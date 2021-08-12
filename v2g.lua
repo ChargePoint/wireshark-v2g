@@ -72,6 +72,7 @@ function v2gtp_protocol.dissector(buffer, pinfo, tree)
         local bitval = buffer(9,2):bitfield(0, 1)
         subtree:add(exi_suported_app_proto_res, bitval)
         print('bit', bitval)
+   end
 end
 
 function get_sdp_payload_type(type)
