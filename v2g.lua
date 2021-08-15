@@ -2,13 +2,13 @@ v2gtp_protocol = Proto("V2GTP", "Vehicle to Grid Transfer Protocol")
 
 -- SDP (SECC Discovery Protocol)
 local SDP = {
-    -- header
+    -- header (8 bytes)
     version = ProtoField.uint8("sdp.ProtocolVersion", "SDP Protocol Version", base.HEX),
     version_inverted = ProtoField.uint8("sdp.InvertedProtocolVersion", "SDP Inverted Protocol Version", base.HEX),
     payload_type = ProtoField.uint16("sdp.PayloadType", "SDP Payload Type", base.HEX),
     payload_length = ProtoField.uint32("sdp.PayloadLength", "SDP Payload Length", base.HEX),
 
-    -- request payload
+    -- request payload (2 bytes)
     request_security = ProtoField.uint8("sdp.RequestSecurity", "SDP Request Security", base.HEX),
     request_transport_proto = ProtoField.uint8("sdp.RequestTransportProtocol", "SDP Request Transport Protocol", base.HEX),
 
@@ -116,9 +116,6 @@ function dissect_sdp(buffer, pinfo, tree)
     return false
 end
 
-function dissect_exi(buffer, pinfo, tree)
-    local subtree = tree:add(v2gtp_protocol, buffer(), "EXI encoded V2G Message")
-end
 
 function v2gtp_protocol.dissector(buffer, pinfo, tree)
     length = buffer:len()
@@ -127,10 +124,14 @@ function v2gtp_protocol.dissector(buffer, pinfo, tree)
     local subtree = tree:add(v2gtp_protocol, buffer(), "Vehicle to Grid Transfer Protocol")
     local is_exi  = dissect_sdp(buffer, pinfo, subtree)
     if is_exi then
-        dissect_exi(buffer, pinfo, subtree)
+        Dissector.get("exi"):call(buffer(8):tvb(), pinfo, subtree)
     end
 end
 
--- Add V2GTP to the dissector table
-local udp_port = DissectorTable.get("udp.port")
-udp_port:add(15118, v2gtp_protocol)
+-- we need this so our other lua files get loaded
+function v2gtp_protocol.init()
+    -- Add V2GTP to the dissector table
+    DissectorTable.get("udp.port"):add(15118, v2gtp_protocol)
+    DissectorTable.get("tcp.port"):add(15118, v2gtp_protocol)
+    DissectorTable.get("tls.port"):add(15118, v2gtp_protocol)
+end
