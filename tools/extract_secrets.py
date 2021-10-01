@@ -3,6 +3,7 @@
 from scapy.all import *
 from scapy.layers.inet6 import UDP as UDP6
 from scapy.layers.inet6 import IPv6
+from scapy.layers.inet6 import TCP as TCP6
 from pathlib import Path
 import argparse
 import subprocess
@@ -47,6 +48,13 @@ class SDPResponse(Packet):
     ]
 
 
+class EXI(Packet):
+    name = "EXI Encoded Data Packet"
+    fields_desc = [
+        StrField("exi_cookie", "")
+    ]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-f", "--file", help="path to pcap file", required=True)
@@ -57,12 +65,15 @@ def main():
     bind_layers(UDP6, SDP, sport=15118)
     bind_layers(SDP, SDPRequest, payload_type=sdp_request_type["sdp_req"])
     bind_layers(SDP, SDPResponse, payload_type=sdp_request_type["sdp_resp"])
+    bind_layers(SDP, EXI, payload_type=sdp_request_type["exi"])
 
     args = ap.parse_args()
     cap = rdpcap(args.file)
     secure_packet_port = None
+    tls_secure_packet_port = None
     has_security = False
     tls_key = None
+    secc_port = None
 
     for pkt in cap:
         if args.verbose > 0 and pkt.haslayer(SDP):
@@ -76,10 +87,25 @@ def main():
             else:
                 print("Session did not request security, no secret to extract")
 
+        # also need try the secc port
+        if pkt.haslayer(SDPResponse):
+            secc_port = pkt[SDPResponse].secc_port
+
+        # Looking for SYN with secc_port which is typically the start of the TLS session.
+        # Some debug flows will insert this key into the TCP port streams as a UDP packet which will
+        # usually be followed up with an ICMPv6 Port Unreachable
+        if pkt.haslayer(TCP6) and pkt[TCP6].flags == "S":
+            if pkt[TCP6].dport == secc_port:
+                tls_secure_packet_port = pkt[TCP6].sport
+
         if has_security and not pkt.haslayer(SDP):
-            if pkt.haslayer(UDP6) and pkt[UDP6].dport == secure_packet_port:
-                print(f"found potential session key on raw UDP packet with dest port {secure_packet_port}")
-                tls_key = pkt[UDP6].load.decode("utf8", "ignore")
+            if pkt.haslayer(UDP6):
+                if pkt[UDP6].dport == secure_packet_port:
+                    print(f"found potential session key on raw UDP packet with dest port {secure_packet_port}")
+                    tls_key = pkt[UDP6].load.decode("utf8", "ignore")
+                if pkt[UDP6].dport == tls_secure_packet_port:
+                    print(f"found potential session key on raw UDP packet with dest port {tls_secure_packet_port}")
+                    tls_key = pkt[UDP6].load.decode("utf8", "ignore")
 
     if tls_key is not None:
         old_file = Path(args.file)
