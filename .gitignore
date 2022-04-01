@@ -1,0 +1,10 @@
+build/
+.vagrant
+.docker-*
+
+# Ignore pcaps that would be used for testing
+*.pcap
+
+# non-project files from host artifacts
+.DS_Store
+.idea/

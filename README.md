@@ -1,8 +1,35 @@
 # wireshark-v2g - A protocol dissector for V2G communications
 
-## Setup
+## Overview
+
+Vehicle to Grid protocols are used in charging applications, this
+project provides a reference for protocol decode and analysis.
 
 Wireshark's LUA documentation:  https://wiki.wireshark.org/Lua
+
+## Building
+
+This plugin is not distributred as part of the Wireshark source, and
+until it is folded in - it can be built as a standalone plugin, or
+as part of a full wireshark build.
+
+### Linux
+
+#### standalone plugin
+
+To build and install the plugin on Debian/Ubuntu:
+
+```
+sudo add-apt-repository ppa:wireshark-dev/stable -y
+sudo apt -get install tshark wireshark wireshark-dev
+
+git clone https://github.com/ChargePoint/wireshark-v2g.git
+
+mkdir wireshark-v2g/build && cd wireshark-v2g/build
+cmake ..
+make
+make install
+```
 
 ### Mac OS X
 
