@@ -44,7 +44,7 @@ With pipenv: `pipenv shell`
 #### Running `extract_secrets.py`
 
 ```shell
-$ ./extract_secrets.py -f ../pcaps/plc_20210810T190140.pcap
+$ ./extract_secrets.py -f ../../pcaps/plc_20210810T190140.pcap
 WARNING: No IPv4 address found on en3 !
 WARNING: No IPv4 address found on en4 !
 WARNING: more No IPv4 address found on en1 !
