@@ -1,0 +1,126 @@
+### Change here for more memory/cores ###
+VM_MEMORY=8192
+VM_CORES=4
+
+# Bootstrap Standalone Script
+$bootstrap_standalone = <<-SCRIPT
+sed -i 's|deb http://us.archive.ubuntu.com/ubuntu/|deb mirror://mirrors.ubuntu.com/mirrors.txt|g' /etc/apt/sources.list
+sed -i -e 's/^#X11UseLocalhost.*$/X11UseLocalhost no/g' /etc/ssh/sshd_config
+/etc/init.d/ssh restart
+
+# Install build requirements
+apt-get -y update
+apt-get purge -q -y snapd lxcfs lxd ubuntu-core-launcher snap-confine
+gem install asciidoctor
+DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
+	cmake \
+	python3 python3-pip perl \
+	qttools5-dev \
+	qttools5-dev-tools \
+	libqt5svg5-dev \
+	qtmultimedia5-dev \
+	qt5-default \
+	libc-ares-dev \
+	libpcap-dev \
+	libgcrypt-dev \
+	libglib2.0-dev
+
+# add the wireshark development
+add-apt-repository ppa:wireshark-dev/stable -y
+apt-get -y update
+DEBIAN_FRONTEND=noninteractive apt-get -y install wireshark wireshark-dev
+
+SCRIPT
+
+# Bootstrap Source Script
+$bootstrap_source = <<-SCRIPT
+sed -i 's|deb http://us.archive.ubuntu.com/ubuntu/|deb mirror://mirrors.ubuntu.com/mirrors.txt|g' /etc/apt/sources.list
+sed -i -e 's/^#X11UseLocalhost.*$/X11UseLocalhost no/g' /etc/ssh/sshd_config
+/etc/init.d/ssh restart
+
+# Install build requirements
+apt-get -y update
+apt-get purge -q -y snapd lxcfs lxd ubuntu-core-launcher snap-confine
+gem install asciidoctor
+DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
+	cmake \
+	python3 python3-pip perl \
+	qttools5-dev \
+	qttools5-dev-tools \
+	libqt5svg5-dev \
+	qtmultimedia5-dev \
+	qt5-default \
+	libc-ares-dev \
+	libpcap-dev \
+	libgcrypt-dev \
+	libglib2.0-dev
+
+# Check out source
+sudo -u vagrant bash << EOF
+
+mkdir -p /home/vagrant/wireshark-"${WIRESHARK_BRANCH}"
+cd /home/vagrant/wireshark-"${WIRESHARK_BRANCH}"
+git init
+if ! git config remote.origin.url >/dev/null; then
+	git remote add -t "${WIRESHARK_BRANCH}" -f origin \
+		https://gitlab.com/wireshark/wireshark
+fi
+git checkout "${WIRESHARK_BRANCH}"
+
+# Link the plugin to the plugins directory if required
+if [ ! -e plugins/epan/v2g ]; then
+	ln -s "${PLUGIN_DIR}" plugins/epan/v2g
+fi
+
+# Apply the patch if required
+if git apply --check "${PLUGIN_DIR}"/wireshark-"${WIRESHARK_BRANCH}".patch &>/dev/null; then
+	git apply "${PLUGIN_DIR}"/wireshark-"${WIRESHARK_BRANCH}".patch
+fi
+EOF
+
+SCRIPT
+
+
+Vagrant.configure(2) do |config|
+  # ssh keys
+  config.ssh.forward_agent = true
+  config.ssh.forward_x11 = true
+
+  # box
+  config.vm.box = "generic/ubuntu2004"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  vagrant_root = File.join(File.dirname(__FILE__), "..", "..")
+  config.vm.provision "shell", name: "bootstrap",
+    inline: "mkdir -p /home/vagrant/wireshark-v2g"
+  config.vm.synced_folder vagrant_root, "/home/vagrant/wireshark-v2g"
+
+  # Providers
+  config.vm.provider :virtualbox do |vb, override|
+    vb.memory = VM_MEMORY
+    vb.cpus = VM_CORES
+    vb.customize ["modifyvm", :id, "--audio", "none"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
+
+    override.vagrant.plugins = [ "vagrant-vbguest" ]
+  end
+
+  # Define a Vagrant VM to compile as a standalone plugin
+  config.vm.define "standalone" do |standalone|
+    standalone.vm.provision "shell",
+      name: "bootstrap-standalone",
+      privileged: true,
+      inline: $bootstrap_standalone
+  end
+
+  # Define a Vagrant VM to compile from source
+  config.vm.define "source" do |source|
+    source.vm.provision "shell",
+      name: "bootstrap-source",
+      privileged: true,
+      inline: $bootstrap_source,
+      env: {"WIRESHARK_BRANCH" => "release-3.6",
+            "PLUGIN_DIR" => "/home/vagrant/wireshark-v2g/"}
+  end
+end
