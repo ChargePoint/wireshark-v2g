@@ -27,6 +27,7 @@ include(extern/dependencies.cmake)
 add_definitions(-DPLUGIN_VERSION=\"${CMAKE_PROJECT_VERSION}\")
 
 set(PLUGIN_FILES
+    src/packet-v2gexi.c
     src/packet-v2gapphandshake.c
     src/packet-v2gdin.c
     src/packet-v2giso1.c
@@ -73,7 +74,7 @@ if(Wireshark_FOUND)
             FOLDER "Plugins"
     )
 
-    target_link_libraries(v2gexi wireshark)
+    target_link_libraries(v2gexi wireshark openv2g)
 
     install(TARGETS v2gexi
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} NAMELINK_SKIP

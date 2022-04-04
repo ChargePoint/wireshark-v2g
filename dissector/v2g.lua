@@ -1,5 +1,8 @@
 v2gtp_protocol = Proto("V2GTP", "Vehicle to Grid Transfer Protocol")
 
+-- V2G TP protocol
+local V2GTP_HEADER_LENGTH = 8
+
 -- SDP (SECC Discovery Protocol)
 local SDP = {
     -- header (8 bytes)
@@ -70,7 +73,11 @@ function append_paren_text(text)
     return "  (" .. text .. ")"
 end
 
-function dissect_sdp(buffer, pinfo, tree)
+function get_v2gtp_length(buffer, pinfo, offset)
+    return V2GTP_HEADER_LENGTH + buffer(offset + 4,4):uint()
+end
+
+function dissect_v2gtp(buffer, pinfo, tree)
     local payload_type_name = get_sdp_payload_type(buffer(2,4):uint())
     local sdp_pay_len = buffer(4,4):uint()
 
@@ -95,11 +102,10 @@ function dissect_sdp(buffer, pinfo, tree)
         local subtree = tree:add(v2gtp_protocol, buffer(), "SECC Discovery Protocol Request")
         subtree:add(SDP["request_security"], buffer(8,1)):append_text("  (" .. get_sdp_security(buffer(8,1):uint()) .. ")")
         subtree:add(SDP["request_transport_proto"], buffer(9,1)):append_text("  (" .. get_sdp_transport_name(buffer(9,1):uint()) .. ")")
-    end
-
-    if payload_type_name == "SDP RESPONSE" then
+    elseif payload_type_name == "SDP RESPONSE" then
         local subtree = tree:add(v2gtp_protocol, buffer(), "SECC Discovery Protocol Response")
         local port = buffer(24,2):uint()
+        local security = buffer(26,1):uint()
 
         subtree:add(SDP["response_secc_ip_addr"], buffer(8,16))
         subtree:add(SDP["response_secc_port"], port)
@@ -109,11 +115,19 @@ function dissect_sdp(buffer, pinfo, tree)
         -- we don't know what port we're using at the start, add our
         -- dissector to the supported tls dissector (if you have session
         -- keys you can decrypt packets with this)
-        DissectorTable.get("tls.port"):add(port, v2gtp_protocol)
+        if buffer(27,1):uint() == 0 then
+            -- TCP
+            if security == 0x10 then
+                -- NO TLS
+                DissectorTable.get("tcp.port"):add(port, v2gtp_protocol)
+            elseif security == 0x00 then
+                -- TLS
+                DissectorTable.get("tls.port"):add(port, v2gtp_protocol)
+            end
+        end
+    elseif payload_type_name == "EXI ENCODED" then
+        Dissector.get("v2gexi"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
     end
-
-    if payload_type_name == "EXI ENCODED" then return true end
-    return false
 end
 
 
@@ -121,10 +135,11 @@ function v2gtp_protocol.dissector(buffer, pinfo, tree)
     length = buffer:len()
     if length == 0 then return end
     pinfo.cols.protocol = v2gtp_protocol.name
-    local subtree = tree:add(v2gtp_protocol, buffer(), "Vehicle to Grid Transfer Protocol")
-    local is_exi  = dissect_sdp(buffer, pinfo, subtree)
-    if is_exi then
-        Dissector.get("exi"):call(buffer(8):tvb(), pinfo, subtree)
+
+    if pinfo.port_type == 3 then -- UDP
+        dissect_v2gtp(buffer, pinfo, tree)
+    else
+        dissect_tcp_pdus(buffer, tree, V2GTP_HEADER_LENGTH, get_v2gtp_length, dissect_v2gtp)
     end
 end
 
