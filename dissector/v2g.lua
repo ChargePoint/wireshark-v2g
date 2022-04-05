@@ -1,3 +1,10 @@
+--
+-- Copyright (c) 2021 ChargePoint, Inc.
+-- All rights reserved.
+--
+-- See LICENSE file
+--
+
 v2gtp_protocol = Proto("V2GTP", "Vehicle to Grid Transfer Protocol")
 
 -- V2G TP protocol

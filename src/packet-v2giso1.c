@@ -1,5 +1,8 @@
 /*
+ * Copyright (c) 2022 ChargePoint, Inc.
+ * All rights reserved.
  *
+ * See LICENSE file
  */
 
 #include "config.h"

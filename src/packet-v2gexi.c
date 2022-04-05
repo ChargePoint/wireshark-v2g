@@ -1,5 +1,15 @@
 /*
- * V2G EXI
+ * Copyright (c) 2022 ChargePoint, Inc.
+ * All rights reserved.
+ *
+ * See LICENSE file
+ */
+/**
+ * V2G EXI Dissector
+ *
+ * This is the entry point from the exi encoded packets that need
+ * to be tracked using the first hardshake to determine which
+ * namespace to use for the subsequent stream.
  */
 
 #include "config.h"
