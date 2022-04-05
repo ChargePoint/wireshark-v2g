@@ -28,7 +28,6 @@ add_definitions(-DPLUGIN_VERSION=\"${CMAKE_PROJECT_VERSION}\")
 
 set(PLUGIN_FILES
     src/packet-v2gexi.c
-    src/packet-v2gapphandshake.c
     src/packet-v2gdin.c
     src/packet-v2giso1.c
 )
