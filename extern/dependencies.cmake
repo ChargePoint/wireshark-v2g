@@ -8,6 +8,7 @@ set(openv2g_VERSION 0.9.5)
 FetchContent_Declare(openv2g
     URL https://sourceforge.net/projects/openv2g/files/release/OpenV2G_${openv2g_VERSION}/OpenV2G_${openv2g_VERSION}.zip/download
     URL_HASH SHA1=c9486c0393346717dafc4df7f2b97c5426f22c43
+    PATCH_COMMAND patch -p1 < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch
 )
 
 FetchContent_MakeAvailable(openv2g)
