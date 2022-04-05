@@ -50,10 +50,6 @@ static int hf_v2gexi_handshake_response = -1;
 static int hf_v2gexi_handshake_response_code = -1;
 static int hf_v2gexi_handshake_response_schemaid = -1;
 
-static int hf_v2gexi_response_in = -1;
-static int hf_v2gexi_response_to = -1;
-static int hf_v2gexi_response_time = -1;
-
 /* Initialize the subtree pointers */
 static gint ett_v2gexi = -1;
 static gint ett_v2gexi_handshake_request_ap_array = -1;
@@ -95,11 +91,6 @@ typedef struct _v2gexi_conv {
 	wmem_map_t *pdus;
 } v2gexi_conv_t;
 
-struct _v2gexi_rr {
-	nstime_t req_time;
-	guint32	req_frame;
-	guint32 rep_frame;
-};
 
 static int
 exi_strncasecmp(const exi_string_character_t *s1, const char *s2, size_t n)
@@ -317,6 +308,8 @@ dissect_v2gexi(tvbuff_t *tvb,
 
 	offset = 0;
 	if (!pinfo->fd->visited) {
+		dissector_handle_t dissector_handle;
+
 		switch(v2gexi_conv->mode) {
 		default:
 			/* unknown mode - stop dissection */
@@ -324,6 +317,12 @@ dissect_v2gexi(tvbuff_t *tvb,
 		case V2GEXI_HANDSHAKE:
 			offset += dissect_v2gexi_hs(tvb, pinfo,
 						    v2gexi_tree, v2gexi_conv);
+			break;
+		case V2GEXI_DIN:
+			dissector_handle = find_dissector("v2gdin");
+			call_dissector_only(dissector_handle, tvb, pinfo,
+					    v2gexi_tree, data);
+			offset += tvb_captured_length(tvb);
 			break;
 		}
 	} else {
