@@ -1,0 +1,117 @@
+# GitHub Action workflows to build and test the plug-in on Ubuntu
+#
+# Adapted from Wireshark's repository https://gitlab.com/wireshark/wireshark/-/tree/master/.github/workflows
+
+name: Build and test Ubuntu plug-in
+
+on: [push, pull_request]
+
+env:
+   WIRESHARK_BRANCH: release-3.6
+
+jobs:
+   standalone:
+      name: Build and test standalone plugin
+      runs-on: ubuntu-18.04
+      steps:
+         - name: Checkout plug-in
+           uses: actions/checkout@v2
+
+         - name: Install dependencies for a standalone build
+           run: |
+              sudo add-apt-repository ppa:wireshark-dev/stable -y
+              sudo apt-get update -qq
+              export DEBIAN_FRONTEND=noninteractive
+              echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
+              sudo apt-get install -yqq cmake wireshark wireshark-dev tshark
+
+         - name: Build standalone
+           run: |
+              mkdir build
+              cd build
+              cmake ..
+              make
+              make install
+
+         - name: Copy plugin so
+           run: |
+              mkdir v2g-artifact
+              cp dissector/v2g.lua v2g-artifact/v2g.lua
+              cp build/v2gexi.so v2g-artifact/v2g-standalone.so
+         - name: Upload Ubuntu packages
+           uses: actions/upload-artifact@v2
+           with:
+              name: packages
+              path: v2g-artifact
+
+   intree:
+      name: Build in-tree plugin
+      runs-on: ubuntu-18.04
+      steps:
+         - name: Checkout Wireshark
+           run: |
+              git init
+              git remote add -t "${{ env.WIRESHARK_BRANCH }}" -f origin https://gitlab.com/wireshark/wireshark.git
+              git checkout ${{ env.WIRESHARK_BRANCH }}
+         - name: Checkout plug-in
+           uses: actions/checkout@v2
+           with:
+              path: plugins/epan/v2g
+         - name: Apply patch
+           run: |
+              git apply plugins/epan/v2g/extern/wireshark-${{ env.WIRESHARK_BRANCH }}.patch
+         - name: Install dependencies for a in-tree build
+           run: |
+              sudo gem install asciidoctor
+              sudo apt-get update -qq
+              sudo apt-get install -yqq cmake libglib2.0-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev qt5-default libc-ares-dev libpcap-dev bison flex make python3 python3-pip perl libgcrypt-dev
+
+         - name: Build in-tree
+           run: |
+              mkdir build
+              cd build
+              cmake ..
+              make v2gexi tshark
+
+         - name: Copy plugin artifact
+           run: |
+              mkdir v2g-artifact
+              cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
+              cp build/run/plugins/3.6/epan/v2gexi.so v2g-artifact/v2g-source.so
+         - name: Upload Ubuntu artifacts
+           uses: actions/upload-artifact@v2
+           with:
+              name: packages
+              path: v2g-artifact
+
+   release:
+      name: Release
+      runs-on: ubuntu-18.04
+      needs: intree
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'v') }}
+      steps:
+         - name: Download Ubuntu artifacts
+           uses: actions/download-artifact@v2
+           with:
+              name: packages
+              path: v2g-artifact
+         - name: Zip artifact
+           run: |
+              zip -j v2g-artifact
+         - name: Create a release
+           id: create_release
+           uses: actions/create-release@v1
+           with:
+              tag_name: ${{ github.ref }}
+              release_name: V2G Plug-in for Wireshark ${{ github.ref }}
+              draft: true
+              prerelease: false
+         - name: Upload release asset
+           uses: actions/upload-release-asset@v1
+           with:
+              upload_url: ${{ steps.create_release.outputs.upload_url }}
+              asset_path: v2g-artifact.zip
+              asset_name: v2g-${{ github.ref }}-linux-x86-64.zip
+              asset_content_type: application/zip

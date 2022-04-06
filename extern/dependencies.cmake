@@ -5,9 +5,17 @@ include(FetchContent)
 # Use the OpenV2G project as part of the dissector
 #
 set(openv2g_VERSION 0.9.5)
+
+if(MSVC)
+    set(OPENV2G_PATCH_COMMAND patch --binary -p1 < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch)
+else(MSVC)
+    set(OPENV2G_PATCH_COMMAND patch -p1 < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch)
+endif(MSVC)
+
 FetchContent_Declare(openv2g
     URL https://sourceforge.net/projects/openv2g/files/release/OpenV2G_${openv2g_VERSION}/OpenV2G_${openv2g_VERSION}.zip/download
     URL_HASH SHA1=c9486c0393346717dafc4df7f2b97c5426f22c43
+    PATCH_COMMAND ${OPENV2G_PATCH_COMMAND}
 )
 
 FetchContent_MakeAvailable(openv2g)

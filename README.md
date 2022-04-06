@@ -1,5 +1,9 @@
 # wireshark-v2g - A protocol dissector for V2G communications
 
+[![Build and test Ubuntu plug-in](https://github.com/ChargePoint/wireshark-v2g/workflows/Build%20and%20test%20Ubuntu%20plug-in/badge.svg)](https://github.com/ChargePoint/wireshark-v2g/actions?query=workflow%3A%22Build+and+test+Ubuntu+plug-in%22)
+[![Build and test MacOS plug-in](https://github.com/ChargePoint/wireshark-v2g/workflows/Build%20and%20test%20MacOS%20plug-in/badge.svg)](https://github.com/ChargePorint/wireshark-v2g/actions?query=workflow%3A%22Build+and+test+MacOS+plug-in%22)
+[![Build and test Windows plug-in](https://github.com/ChargePoint/wireshark-v2g/workflows/Build%20and%20test%20Windows%20plug-in/badge.svg)](https://github.com/ChargePoint/wireshark-v2g/actions?query=workflow%3A%22Build+and+test+Windows+plug-in%22)
+
 ## Overview
 
 Vehicle to Grid protocols are used in charging applications, this

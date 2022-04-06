@@ -57,6 +57,9 @@ if(Wireshark_FOUND)
 
     include_directories(${Wireshark_INCLUDE_DIR})
     link_directories(${Wireshark_LIB_DIR})
+    if(APPLE)
+        link_directories(/usr/local/lib)
+    endif(APPLE)
 
     # Keep in sync with in-tree build
     register_plugin_files(plugin.c
