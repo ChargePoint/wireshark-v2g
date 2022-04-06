@@ -31,6 +31,35 @@ make
 make install
 ```
 
+#### source plugin
+
+To build and install the plugin as part of Wireshark (ie. permenant)
+
+1) Get the wireshark repo
+    ```
+    git clone https://gitlab.com/wireshark/wireshark
+    cd wireshark
+    git checkout release-3.6
+    ```
+
+2) Copy the V2G plugin to a new `plugins/epan/v2g` directory
+    ```
+    git clone https://github.com/ChargePoint/wireshark-v2g.git plugins/epan/v2g
+    ```
+
+3) Patch the cmake in wireshark to include the v2g plugin
+    ```
+    git apply plugins/epan/v2g/extern/wireshark-release-3.6.patch
+    ```
+
+4) Perform a new wireshark build with the v2g plugin
+    ```
+    mkdir -p build && cd build
+    cmake ..
+    make
+    make install
+    ```
+
 ### Mac OS X
 
 Install wireshark application in the usual location, and this will

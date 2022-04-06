@@ -22,7 +22,6 @@
 #include <epan/conversation.h>
 #include <epan/prefs.h>
 #include <epan/expert.h>
-#include <epan/wmem/wmem.h>
 
 /* openv2g */
 #include <codec/EXITypes.h>
