@@ -12,7 +12,7 @@ env:
 jobs:
    standalone:
       name: Build and test standalone plugin
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-20.04
       steps:
          - name: Checkout plug-in
            uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
 
    intree:
       name: Build in-tree plugin
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-20.04
       steps:
          - name: Checkout Wireshark
            run: |
@@ -86,7 +86,7 @@ jobs:
 
    release:
       name: Release
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-20.04
       needs: intree
       env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
            uses: actions/create-release@v1
            with:
               tag_name: ${{ github.ref }}
-              release_name: V2G Plug-in for Wireshark ${{ github.ref }}
+              release_name: Linux V2G Wireshark Plug-in ${{ github.ref }}
               draft: true
               prerelease: false
          - name: Upload release asset
