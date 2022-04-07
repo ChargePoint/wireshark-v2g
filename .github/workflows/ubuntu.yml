@@ -90,16 +90,16 @@ jobs:
       needs: intree
       env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'v') }}
+      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
       steps:
          - name: Download Ubuntu artifacts
            uses: actions/download-artifact@v2
            with:
               name: packages
               path: v2g-artifact
-         - name: Zip artifact
+         - name: Tar artifact
            run: |
-              zip -j v2g-artifact
+              tar -cf v2g-artifact.tar -C v2g-artifact .
          - name: Create a release
            id: create_release
            uses: actions/create-release@v1
@@ -112,6 +112,6 @@ jobs:
            uses: actions/upload-release-asset@v1
            with:
               upload_url: ${{ steps.create_release.outputs.upload_url }}
-              asset_path: v2g-artifact.zip
-              asset_name: v2g-${{ github.ref }}-linux-x86-64.zip
-              asset_content_type: application/zip
+              asset_path: v2g-artifact.tar
+              asset_name: v2g-${{ github.ref_name }}-linux-x86-64.tar
+              asset_content_type: application/x-tar

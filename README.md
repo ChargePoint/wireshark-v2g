@@ -66,24 +66,42 @@ To build and install the plugin as part of Wireshark (ie. permenant)
 
 ### Mac OS X
 
-Install wireshark application in the usual location, and this will
-allow access to the tshark application to run the script and debug
-the output.
+The build process is similar to the linux build but based upon the
+homebrew. This means that most of the setup requires a full build
+that encompasses getting the brew recipes.
+
+See the github workflows for macos to see the package installs and
+the build steps.
+
+### Windows
+
+The plugins need to be built as part of an intree for this particular
+platform. So, the following steps are required to maike a full build
+setup.
+
+1) Follow the wireshark windows [step-to-step guide](https://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html)
+
+2) Copy the V2G plugin to the `plugins/epan/v2g` directory
+
+3) Patch the wireshark build system to include the plugin
+    ```
+    git apply plugins/epan/v2g/extern/wireshark-release-3.6.patch
+    ```
+
+4) Perform the full build including the plugin
+
+## Usage
+
+Assuming that the build and installation of the plugins has been
+performed, the basic testing for integration and display is thru
+tshark to quickly check the the plugin parsing and display.
 
 ```
-/Applications/Wireshark.app/Contents/MacOS/tshark \
-    -X lua_script:v2g.lua -r test.pcap
+tshark -V -r ../wireshark-v2g/pcaps/test.pcap 2>&1
 ```
 
-### Win 10
-
-Install wireshark application in the usual location, and this will
-allow access to the tshark application to run the script and debug
-the output.
-
-```
-c:\Program Files (x86)\Wireshark\tshark.exe-X lua_script:v2g.lua -r test.pcap
-```
+*NOTE:* For developers, this is where the fprintf to stderr can be
+used to trace and determine possible sources of parsing errors.
 
 ## Decrypting TLS payloads
 
