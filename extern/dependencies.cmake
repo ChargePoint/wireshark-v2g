@@ -7,15 +7,16 @@ include(FetchContent)
 set(openv2g_VERSION 0.9.5)
 
 if(MSVC)
-    set(OPENV2G_PATCH_COMMAND patch --binary -p1 < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch)
+    set(OPENV2G_PATCH_COMMAND patch --binary -p1)
 else(MSVC)
-    set(OPENV2G_PATCH_COMMAND patch -p1 < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch)
+    set(OPENV2G_PATCH_COMMAND patch -p1)
 endif(MSVC)
 
 FetchContent_Declare(openv2g
     URL https://sourceforge.net/projects/openv2g/files/release/OpenV2G_${openv2g_VERSION}/OpenV2G_${openv2g_VERSION}.zip/download
     URL_HASH SHA1=c9486c0393346717dafc4df7f2b97c5426f22c43
-    PATCH_COMMAND ${OPENV2G_PATCH_COMMAND}
+    PATCH_COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch
+          COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-fix-windows-build.patch
 )
 
 FetchContent_MakeAvailable(openv2g)

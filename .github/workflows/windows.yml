@@ -14,7 +14,7 @@ env:
 jobs:
    intree:
       name: Build in-tree plugin
-      runs-on: windows-latest
+      runs-on: windows-2019
       steps:
          - name: Checkout Wireshark
            run: |
@@ -83,7 +83,7 @@ jobs:
 
    release:
       name: Release
-      runs-on: windows-latest
+      runs-on: windows-2019
       needs: intree
       env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
