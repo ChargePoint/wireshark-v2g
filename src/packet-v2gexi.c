@@ -287,7 +287,7 @@ dissect_v2gexi(tvbuff_t *tvb,
 
 	/*
 	 * Track state of this decode on a per conversation basis so that
-	 * we can determine the parser to use and namesapces.
+	 * we can determine the parser to use and namespaces.
 	 */
 	conversation = find_or_create_conversation(pinfo);
 	v2gexi_conv = conversation_get_proto_data(conversation, proto_v2gexi);
