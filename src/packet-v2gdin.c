@@ -131,6 +131,14 @@ static int hf_v2gdin_struct_dinPhysicalValueType_Value = -1;
 
 static int hf_v2gdin_struct_dinCertificateChainType_Certificate = -1;
 static int hf_v2gdin_struct_dinSubCertificatesType_Certificate = -1;
+static int hf_v2gdin_struct_dinListOfRootCertificateIDsType_RootCertificateID = -1;
+
+static int hf_v2gdin_struct_dinAC_EVChargeParameterType_DepartureTime = -1;
+
+static int hf_v2gdin_struct_dinAC_EVSEStatusType_PowerSwitchClosed = -1;
+static int hf_v2gdin_struct_dinAC_EVSEStatusType_RCD = -1;
+static int hf_v2gdin_struct_dinAC_EVSEStatusType_NotificationMaxDelay = -1;
+static int hf_v2gdin_struct_dinAC_EVSEStatusType_EVSENotification = -1;
 
 static int hf_v2gdin_struct_dinDC_EVStatusType_EVReady = -1;
 static int hf_v2gdin_struct_dinDC_EVStatusType_EVCabinConditioning = -1;
@@ -142,6 +150,39 @@ static int hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEIsolationStatus = -1;
 static int hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEStatusCode = -1;
 static int hf_v2gdin_struct_dinDC_EVSEStatusType_NotificationMaxDelay = -1;
 static int hf_v2gdin_struct_dinDC_EVSEStatusType_EVSENotification = -1;
+
+static int hf_v2gdin_struct_dinDC_EVChargeParameterType_FullSOC = -1;
+static int hf_v2gdin_struct_dinDC_EVChargeParameterType_BulkSOC = -1;
+
+static int hf_v2gdin_struct_dinSAScheduleTupleType_SAScheduleTupleID = -1;
+
+static int hf_v2gdin_struct_dinPMaxScheduleType_PMaxScheduleID = -1;
+static int hf_v2gdin_struct_dinPMaxScheduleEntryType_PMax = -1;
+
+static int hf_v2gdin_struct_dinRelativeTimeIntervalType_start = -1;
+static int hf_v2gdin_struct_dinRelativeTimeIntervalType_duration = -1;
+
+static int hf_v2gdin_struct_dinSalesTariffType_Id = -1;
+static int hf_v2gdin_struct_dinSalesTariffType_SalesTariffDescription = -1;
+static int hf_v2gdin_struct_dinSalesTariffType_NumEPriceLevels = -1;
+static int hf_v2gdin_struct_dinSalesTariffEntryType_EPriceLevel = -1;
+static int hf_v2gdin_struct_dinConsumptionCostType_startValue = -1;
+static int hf_v2gdin_struct_dinCostType_costKind = -1;
+static int hf_v2gdin_struct_dinCostType_amount = -1;
+static int hf_v2gdin_struct_dinCostType_amountMultiplier = -1;
+
+static int hf_v2gdin_struct_dinChargingProfileType_SAScheduleTupleID = -1;
+
+static int hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryStart = -1;
+static int hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryMaxPower = -1;
+
+static int hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_BulkChargingComplete = -1;
+static int hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_ChargingComplete = -1;
+
+static int hf_v2gdin_struct_dinMeterInfoType_MeterID = -1;
+static int hf_v2gdin_struct_dinMeterInfoType_SigMeterReading = -1;
+static int hf_v2gdin_struct_dinMeterInfoType_MeterStatus = -1;
+static int hf_v2gdin_struct_dinMeterInfoType_TMeter = -1;
 
 static int hf_v2gdin_header_SessionID = -1;
 
@@ -165,12 +206,58 @@ static int hf_v2gdin_body_ContractAuthenticationReq_Id = -1;
 static int hf_v2gdin_body_ContractAuthenticationReq_GenChallenge = -1;
 static int hf_v2gdin_body_ContractAuthenticationRes_ResponseCode = -1;
 static int hf_v2gdin_body_ContractAuthenticationRes_EVSEProcessing = -1;
+static int hf_v2gdin_body_ChargeParameterDiscoveryReq_EVRequestedEnergyTransferType = -1;
+static int hf_v2gdin_body_ChargeParameterDiscoveryRes_ResponseCode = -1;
+static int hf_v2gdin_body_ChargeParameterDiscoveryRes_EVSEProcessing = -1;
+
+static int hf_v2gdin_body_PowerDeliveryReq_ReadyToChargeState = -1;
+static int hf_v2gdin_body_PowerDeliveryRes_ResponseCode = -1;
+
+static int hf_v2gdin_body_ChargingStatusRes_ResponseCode = -1;
+static int hf_v2gdin_body_ChargingStatusRes_EVSEID = -1;
+static int hf_v2gdin_body_ChargingStatusRes_SAScheduleTupleID = -1;
+static int hf_v2gdin_body_ChargingStatusRes_ReceiptRequired = -1;
+
+static int hf_v2gdin_body_MeteringReceiptReq_Id = -1;
+static int hf_v2gdin_body_MeteringReceiptReq_SessionID = -1;
+static int hf_v2gdin_body_MeteringReceiptReq_SAScheduleTupleID = -1;
+static int hf_v2gdin_body_MeteringReceiptRes_ResponseCode = -1;
+
+static int hf_v2gdin_body_SessionStopRes_ResponseCode = -1;
+
+static int hf_v2gdin_body_CertificateUpdateReq_Id = -1;
+static int hf_v2gdin_body_CertificateUpdateReq_ContractID = -1;
+static int hf_v2gdin_body_CertificateUpdateReq_DHParams = -1;
+static int hf_v2gdin_body_CertificateUpdateRes_Id = -1;
+static int hf_v2gdin_body_CertificateUpdateRes_ResponseCode = -1;
+static int hf_v2gdin_body_CertificateUpdateRes_ContractID = -1;
+static int hf_v2gdin_body_CertificateUpdateRes_DHParams = -1;
+static int hf_v2gdin_body_CertificateUpdateRes_RetryCounter = -1;
+static int hf_v2gdin_body_CertificateUpdateRes_ContractSignatureEncryptedPrivateKey = -1;
+
+static int hf_v2gdin_body_CertificateInstallationReq_Id = -1;
+static int hf_v2gdin_body_CertificateInstallationReq_OEMProvisioningCert = -1;
+static int hf_v2gdin_body_CertificateInstallationReq_DHParams = -1;
+static int hf_v2gdin_body_CertificateInstallationRes_Id = -1;
+static int hf_v2gdin_body_CertificateInstallationRes_ResponseCode = -1;
+static int hf_v2gdin_body_CertificateInstallationRes_ContractSignatureEncryptedPrivateKey = -1;
+static int hf_v2gdin_body_CertificateInstallationRes_DHParams = -1;
+static int hf_v2gdin_body_CertificateInstallationRes_ContractID = -1;
+
+static int hf_v2gdin_body_CableCheckRes_ResponseCode = -1;
+static int hf_v2gdin_body_CableCheckRes_EVSEProcessing = -1;
+
+static int hf_v2gdin_body_PreChargeRes_ResponseCode = -1;
+
 static int hf_v2gdin_body_CurrentDemandReq_ChargingComplete = -1;
 static int hf_v2gdin_body_CurrentDemandReq_BulkChargingComplete = -1;
 static int hf_v2gdin_body_CurrentDemandRes_ResponseCode = -1;
 static int hf_v2gdin_body_CurrentDemandRes_EVSECurrentLimitAchieved = -1;
 static int hf_v2gdin_body_CurrentDemandRes_EVSEVoltageLimitAchieved = -1;
 static int hf_v2gdin_body_CurrentDemandRes_EVSEPowerLimitAchieved = -1;
+
+static int hf_v2gdin_body_WeldingDetectionRes_ResponseCode = -1;
+
 
 /* Initialize the subtree pointers */
 static gint ett_v2gdin = -1;
@@ -210,8 +297,33 @@ static gint ett_v2gdin_struct_dinPhysicalValueType = -1;
 static gint ett_v2gdin_struct_dinPaymentOptionsType = -1;
 static gint ett_v2gdin_struct_dinCertificateChainType = -1;
 static gint ett_v2gdin_struct_dinSubCertificatesType = -1;
+static gint ett_v2gdin_struct_dinListOfRootCertificateIDsType = -1;
+static gint ett_v2gdin_struct_dinEVChargeParameterType = -1;
+static gint ett_v2gdin_struct_dinAC_EVChargeParameterType = -1;
+static gint ett_v2gdin_struct_dinDC_EVChargeParameterType = -1;
 static gint ett_v2gdin_struct_dinDC_EVStatusType = -1;
+static gint ett_v2gdin_struct_dinEVSEChargeParameterType = -1;
+static gint ett_v2gdin_struct_dinEVSEStatusType = -1;
+static gint ett_v2gdin_struct_dinAC_EVSEChargeParameterType = -1;
+static gint ett_v2gdin_struct_dinAC_EVSEStatusType = -1;
+static gint ett_v2gdin_struct_dinDC_EVSEChargeParameterType = -1;
 static gint ett_v2gdin_struct_dinDC_EVSEStatusType = -1;
+static gint ett_v2gdin_struct_dinSASchedulesType = -1;
+static gint ett_v2gdin_struct_dinSAScheduleListType = -1;
+static gint ett_v2gdin_struct_dinSAScheduleTupleType = -1;
+static gint ett_v2gdin_struct_dinPMaxScheduleType = -1;
+static gint ett_v2gdin_struct_dinPMaxScheduleEntryType = -1;
+static gint ett_v2gdin_struct_dinRelativeTimeIntervalType = -1;
+static gint ett_v2gdin_struct_dinIntervalType = -1;
+static gint ett_v2gdin_struct_dinSalesTariffType = -1;
+static gint ett_v2gdin_struct_dinSalesTariffEntryType = -1;
+static gint ett_v2gdin_struct_dinConsumptionCostType = -1;
+static gint ett_v2gdin_struct_dinCostType = -1;
+static gint ett_v2gdin_struct_dinChargingProfileType = -1;
+static gint ett_v2gdin_struct_dinEVPowerDeliveryParameterType = -1;
+static gint ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType = -1;
+static gint ett_v2gdin_struct_dinProfileEntryType = -1;
+static gint ett_v2gdin_struct_dinMeterInfoType = -1;
 
 static gint ett_v2gdin_header = -1;
 static gint ett_v2gdin_body = -1;
@@ -227,28 +339,28 @@ static gint ett_v2gdin_body_PaymentDetailsReq = -1;
 static gint ett_v2gdin_body_PaymentDetailsRes = -1;
 static gint ett_v2gdin_body_ContractAuthenticationReq = -1;
 static gint ett_v2gdin_body_ContractAuthenticationRes = -1;
-static gint ett_v2gdin_body_chargeparameterdiscoveryreq = -1;
-static gint ett_v2gdin_body_chargeparameterdiscoveryres = -1;
-static gint ett_v2gdin_body_powerdeliveryreq = -1;
-static gint ett_v2gdin_body_powerdeliveryres = -1;
-static gint ett_v2gdin_body_chargingstatusreq = -1;
-static gint ett_v2gdin_body_chargingstatusres = -1;
-static gint ett_v2gdin_body_meteringreceiptreq = -1;
-static gint ett_v2gdin_body_meteringreceiptres = -1;
-static gint ett_v2gdin_body_sessionstopreq = -1;
-static gint ett_v2gdin_body_sessionstopres = -1;
-static gint ett_v2gdin_body_certificateupdatereq = -1;
-static gint ett_v2gdin_body_certificateupdateres = -1;
-static gint ett_v2gdin_body_certificateinstallationreq = -1;
-static gint ett_v2gdin_body_certificateinstallationres = -1;
-static gint ett_v2gdin_body_cablecheckreq = -1;
-static gint ett_v2gdin_body_cablecheckres = -1;
-static gint ett_v2gdin_body_prechargereq = -1;
-static gint ett_v2gdin_body_prechargeres = -1;
+static gint ett_v2gdin_body_ChargeParameterDiscoveryReq = -1;
+static gint ett_v2gdin_body_ChargeParameterDiscoveryRes = -1;
+static gint ett_v2gdin_body_PowerDeliveryReq = -1;
+static gint ett_v2gdin_body_PowerDeliveryRes = -1;
+static gint ett_v2gdin_body_ChargingStatusReq = -1;
+static gint ett_v2gdin_body_ChargingStatusRes = -1;
+static gint ett_v2gdin_body_MeteringReceiptReq = -1;
+static gint ett_v2gdin_body_MeteringReceiptRes = -1;
+static gint ett_v2gdin_body_SessionStopReq = -1;
+static gint ett_v2gdin_body_SessionStopRes = -1;
+static gint ett_v2gdin_body_CertificateUpdateReq = -1;
+static gint ett_v2gdin_body_CertificateUpdateRes = -1;
+static gint ett_v2gdin_body_CertificateInstallationReq = -1;
+static gint ett_v2gdin_body_CertificateInstallationRes = -1;
+static gint ett_v2gdin_body_CableCheckReq = -1;
+static gint ett_v2gdin_body_CableCheckRes = -1;
+static gint ett_v2gdin_body_PreChargeReq = -1;
+static gint ett_v2gdin_body_PreChargeRes = -1;
 static gint ett_v2gdin_body_CurrentDemandReq = -1;
 static gint ett_v2gdin_body_CurrentDemandRes = -1;
-static gint ett_v2gdin_body_weldingdetectionreq = -1;
-static gint ett_v2gdin_body_weldingdetectionres = -1;
+static gint ett_v2gdin_body_WeldingDetectionReq = -1;
+static gint ett_v2gdin_body_WeldingDetectionRes = -1;
 
 static const value_string v2gdin_fault_code_names[] = {
 	{ dinfaultCodeType_ParsingError, "ParsingError" },
@@ -316,7 +428,18 @@ static const value_string v2gdin_payment_option_names[] = {
 	{ dinpaymentOptionType_ExternalPayment, "ExternalPayment" }
 };
 
-static const value_string v2gdin_energy_transfer_type_names[] = {
+static const value_string v2gdin_ev_requested_energy_transfer[] = {
+	{ dinEVRequestedEnergyTransferType_AC_single_phase_core,
+	  "AC_single_phase_core" },
+	{ dinEVRequestedEnergyTransferType_AC_three_phase_core,
+	  "AC_three_phase_core" },
+	{ dinEVRequestedEnergyTransferType_DC_core, "DC_core" },
+	{ dinEVRequestedEnergyTransferType_DC_extended, "DC_extended" },
+	{ dinEVRequestedEnergyTransferType_DC_combo_core, "DC_combo_core" },
+	{ dinEVRequestedEnergyTransferType_DC_unique, "DC_unique" }
+};
+
+static const value_string v2gdin_evse_supported_energy_transfer_names[] = {
 	{ dinEVSESupportedEnergyTransferType_AC_single_phase_core,
 	  "AC_single_phase_core" },
 	{ dinEVSESupportedEnergyTransferType_AC_three_phase_core,
@@ -409,6 +532,13 @@ static const value_string v2gdin_unitsymbol_names[] = {
 	{ dinunitSymbolType_W, "W" },
 	{ dinunitSymbolType_W_s, "W_s" },
 	{ dinunitSymbolType_Wh, "Wh" }
+};
+
+static const value_string v2gdin_cost_kind_names[] = {
+	{ dincostKindType_relativePricePercentage, "relativePricePercentage" },
+	{ dincostKindType_RenewableGenerationPercentage,
+	  "RenewableGenerationPercentage" },
+	{ dincostKindType_CarbonDioxideEmission, "CarbonDioxideEmission" }
 };
 
 
@@ -1821,6 +1951,7 @@ dissect_v2gdin_selectedservicelist(
 	for (i = 0; i < selectedservicelist->SelectedService.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2gdin_selectedservice(
 			&selectedservicelist->SelectedService.array[i],
 			tvb, selectedservicelist_tree,
@@ -1895,6 +2026,88 @@ dissect_v2gdin_certificatechain(
 }
 
 static void
+dissect_v2gdin_listofrootcertificateids(
+	const struct dinListOfRootCertificateIDsType *listofrootcertificateids,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *rootcertificateid_tree;
+	proto_tree *rootcertificateid_i_tree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	rootcertificateid_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "RootCertificateID");
+	for (i = 0; i < listofrootcertificateids->RootCertificateID.arrayLen; i++) {
+		rootcertificateid_i_tree = proto_tree_add_subtree_format(
+			rootcertificateid_tree,
+			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
+		exi_add_characters(rootcertificateid_i_tree,
+			hf_v2gdin_struct_dinListOfRootCertificateIDsType_RootCertificateID,
+			tvb,
+			listofrootcertificateids->RootCertificateID.array[i].characters,
+			listofrootcertificateids->RootCertificateID.array[i].charactersLen,
+			sizeof(listofrootcertificateids->RootCertificateID.array[i].characters));
+	}
+	return;
+}
+
+static void
+dissect_v2gdin_evchargeparameter(
+	const struct dinEVChargeParameterType *evchargeparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_ac_evchargeparameter(
+	const struct dinAC_EVChargeParameterType *ac_evchargeparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinAC_EVChargeParameterType_DepartureTime,
+		tvb, 0, 0, ac_evchargeparameter->DepartureTime);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EAmount,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EAmount");
+
+	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EVMaxVoltage,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVMaxVoltage");
+
+	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EVMaxCurrent,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVMaxCurrent");
+
+	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EVMinCurrent,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVMinCurrent");
+
+	return;
+}
+
+static void
 dissect_v2gdin_dc_evstatus(const struct dinDC_EVStatusType *dc_evstatus,
 			   tvbuff_t *tvb,
 			   proto_tree *tree,
@@ -1940,6 +2153,83 @@ dissect_v2gdin_dc_evstatus(const struct dinDC_EVStatusType *dc_evstatus,
 }
 
 static void
+dissect_v2gdin_dc_evchargeparameter(
+	const struct dinDC_EVChargeParameterType *dc_evchargeparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evstatus(&dc_evchargeparameter->DC_EVStatus,
+		tvb, subtree, ett_v2gdin_struct_dinDC_EVStatusType,
+		"DC_EVStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evchargeparameter->EVMaximumVoltageLimit,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVMaximumVoltageLimit");
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evchargeparameter->EVMaximumCurrentLimit,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVMaximumCurrentLimit");
+
+	if (dc_evchargeparameter->EVMaximumPowerLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&dc_evchargeparameter->EVMaximumPowerLimit,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVMaximumPowertLimit");
+	}
+
+	if (dc_evchargeparameter->EVEnergyCapacity_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&dc_evchargeparameter->EVEnergyCapacity,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVEnergyCapacity");
+	}
+
+	if (dc_evchargeparameter->EVEnergyRequest_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&dc_evchargeparameter->EVEnergyRequest,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVEnergyRequest");
+	}
+
+	if (dc_evchargeparameter->FullSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinDC_EVChargeParameterType_FullSOC,
+			tvb, 0, 0, dc_evchargeparameter->FullSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dc_evchargeparameter->BulkSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinDC_EVChargeParameterType_BulkSOC,
+			tvb, 0, 0, dc_evchargeparameter->BulkSOC);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_evsestatus(const struct dinEVSEStatusType *evsestatus,
+			  tvbuff_t *tvb,
+			  proto_tree *tree,
+			  gint idx,
+			  const char *subtree_name)
+{
+	/* no content */
+	return;
+}
+
+static void
 dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
 			     tvbuff_t *tvb,
 			     proto_tree *tree,
@@ -1978,25 +2268,681 @@ dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
 };
 
 static void
+dissect_v2gdin_evsechargeparameter(
+	const struct dinEVSEChargeParameterType *evsechargeparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_ac_evsestatus(const struct dinAC_EVSEStatusType *ac_evsestatus,
+			     tvbuff_t *tvb,
+			     proto_tree *tree,
+			     gint idx,
+			     const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinAC_EVSEStatusType_PowerSwitchClosed,
+		tvb, 0, 0, ac_evsestatus->PowerSwitchClosed);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinAC_EVSEStatusType_RCD,
+		tvb, 0, 0, ac_evsestatus->RCD);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinAC_EVSEStatusType_NotificationMaxDelay,
+		tvb, 0, 0, ac_evsestatus->NotificationMaxDelay);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinAC_EVSEStatusType_EVSENotification,
+		tvb, 0, 0, ac_evsestatus->EVSENotification);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_ac_evsechargeparameter(
+	const struct dinAC_EVSEChargeParameterType *ac_evsechargeparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_v2gdin_ac_evsestatus(&ac_evsechargeparameter->AC_EVSEStatus,
+		tvb, subtree, ett_v2gdin_struct_dinAC_EVSEStatusType,
+		"AC_EVSEStatus");
+
+	dissect_v2gdin_physicalvalue(&ac_evsechargeparameter->EVSEMaxVoltage,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMaxVoltage");
+
+	dissect_v2gdin_physicalvalue(&ac_evsechargeparameter->EVSEMaxCurrent,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMaxCurrent");
+
+	dissect_v2gdin_physicalvalue(&ac_evsechargeparameter->EVSEMaxCurrent,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMinCurrent");
+
+	return;
+}
+
+static void
+dissect_v2gdin_dc_evsechargeparameter(
+	const struct dinDC_EVSEChargeParameterType *dc_evsechargeparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evsestatus(&dc_evsechargeparameter->DC_EVSEStatus,
+		tvb, subtree, ett_v2gdin_struct_dinDC_EVSEStatusType,
+		"DC_EVSEStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evsechargeparameter->EVSEMaximumVoltageLimit,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMaximumVoltageLimit");
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evsechargeparameter->EVSEMinimumVoltageLimit,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMinimumVoltageLimit");
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evsechargeparameter->EVSEMaximumCurrentLimit,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMaximumCurrentLimit");
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evsechargeparameter->EVSEMinimumCurrentLimit,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEMinimumCurrentLimit");
+
+	if (dc_evsechargeparameter->EVSEMaximumPowerLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&dc_evsechargeparameter->EVSEMaximumPowerLimit,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEMaximumPowerLimit");
+	}
+
+	if (dc_evsechargeparameter->EVSECurrentRegulationTolerance_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&dc_evsechargeparameter->EVSECurrentRegulationTolerance,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSECurrentRegulationTolerance");
+	}
+
+	dissect_v2gdin_physicalvalue(
+		&dc_evsechargeparameter->EVSEPeakCurrentRipple,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEPeakCurrentRipple");
+
+	if (dc_evsechargeparameter->EVSEEnergyToBeDelivered_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&dc_evsechargeparameter->EVSEEnergyToBeDelivered,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEEnergyToBeDelivered");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_interval(const struct dinIntervalType *interval,
+			tvbuff_t *tvb,
+			proto_tree *tree,
+			gint idx,
+			const char *subtree_name)
+{
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_relativetimeinterval(
+	const struct dinRelativeTimeIntervalType *relativetimeinterval,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinRelativeTimeIntervalType_start,
+		tvb, 0, 0, relativetimeinterval->start);
+	proto_item_set_generated(it);
+
+	if (relativetimeinterval->duration_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_v2gdin_struct_dinRelativeTimeIntervalType_duration,
+			tvb, 0, 0, relativetimeinterval->duration);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_pmaxscheduleentry(
+	const struct dinPMaxScheduleEntryType *pmaxscheduleentry,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	if (pmaxscheduleentry->TimeInterval_isUsed) {
+		dissect_v2gdin_interval(&pmaxscheduleentry->TimeInterval,
+			tvb, subtree, ett_v2gdin_struct_dinIntervalType,
+			"TimeInterval");
+	}
+
+	if (pmaxscheduleentry->RelativeTimeInterval_isUsed) {
+		dissect_v2gdin_relativetimeinterval(
+			&pmaxscheduleentry->RelativeTimeInterval,
+			tvb, subtree,
+			ett_v2gdin_struct_dinRelativeTimeIntervalType,
+			"RelativeTimeInterval");
+	}
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinPMaxScheduleEntryType_PMax,
+		tvb, 0, 0, pmaxscheduleentry->PMax);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_pmaxschedule(const struct dinPMaxScheduleType *pmaxschedule,
+			    tvbuff_t *tvb,
+			    proto_tree *tree,
+			    gint idx,
+			    const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *pmaxscheduleentry_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinPMaxScheduleType_PMaxScheduleID,
+		tvb, 0, 0, pmaxschedule->PMaxScheduleID);
+	proto_item_set_generated(it);
+
+	pmaxscheduleentry_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "PMaxScheduleEntry");
+	for (i = 0; i < pmaxschedule->PMaxScheduleEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gdin_pmaxscheduleentry(
+			&pmaxschedule->PMaxScheduleEntry.array[i],
+			tvb, pmaxscheduleentry_tree,
+			ett_v2gdin_struct_dinPMaxScheduleEntryType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_cost(const struct dinCostType *cost,
+		    tvbuff_t *tvb,
+		    proto_tree *tree,
+		    gint idx,
+		    const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCostType_costKind,
+		tvb, 0, 0, cost->costKind);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCostType_amount,
+		tvb, 0, 0, cost->amount);
+	proto_item_set_generated(it);
+
+	if (cost->amountMultiplier_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinCostType_amountMultiplier,
+			tvb, 0, 0, cost->amount);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+
+static void
+dissect_v2gdin_consumptioncost(
+	const struct dinConsumptionCostType *consumptioncost,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *cost_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinConsumptionCostType_startValue,
+		tvb, 0, 0, consumptioncost->startValue);
+	proto_item_set_generated(it);
+
+	cost_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "Cost");
+	for (i = 0; i < consumptioncost->Cost.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gdin_cost(
+			&consumptioncost->Cost.array[i], tvb, cost_tree,
+			ett_v2gdin_struct_dinCostType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_salestariffentry(
+	const struct dinSalesTariffEntryType *salestariffentry,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *consumptioncost_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	if (salestariffentry->TimeInterval_isUsed) {
+		dissect_v2gdin_interval(&salestariffentry->TimeInterval,
+			tvb, subtree, ett_v2gdin_struct_dinIntervalType,
+			"TimeInterval");
+	}
+
+	if (salestariffentry->RelativeTimeInterval_isUsed) {
+		dissect_v2gdin_relativetimeinterval(
+			&salestariffentry->RelativeTimeInterval,
+			tvb, subtree,
+			ett_v2gdin_struct_dinRelativeTimeIntervalType,
+			"RelativeTimeInterval");
+	}
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinSalesTariffEntryType_EPriceLevel,
+		tvb, 0, 0, salestariffentry->EPriceLevel);
+	proto_item_set_generated(it);
+
+	consumptioncost_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "ConsumptionCost");
+	for (i = 0; i < salestariffentry->ConsumptionCost.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gdin_consumptioncost(
+			&salestariffentry->ConsumptionCost.array[i], tvb,
+			consumptioncost_tree,
+			ett_v2gdin_struct_dinConsumptionCostType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
+			   tvbuff_t *tvb,
+			   proto_tree *tree,
+			   gint idx,
+			   const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *salestariffentry_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinSalesTariffType_Id,
+		tvb,
+		salestariff->Id.characters,
+		salestariff->Id.charactersLen,
+		sizeof(salestariff->Id.characters));
+
+	if (salestariff->SalesTariffDescription_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_dinSalesTariffType_SalesTariffDescription,
+			tvb,
+			salestariff->SalesTariffDescription.characters,
+			salestariff->SalesTariffDescription.charactersLen,
+			sizeof(salestariff->SalesTariffDescription.characters));
+	}
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinSalesTariffType_NumEPriceLevels,
+		tvb, 0, 0, salestariff->NumEPriceLevels);
+	proto_item_set_generated(it);
+
+	salestariffentry_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "SalesTariffEntry");
+	for (i = 0; i < salestariff->SalesTariffEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gdin_salestariffentry(
+			&salestariff->SalesTariffEntry.array[i], tvb,
+			salestariffentry_tree,
+			ett_v2gdin_struct_dinSalesTariffEntryType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_saschedules(const struct dinSASchedulesType *saschedules,
+			   tvbuff_t *tvb,
+			   proto_tree *tree,
+			   gint idx,
+			   const char *subtree_name)
+{
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_sascheduletuple(
+	const struct dinSAScheduleTupleType *sascheduletuple,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinSAScheduleTupleType_SAScheduleTupleID,
+		tvb, 0, 0, sascheduletuple->SAScheduleTupleID);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_pmaxschedule(&sascheduletuple->PMaxSchedule,
+		tvb, subtree, ett_v2gdin_struct_dinPMaxScheduleType,
+		"PMaxSchedule");
+
+	if (sascheduletuple->SalesTariff_isUsed) {
+		dissect_v2gdin_salestariff(&sascheduletuple->SalesTariff,
+			tvb, subtree, ett_v2gdin_struct_dinSalesTariffType,
+			"SalesTariff");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_saschedulelist(
+	const struct dinSAScheduleListType *saschedulelist,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *sascheduletuple_tree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	sascheduletuple_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "SAScheduleTuple");
+	for (i = 0; i < saschedulelist->SAScheduleTuple.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gdin_sascheduletuple(
+			&saschedulelist->SAScheduleTuple.array[i], tvb,
+			sascheduletuple_tree,
+			ett_v2gdin_struct_dinSAScheduleTupleType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_profileentry(
+	const struct dinProfileEntryType *profileentry,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryStart,
+		tvb, 0, 0, profileentry->ChargingProfileEntryStart);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryMaxPower,
+		tvb, 0, 0, profileentry->ChargingProfileEntryMaxPower);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_chargingprofile(
+	const struct dinChargingProfileType *chargingprofile,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *profileentry_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinChargingProfileType_SAScheduleTupleID,
+		tvb, 0, 0, chargingprofile->SAScheduleTupleID);
+	proto_item_set_generated(it);
+
+	profileentry_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gdin_array, NULL, "ProfileEntry");
+	for (i = 0; i < chargingprofile->ProfileEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gdin_profileentry(
+			&chargingprofile->ProfileEntry.array[i], tvb,
+			profileentry_tree,
+			ett_v2gdin_struct_dinProfileEntryType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
+			 tvbuff_t *tvb,
+			 proto_tree *tree,
+			 gint idx,
+			 const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinMeterInfoType_MeterID,
+		tvb,
+		meterinfo->MeterID.characters,
+		meterinfo->MeterID.charactersLen,
+		sizeof(meterinfo->MeterID.characters));
+
+	if (meterinfo->MeterReading_isUsed) {
+		dissect_v2gdin_physicalvalue(&meterinfo->MeterReading,
+			tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+			"MeterReading");
+	}
+
+	if (meterinfo->SigMeterReading_isUsed) {
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_dinMeterInfoType_SigMeterReading,
+			tvb,
+			meterinfo->SigMeterReading.bytes,
+			meterinfo->SigMeterReading.bytesLen,
+			sizeof(meterinfo->SigMeterReading.bytes));
+	}
+
+	if (meterinfo->MeterStatus_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinMeterInfoType_MeterStatus,
+			tvb, 0, 0, meterinfo->MeterStatus);
+		proto_item_set_generated(it);
+	}
+
+	if (meterinfo->TMeter_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinMeterInfoType_TMeter,
+			tvb, 0, 0, meterinfo->TMeter);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_evpowerdeliveryparameter(
+	const struct dinEVPowerDeliveryParameterType *evpowerdeliveryparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_dc_evpowerdeliveryparameter(
+	const struct dinDC_EVPowerDeliveryParameterType *dc_evpowerdeliveryparameter,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evstatus(&dc_evpowerdeliveryparameter->DC_EVStatus,
+		tvb, subtree, ett_v2gdin_struct_dinDC_EVStatusType,
+		"DC_EVStatus");
+
+	if (dc_evpowerdeliveryparameter->BulkChargingComplete_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_BulkChargingComplete,
+			tvb, 0, 0,
+			dc_evpowerdeliveryparameter->BulkChargingComplete);
+		proto_item_set_generated(it);
+	}
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_ChargingComplete,
+		tvb, 0, 0,
+		dc_evpowerdeliveryparameter->ChargingComplete);
+		proto_item_set_generated(it);
+
+	return;
+}
+
+
+static void
 dissect_v2gdin_header(tvbuff_t *tvb, packet_info *pinfo,
 		      proto_tree *v2gdin_tree, struct dinMessageHeaderType *hdr)
 {
-	unsigned int i;
 	proto_tree *hdr_tree;
-	proto_item *it;
 
 	hdr_tree = proto_tree_add_subtree(v2gdin_tree,
 		tvb, 0, 0, ett_v2gdin_header, NULL, "Header");
 
-	char sessionid[2*dinMessageHeaderType_SessionID_BYTES_SIZE + 1];
-	for (i = 0; i < hdr->SessionID.bytesLen; i++) {
-		snprintf(&sessionid[2*i], sizeof(sessionid) - 2*i,
-			"%02X", hdr->SessionID.bytes[i]);
-	}
-	sessionid[2*i] = '\0';
-	it = proto_tree_add_string(hdr_tree,
-		hf_v2gdin_header_SessionID, tvb, 0, 0, sessionid);
-	proto_item_set_generated(it);
+	exi_add_bytes(hdr_tree, hf_v2gdin_header_SessionID, tvb,
+		hdr->SessionID.bytes,
+		hdr->SessionID.bytesLen,
+		sizeof(hdr->SessionID.bytes));
 
 	if (hdr->Notification_isUsed) {
 		dissect_v2gdin_notification(
@@ -2297,102 +3243,577 @@ dissect_v2gdin_body(tvbuff_t *tvb, packet_info *pinfo,
 	}
 
 	if (body->ChargeParameterDiscoveryReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_chargeparameterdiscoveryreq,
+		proto_tree *req_tree;
+		proto_item *it;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_ChargeParameterDiscoveryReq,
 			NULL, "ChargeParameterDiscoveryReq");
+
+		it = proto_tree_add_uint(req_tree,
+			hf_v2gdin_body_ChargeParameterDiscoveryReq_EVRequestedEnergyTransferType,
+			tvb, 0, 0,
+			body->ChargeParameterDiscoveryReq.EVRequestedEnergyTransferType);
+		proto_item_set_generated(it);
+
+		if (body->ChargeParameterDiscoveryReq.EVChargeParameter_isUsed) {
+
+			dissect_v2gdin_evchargeparameter(
+				&body->ChargeParameterDiscoveryReq.EVChargeParameter,
+				tvb, req_tree,
+				ett_v2gdin_struct_dinEVChargeParameterType,
+				"EVChargeParameter");
+		}
+
+		if (body->ChargeParameterDiscoveryReq.AC_EVChargeParameter_isUsed) {
+			dissect_v2gdin_ac_evchargeparameter(
+				&body->ChargeParameterDiscoveryReq.AC_EVChargeParameter,
+				tvb, req_tree,
+				ett_v2gdin_struct_dinAC_EVChargeParameterType,
+				"AC_EVChargeParameter");
+		}
+
+		if (body->ChargeParameterDiscoveryReq.DC_EVChargeParameter_isUsed) {
+			dissect_v2gdin_dc_evchargeparameter(
+				&body->ChargeParameterDiscoveryReq.DC_EVChargeParameter,
+				tvb, req_tree,
+				ett_v2gdin_struct_dinDC_EVChargeParameterType,
+				"DC_EVChargeParameter");
+		}
 	}
 	if (body->ChargeParameterDiscoveryRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_chargeparameterdiscoveryres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_ChargeParameterDiscoveryRes,
 			NULL, "ChargeParameterDiscoveryRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_ChargeParameterDiscoveryRes_ResponseCode,
+			tvb, 0, 0,
+			body->ChargeParameterDiscoveryRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_ChargeParameterDiscoveryRes_EVSEProcessing,
+			tvb, 0, 0,
+			body->ChargeParameterDiscoveryRes.EVSEProcessing);
+		proto_item_set_generated(it);
+
+		if (body->ChargeParameterDiscoveryRes.SASchedules_isUsed) {
+			dissect_v2gdin_saschedules(
+				&body->ChargeParameterDiscoveryRes.SASchedules,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinSASchedulesType,
+				"SASchedules");
+		}
+		if (body->ChargeParameterDiscoveryRes.SAScheduleList_isUsed) {
+			dissect_v2gdin_saschedulelist(
+				&body->ChargeParameterDiscoveryRes.SAScheduleList,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinSAScheduleListType,
+				"SAScheduleList");
+		}
+		if (body->ChargeParameterDiscoveryRes.EVSEChargeParameter_isUsed) {
+			dissect_v2gdin_evsechargeparameter(&body->ChargeParameterDiscoveryRes.EVSEChargeParameter,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinEVSEChargeParameterType,
+				"EVSEChargeParameter");
+		}
+		if (body->ChargeParameterDiscoveryRes.AC_EVSEChargeParameter_isUsed) {
+			dissect_v2gdin_ac_evsechargeparameter(
+				&body->ChargeParameterDiscoveryRes.AC_EVSEChargeParameter,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinAC_EVSEChargeParameterType,
+				"AC_EVSEChargeParameter");
+		}
+		if (body->ChargeParameterDiscoveryRes.DC_EVSEChargeParameter_isUsed) {
+			dissect_v2gdin_dc_evsechargeparameter(
+				&body->ChargeParameterDiscoveryRes.DC_EVSEChargeParameter,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinDC_EVSEChargeParameterType,
+				"DC_EVSEChargeParameter");
+		}
 	}
 
 	if (body->PowerDeliveryReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_powerdeliveryreq,
+		proto_tree *req_tree;
+		proto_item *it;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_PowerDeliveryReq,
 			NULL, "PowerDeliveryReq");
+
+		it = proto_tree_add_int(req_tree,
+			hf_v2gdin_body_PowerDeliveryReq_ReadyToChargeState,
+			tvb, 0, 0, body->PowerDeliveryReq.ReadyToChargeState);
+		proto_item_set_generated(it);
+
+		if (body->PowerDeliveryReq.ChargingProfile_isUsed) {
+			dissect_v2gdin_chargingprofile(
+				&body->PowerDeliveryReq.ChargingProfile,
+				tvb, req_tree,
+				ett_v2gdin_struct_dinChargingProfileType,
+				"ChargingProfile");
+		}
+		if (body->PowerDeliveryReq.EVPowerDeliveryParameter_isUsed) {
+			dissect_v2gdin_evpowerdeliveryparameter(
+				&body->PowerDeliveryReq.EVPowerDeliveryParameter,
+				tvb, req_tree,
+				ett_v2gdin_struct_dinEVPowerDeliveryParameterType,
+				"EVPowerDeliveryParameter");
+		}
+		if (body->PowerDeliveryReq.DC_EVPowerDeliveryParameter_isUsed) {
+			dissect_v2gdin_dc_evpowerdeliveryparameter(
+				&body->PowerDeliveryReq.DC_EVPowerDeliveryParameter,
+				tvb, req_tree,
+				ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
+				"DC_EVPowerDeliveryParameter");
+		}
 	}
 	if (body->PowerDeliveryRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_powerdeliveryres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_PowerDeliveryRes,
 			NULL, "PowerDeliveryRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_PowerDeliveryRes_ResponseCode,
+			tvb, 0, 0,
+			body->PowerDeliveryRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		if (body->PowerDeliveryRes.EVSEStatus_isUsed) {
+			dissect_v2gdin_evsestatus(
+				&body->PowerDeliveryRes.EVSEStatus,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinEVSEStatusType,
+				"EVSEStatus");
+		}
+		if (body->PowerDeliveryRes.AC_EVSEStatus_isUsed) {
+			dissect_v2gdin_ac_evsestatus(
+				&body->PowerDeliveryRes.AC_EVSEStatus,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinAC_EVSEStatusType,
+				"AC_EVSEStatus");
+		}
+		if (body->PowerDeliveryRes.DC_EVSEStatus_isUsed) {
+			dissect_v2gdin_dc_evsestatus(
+				&body->PowerDeliveryRes.DC_EVSEStatus,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinDC_EVSEStatusType,
+				"DC_EVSEStatus");
+		}
 	}
 
 	if (body->ChargingStatusReq_isUsed) {
 		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_chargingstatusreq,
+			tvb, 0, 0, ett_v2gdin_body_ChargingStatusReq,
 			NULL, "ChargingStatusReq");
+
+		/* no content */
 	}
 	if (body->ChargingStatusRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_chargingstatusres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_ChargingStatusRes,
 			NULL, "ChargingStatusRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_ChargingStatusRes_ResponseCode,
+			tvb, 0, 0,
+			body->ChargingStatusRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		exi_add_bytes(res_tree,
+			hf_v2gdin_body_ChargingStatusRes_EVSEID,
+			tvb,
+			body->ChargingStatusRes.EVSEID.bytes,
+			body->ChargingStatusRes.EVSEID.bytesLen,
+			sizeof(body->ChargingStatusRes.EVSEID.bytes));
+
+		it = proto_tree_add_int(res_tree,
+			hf_v2gdin_body_ChargingStatusRes_SAScheduleTupleID,
+			tvb, 0, 0,
+			body->ChargingStatusRes.SAScheduleTupleID);
+		proto_item_set_generated(it);
+
+		if (body->ChargingStatusRes.EVSEMaxCurrent_isUsed) {
+			dissect_v2gdin_physicalvalue(
+				&body->ChargingStatusRes.EVSEMaxCurrent,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinPhysicalValueType,
+				"EVSEMaxCurrent");
+		}
+		if (body->ChargingStatusRes.MeterInfo_isUsed) {
+			dissect_v2gdin_meterinfo(
+				&body->ChargingStatusRes.MeterInfo,
+				tvb, res_tree,
+				ett_v2gdin_struct_dinMeterInfoType,
+				"MeterInfo");
+		}
+
+		it = proto_tree_add_int(res_tree,
+			hf_v2gdin_body_ChargingStatusRes_ReceiptRequired,
+			tvb, 0, 0,
+			body->ChargingStatusRes.ReceiptRequired);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_ac_evsestatus(
+			&body->ChargingStatusRes.AC_EVSEStatus,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinAC_EVSEStatusType,
+			"AC_EVSEStatus");
 	}
 
 	if (body->MeteringReceiptReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_meteringreceiptreq,
+		proto_tree *req_tree;
+		proto_item *it;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_MeteringReceiptReq,
 			NULL, "MeteringReceiptReq");
+
+		if (body->MeteringReceiptReq.Id_isUsed) {
+			exi_add_characters(req_tree,
+				hf_v2gdin_body_MeteringReceiptReq_Id,
+				tvb,
+				body->MeteringReceiptReq.Id.characters,
+				body->MeteringReceiptReq.Id.charactersLen,
+				sizeof(body->MeteringReceiptReq.Id.characters));
+		}
+
+		exi_add_bytes(req_tree,
+			hf_v2gdin_body_MeteringReceiptReq_SessionID,
+			tvb,
+			body->MeteringReceiptReq.SessionID.bytes,
+			body->MeteringReceiptReq.SessionID.bytesLen,
+			sizeof(body->MeteringReceiptReq.SessionID.bytes));
+
+		if (body->MeteringReceiptReq.SAScheduleTupleID_isUsed) {
+			it = proto_tree_add_int(req_tree,
+				hf_v2gdin_body_MeteringReceiptReq_SAScheduleTupleID,
+				tvb, 0, 0,
+				body->MeteringReceiptReq.SAScheduleTupleID);
+			proto_item_set_generated(it);
+		}
+
+		dissect_v2gdin_meterinfo(
+			&body->MeteringReceiptReq.MeterInfo,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinMeterInfoType,
+			"MeterInfo");
 	}
 	if (body->MeteringReceiptRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_meteringreceiptres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_MeteringReceiptRes,
 			NULL, "MeteringReceiptRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_MeteringReceiptRes_ResponseCode,
+			tvb, 0, 0,
+			body->MeteringReceiptRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_ac_evsestatus(
+			&body->MeteringReceiptRes.AC_EVSEStatus,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinAC_EVSEStatusType,
+			"AC_EVSEStatus");
 	}
 
 	if (body->SessionStopReq_isUsed) {
 		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_sessionstopreq,
+			tvb, 0, 0, ett_v2gdin_body_SessionStopReq,
 			NULL, "SessionStopReq");
+
+		/* no content */
 	}
 	if (body->SessionStopRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_sessionstopres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_SessionStopRes,
 			NULL, "SessionStopRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_SessionStopRes_ResponseCode,
+			tvb, 0, 0, body->SessionStopRes.ResponseCode);
+		proto_item_set_generated(it);
 	}
 
 	if (body->CertificateUpdateReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_certificateupdatereq,
+		proto_tree *req_tree;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_CertificateUpdateReq,
 			NULL, "CertificateUpdateReq");
+
+		exi_add_characters(req_tree,
+			hf_v2gdin_body_CertificateUpdateReq_Id,
+			tvb,
+			body->CertificateUpdateReq.Id.characters,
+			body->CertificateUpdateReq.Id.charactersLen,
+			sizeof(body->CertificateUpdateReq.Id.characters));
+
+		dissect_v2gdin_certificatechain(
+			&body->CertificateUpdateReq.ContractSignatureCertChain,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinCertificateChainType,
+			"ContractSignatureCertChain");
+
+		exi_add_characters(req_tree,
+			hf_v2gdin_body_CertificateUpdateReq_ContractID,
+			tvb,
+			body->CertificateUpdateReq.ContractID.characters,
+			body->CertificateUpdateReq.ContractID.charactersLen,
+			sizeof(body->CertificateUpdateReq.ContractID.characters));
+
+		dissect_v2gdin_listofrootcertificateids(
+			&body->CertificateUpdateReq.ListOfRootCertificateIDs,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinListOfRootCertificateIDsType,
+			"ListOfRootCertificateIDs");
+
+		exi_add_bytes(req_tree,
+			hf_v2gdin_body_CertificateUpdateReq_DHParams,
+			tvb,
+			body->CertificateUpdateReq.DHParams.bytes,
+			body->CertificateUpdateReq.DHParams.bytesLen,
+			sizeof(body->CertificateUpdateReq.DHParams.bytes));
 	}
 	if (body->CertificateUpdateRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_certificateupdateres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_CertificateUpdateRes,
 			NULL, "CertificateUpdateRes");
+
+		exi_add_characters(res_tree,
+			hf_v2gdin_body_CertificateUpdateRes_Id,
+			tvb,
+			body->CertificateUpdateRes.Id.characters,
+			body->CertificateUpdateRes.Id.charactersLen,
+			sizeof(body->CertificateUpdateRes.Id.characters));
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_CertificateUpdateRes_ResponseCode,
+			tvb, 0, 0, body->CertificateUpdateRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_certificatechain(
+			&body->CertificateUpdateRes.ContractSignatureCertChain,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinCertificateChainType,
+			"ContractSignatureCertChain");
+
+		exi_add_bytes(res_tree,
+			hf_v2gdin_body_CertificateUpdateRes_ContractSignatureEncryptedPrivateKey,
+			tvb,
+			body->CertificateUpdateRes.ContractSignatureEncryptedPrivateKey.bytes,
+			body->CertificateUpdateRes.ContractSignatureEncryptedPrivateKey.bytesLen,
+			sizeof(body->CertificateUpdateRes.ContractSignatureEncryptedPrivateKey.bytes));
+
+		exi_add_bytes(res_tree,
+			hf_v2gdin_body_CertificateUpdateRes_DHParams,
+			tvb,
+			body->CertificateUpdateRes.DHParams.bytes,
+			body->CertificateUpdateRes.DHParams.bytesLen,
+			sizeof(body->CertificateUpdateRes.DHParams.bytes));
+
+		exi_add_characters(res_tree,
+			hf_v2gdin_body_CertificateUpdateRes_ContractID,
+			tvb,
+			body->CertificateUpdateRes.ContractID.characters,
+			body->CertificateUpdateRes.ContractID.charactersLen,
+			sizeof(body->CertificateUpdateRes.ContractID.characters));
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_CertificateUpdateRes_RetryCounter,
+			tvb, 0, 0, body->CertificateUpdateRes.RetryCounter);
+		proto_item_set_generated(it);
 	}
 
 	if (body->CertificateInstallationReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_certificateinstallationreq,
+		proto_tree *req_tree;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_CertificateInstallationReq,
 			NULL, "CertificateInstallationReq");
+
+		if (body->CertificateInstallationReq.Id_isUsed) {
+			exi_add_characters(req_tree,
+				hf_v2gdin_body_CertificateInstallationReq_Id,
+				tvb,
+				body->CertificateInstallationRes.Id.characters,
+				body->CertificateInstallationRes.Id.charactersLen,
+				sizeof(body->CertificateInstallationRes.Id.characters));
+		}
+
+		exi_add_bytes(req_tree,
+			hf_v2gdin_body_CertificateInstallationReq_OEMProvisioningCert,
+			tvb,
+			body->CertificateInstallationReq.OEMProvisioningCert.bytes,
+			body->CertificateInstallationReq.OEMProvisioningCert.bytesLen,
+			sizeof(body->CertificateInstallationReq.OEMProvisioningCert.bytes));
+		dissect_v2gdin_listofrootcertificateids(
+			&body->CertificateInstallationReq.ListOfRootCertificateIDs,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinListOfRootCertificateIDsType,
+			"ListOfRootCertificateIDs");
+
+		exi_add_bytes(req_tree,
+			hf_v2gdin_body_CertificateInstallationReq_DHParams,
+			tvb,
+			body->CertificateInstallationReq.DHParams.bytes,
+			body->CertificateInstallationReq.DHParams.bytesLen,
+			sizeof(body->CertificateInstallationReq.DHParams.bytes));
 	}
 	if (body->CertificateInstallationRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_certificateinstallationres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_CertificateInstallationRes,
 			NULL, "CertificateInstallationRes");
+
+		exi_add_characters(res_tree,
+			hf_v2gdin_body_CertificateInstallationRes_Id,
+			tvb,
+			body->CertificateInstallationRes.Id.characters,
+			body->CertificateInstallationRes.Id.charactersLen,
+			sizeof(body->CertificateInstallationRes.Id.characters));
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_CertificateInstallationRes_ResponseCode,
+			tvb, 0, 0, body->CertificateInstallationRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_certificatechain(
+			&body->CertificateInstallationRes.ContractSignatureCertChain,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinCertificateChainType,
+			"ContractSignatureCertChain");
+
+		exi_add_bytes(res_tree,
+			hf_v2gdin_body_CertificateInstallationRes_ContractSignatureEncryptedPrivateKey,
+			tvb,
+			body->CertificateInstallationRes.ContractSignatureEncryptedPrivateKey.bytes,
+			body->CertificateInstallationRes.ContractSignatureEncryptedPrivateKey.bytesLen,
+			sizeof(body->CertificateInstallationRes.ContractSignatureEncryptedPrivateKey.bytes));
+
+		exi_add_bytes(res_tree,
+			hf_v2gdin_body_CertificateInstallationRes_DHParams,
+			tvb,
+			body->CertificateInstallationRes.DHParams.bytes,
+			body->CertificateInstallationRes.DHParams.bytesLen,
+			sizeof(body->CertificateInstallationRes.DHParams.bytes));
+
+		exi_add_characters(res_tree,
+			hf_v2gdin_body_CertificateInstallationRes_ContractID,
+			tvb,
+			body->CertificateInstallationRes.ContractID.characters,
+			body->CertificateInstallationRes.ContractID.charactersLen,
+			sizeof(body->CertificateInstallationRes.ContractID.characters));
 	}
 
 	if (body->CableCheckReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_cablecheckreq,
+		proto_tree *req_tree;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_CableCheckReq,
 			NULL, "CableCheckReq");
+
+		dissect_v2gdin_dc_evstatus(
+			&body->CableCheckReq.DC_EVStatus,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinDC_EVStatusType,
+			"DC_EVStatus");
 	}
 	if (body->CableCheckRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_cablecheckres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_CableCheckRes,
 			NULL, "CableCheckRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_CableCheckRes_ResponseCode,
+			tvb, 0, 0, body->CableCheckRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_dc_evsestatus(
+			&body->CableCheckRes.DC_EVSEStatus,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinDC_EVSEStatusType,
+			"DC_EVSEStatus");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_CableCheckRes_EVSEProcessing,
+			tvb, 0, 0, body->CableCheckRes.EVSEProcessing);
+		proto_item_set_generated(it);
 	}
 
 	if (body->PreChargeReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_prechargereq,
+		proto_tree *req_tree;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_PreChargeReq,
 			NULL, "PreChargeReq");
+
+		dissect_v2gdin_dc_evstatus(
+			&body->PreChargeReq.DC_EVStatus,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinDC_EVStatusType,
+			"DC_EVStatus");
+
+		dissect_v2gdin_physicalvalue(
+			&body->PreChargeReq.EVTargetVoltage,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVTargetVoltage");
+
+		dissect_v2gdin_physicalvalue(
+			&body->PreChargeReq.EVTargetCurrent,
+			tvb, req_tree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVTargetCurrent");
 	}
 	if (body->PreChargeRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_prechargeres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_PreChargeRes,
 			NULL, "PreChargeRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_PreChargeRes_ResponseCode,
+			tvb, 0, 0, body->PreChargeRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_dc_evsestatus(
+			&body->PreChargeRes.DC_EVSEStatus,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinDC_EVSEStatusType,
+			"DC_EVSEStatus");
+
+		dissect_v2gdin_physicalvalue(
+			&body->PreChargeRes.EVSEPresentVoltage,
+			tvb, res_tree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEPresentVoltage");
 	}
 
 	if (body->CurrentDemandReq_isUsed) {
@@ -2543,14 +3964,39 @@ dissect_v2gdin_body(tvbuff_t *tvb, packet_info *pinfo,
 	}
 
 	if (body->WeldingDetectionReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_weldingdetectionreq,
+		proto_tree *req_tree;
+
+		req_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_WeldingDetectionReq,
 			NULL, "WeldingDetectionReq");
+
+		dissect_v2gdin_dc_evstatus(
+			&body->WeldingDetectionReq.DC_EVStatus,
+			tvb, req_tree, ett_v2gdin_struct_dinDC_EVStatusType,
+			"DC_EVStatus");
 	}
 	if (body->WeldingDetectionRes_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_weldingdetectionres,
+		proto_tree *res_tree;
+		proto_item *it;
+
+		res_tree = proto_tree_add_subtree(body_tree,
+			tvb, 0, 0, ett_v2gdin_body_WeldingDetectionRes,
 			NULL, "WeldingDetectionRes");
+
+		it = proto_tree_add_uint(res_tree,
+			hf_v2gdin_body_WeldingDetectionRes_ResponseCode,
+			tvb, 0, 0, body->WeldingDetectionRes.ResponseCode);
+		proto_item_set_generated(it);
+
+		dissect_v2gdin_dc_evsestatus(
+			&body->WeldingDetectionRes.DC_EVSEStatus,
+			tvb, res_tree, ett_v2gdin_struct_dinDC_EVSEStatusType,
+			"DC_EVSEStatus");
+
+		dissect_v2gdin_physicalvalue(
+			&body->WeldingDetectionRes.EVSEPresentVoltage,
+			tvb, res_tree, ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEPresentVoltage");
 	}
 
 	return;
@@ -2890,7 +4336,8 @@ proto_register_v2gdin(void)
 		{ &hf_v2gdin_struct_dinServiceChargeType_EnergyTransferType,
 		  { "EnergyTransferType",
 		    "v2gdin.struct.servicechargee.energytransfertype",
-		    FT_UINT32, BASE_DEC, VALS(v2gdin_energy_transfer_type_names),
+		    FT_UINT32, BASE_DEC,
+		    VALS(v2gdin_evse_supported_energy_transfer_names),
 		    0x0, NULL, HFILL }
 		},
 
@@ -2959,6 +4406,42 @@ proto_register_v2gdin(void)
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
+		/* struct dinListOfRootCertificateIDsType */
+		{ &hf_v2gdin_struct_dinListOfRootCertificateIDsType_RootCertificateID,
+		  { "RootCertificateID",
+		    "v2gdin.struct.listofrootcertificateids.rootcertificateid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinAC_EVChargeParameterType */
+		{ &hf_v2gdin_struct_dinAC_EVChargeParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2gdin.struct.ac_evchargeparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinAC_EVSEStatusType */
+		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_PowerSwitchClosed,
+		  { "PowerSwitchClosed",
+		    "v2gdin.struct.ac_evsestatus.powerswitchclosed",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_RCD,
+		  { "RCD", "v2gdin.struct.ac_evsestatus.rcd",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_NotificationMaxDelay,
+		  { "NotificationMaxDelay",
+		    "v2gdin.struct.ac_evsestatus.notificationmaxdelay",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_EVSENotification,
+		  { "EVSENotification",
+		    "v2gdinstruct.ac_evsestatus.evsenotification",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_evsenotification_names),
+		    0x0, NULL, HFILL }
+		},
+
 		/* struct struct dinDC_EVStatusType */
 		{ &hf_v2gdin_struct_dinDC_EVStatusType_EVReady,
 		  { "EVReady",
@@ -2987,6 +4470,16 @@ proto_register_v2gdin(void)
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
+		/* struct dinDC_EVChargeParameterType */
+		{ &hf_v2gdin_struct_dinDC_EVChargeParameterType_FullSOC,
+		  { "FullSOC", "v2gdin.struct.dc_evchargeparameter.fullsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinDC_EVChargeParameterType_BulkSOC,
+		  { "BulkSOC", "v2gdin.struct.dc_evchargeparameter.bulksoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
 		/* struct dinDC_EVSEStatusType */
 		{ &hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEIsolationStatus,
 		  { "EVSEIsolationStatus",
@@ -3010,6 +4503,127 @@ proto_register_v2gdin(void)
 		    "v2gdinstruct.dc_evsestatus.evsenotification",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evsenotification_names),
 		    0x0, NULL, HFILL }
+		},
+
+		/* struct dinSAScheduleTupleType */
+		{ &hf_v2gdin_struct_dinSAScheduleTupleType_SAScheduleTupleID,
+		  { "SAScheduleTupleID",
+		    "v2gdin.struct.sascheduletuple.sascheduletupleid",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinPMaxScheduleType */
+		{ &hf_v2gdin_struct_dinPMaxScheduleType_PMaxScheduleID,
+		  { "PMaxScheduleID",
+		    "v2gdin.struct.pmaxschedule.pmaxscheduleid",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinPMaxScheduleEntryType */
+		{ &hf_v2gdin_struct_dinPMaxScheduleEntryType_PMax,
+		  { "PMax", "v2gdin.struct.pmaxscheduleentry.pmax",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinRelativeTimeIntervalType */
+		{ &hf_v2gdin_struct_dinRelativeTimeIntervalType_start,
+		  { "start", "v2gdin.struct.relativetimeinterval.start",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinRelativeTimeIntervalType_duration,
+		  { "duration", "v2gdin.struct.relativetimeinterval.duration",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinSalesTariffType */
+		{ &hf_v2gdin_struct_dinSalesTariffType_Id,
+		  { "Id", "v2gdin.struct.salestariff.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinSalesTariffType_SalesTariffDescription,
+		  { "SalesTariffDescription",
+		    "v2gdin.struct.salestariff.salestariffdescription",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinSalesTariffType_NumEPriceLevels,
+		  { "NumEPriceLevels",
+		    "v2gdin.struct.salestariff.numepricelevels",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct hf_v2gdin_struct_dinSalesTariffEntryType */
+		{ &hf_v2gdin_struct_dinSalesTariffEntryType_EPriceLevel,
+		  { "EPriceLevel", "v2gdin.struct.salestariffentry.epricelevel",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinConsumptionCostType */
+		{ &hf_v2gdin_struct_dinConsumptionCostType_startValue,
+		  { "startValue", "v2gdin.struct.consumptioncost.startvalue",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinCostType */
+		{ &hf_v2gdin_struct_dinCostType_costKind,
+		  { "costKind", "v2gdin.struct.cost.costkind",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_cost_kind_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinCostType_amount,
+		  { "amount", "v2gdin.struct.cost.amount",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinCostType_amountMultiplier,
+		  { "amountMultiplier", "v2gdin.struct.cost.amountmultiplier",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinChargingProfileType */
+		{ &hf_v2gdin_struct_dinChargingProfileType_SAScheduleTupleID,
+		  { "SAScheduleTupleID",
+		    "v2gdin.struct.chargingprofile.sascheduletupleid",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryStart,
+		  { "ChargingProfileEntryStart",
+		    "v2gdin.struct.profileentry.chargingprofileentrystart",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryMaxPower,
+		  { "ChargingProfileEntryMaxPower",
+		    "v2gdin.struct.profileentry.chargingprofileentrymaxpower",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinDC_EVPowerDeliveryParameterType */
+		{ &hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_BulkChargingComplete,
+		  { "BulkChargingComplete",
+		    "v2gdin.struct.dc_evpowerdeliveryparameter.bulkchargingcomplete",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_ChargingComplete,
+		  { "ChargingComplete",
+		    "v2gdin.struct.dc_evpowerdeliveryparameter.chargingcomplete",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct dinMeterInfoType */
+		{ &hf_v2gdin_struct_dinMeterInfoType_MeterID,
+		  { "MeterID", "v2gdin.struct.meterinfo.meterid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinMeterInfoType_SigMeterReading,
+		  { "SigMeterReading",
+		    "v2gdin.struct.meterinfo.sigmeterreading",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinMeterInfoType_MeterStatus,
+		  { "MeterStatus", "v2gdin.struct.meterinfo.meterstatus",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_struct_dinMeterInfoType_TMeter,
+		  { "TMeter", "v2gdin.struct.meterinfo.tmeter",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		{ &hf_v2gdin_header_SessionID,
@@ -3133,6 +4747,199 @@ proto_register_v2gdin(void)
 		    0x0, NULL, HFILL }
 		},
 
+		/* ChargeParameterDiscoveryReq */
+		{ &hf_v2gdin_body_ChargeParameterDiscoveryReq_EVRequestedEnergyTransferType,
+		  { "EVRequestedEnergyTransferType",
+		    "v2gdin.body.chargeparameterdiscoveryreq.evrequestenergytransfer",
+		    FT_UINT32, BASE_DEC,
+		    VALS(v2gdin_ev_requested_energy_transfer),
+		    0x0, NULL, HFILL }
+		},
+		/* ChargeParameterDiscoveryRes */
+		{ &hf_v2gdin_body_ChargeParameterDiscoveryRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.chargeparametersdiscoveryres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_ChargeParameterDiscoveryRes_EVSEProcessing,
+		  { "EVSEProcessing",
+		    "v2gdin.body.chargeparametersdiscoveryres.evseprocessing",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* PowerDeliveryReq */
+		{ &hf_v2gdin_body_PowerDeliveryReq_ReadyToChargeState,
+		  { "_ReadyToChargeState",
+		    "v2gdin.body.powerdeliveryreq.readytochargestate",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		/* PowerDeliveryRes */
+		{ &hf_v2gdin_body_PowerDeliveryRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.powerdeliveryres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* ChargingStatusRes */
+		{ &hf_v2gdin_body_ChargingStatusRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.chargingstatusres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_ChargingStatusRes_EVSEID,
+		  { "EVSEID", "v2gdin.body.chargingstatusres.evseid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_ChargingStatusRes_SAScheduleTupleID,
+		  { "SAScheduleTupleID",
+		    "v2gdin.body.chargingstatusres.sascheduletupleid",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_ChargingStatusRes_ReceiptRequired,
+		  { "ReceiptRequired",
+		    "v2gdin.body.chargingstatusres.receiptrequired",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* MeteringReceiptReq */
+		{ &hf_v2gdin_body_MeteringReceiptReq_Id,
+		  { "Id", "v2gdin.body.meteringreceiptreq.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_MeteringReceiptReq_SessionID,
+		  { "SessionID", "v2gdin.body.meteringreceiptreq.sessionid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_MeteringReceiptReq_SAScheduleTupleID,
+		  { "SAScheduleTupleID",
+		    "v2gdin.body.meteringreceiptreq.sascheduletupleid",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		/* MeteringReceiptRes */
+		{ &hf_v2gdin_body_MeteringReceiptRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.meteringreceiptres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* SessionStopRes */
+		{ &hf_v2gdin_body_SessionStopRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.sessionstopres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* CertificateUpdateReq */
+		{ &hf_v2gdin_body_CertificateUpdateReq_Id,
+		  { "Id", "v2gdin.body.certificateupdatereq.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateReq_ContractID,
+		  { "ContractID",
+		    "v2gdin.body.certificateupdatereq.contractid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateReq_DHParams,
+		  { "DHParams", "v2gdin.body.certificateupdatereq.dhparams",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		/* CertificateUpdateRes */
+		{ &hf_v2gdin_body_CertificateUpdateRes_Id,
+		  { "Id", "v2gdin.body.certificateupdateres.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.certificateupdateres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateRes_ContractID,
+		  { "ContractID",
+		    "v2gdin.body.certificateupdateres.contractid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateRes_ContractID,
+		  { "DHParams", "v2gdin.body.certificateupdateres.dhparams",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateRes_ContractSignatureEncryptedPrivateKey,
+		  { "DHParams", "v2gdin.body.certificateupdateres.contractsignatureencryptedprivatekey",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateUpdateRes_RetryCounter,
+		  { "RetryCounter",
+		    "v2gdin.body.certificateupdateres.retrycounts",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* CertificateInstallationReq */
+		{ &hf_v2gdin_body_CertificateInstallationReq_Id,
+		  { "Id", "v2gdin.body.certificateupdatereq.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateInstallationReq_OEMProvisioningCert,
+		  { "OEMProvisioningCert",
+		    "v2gdin.body.certificateupdatereq.oemprovisioningcert",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateInstallationReq_DHParams,
+		  { "DHParams", "v2gdin.body.certificateupdatereq.dhparams",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		/* CertificateInstallationRes */
+		{ &hf_v2gdin_body_CertificateInstallationRes_Id,
+		  { "Id", "v2gdin.body.certificateupdateres.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateInstallationRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.certificateupdateres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateInstallationRes_ContractID,
+		  { "ContractID",
+		    "v2gdin.body.certificateupdateres.contractid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateInstallationRes_ContractID,
+		  { "DHParams", "v2gdin.body.certificateupdateres.dhparams",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CertificateInstallationRes_ContractSignatureEncryptedPrivateKey,
+		  { "DHParams", "v2gdin.body.certificateupdateres.contractsignatureencryptedprivatekey",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* CableCheckRes */
+		{ &hf_v2gdin_body_CableCheckRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.cablecheckres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_body_CableCheckRes_EVSEProcessing,
+		  { "EVSEProcessing",
+		    "v2gdin.body.cablecheckres.evseprocessing",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* PreChargeRes */
+		{ &hf_v2gdin_body_PreChargeRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.prechargeres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+
 		/* CurrentDemandReq */
 		{ &hf_v2gdin_body_CurrentDemandReq_ChargingComplete,
 		  { "ChargingComplete",
@@ -3166,6 +4973,14 @@ proto_register_v2gdin(void)
 		  { "EVSEPowerLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsepowerlimitachieved",
 		    FT_INT32, BASE_DEC, 0,
+		    0x0, NULL, HFILL }
+		},
+
+		/* WeldingDetectionRes */
+		{ &hf_v2gdin_body_WeldingDetectionRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gdin.body.weldingdetectionres.responsecode",
+		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
 	};
@@ -3208,8 +5023,31 @@ proto_register_v2gdin(void)
 		&ett_v2gdin_struct_dinPaymentOptionsType,
 		&ett_v2gdin_struct_dinCertificateChainType,
 		&ett_v2gdin_struct_dinSubCertificatesType,
+		&ett_v2gdin_struct_dinEVChargeParameterType,
+		&ett_v2gdin_struct_dinAC_EVChargeParameterType,
+		&ett_v2gdin_struct_dinDC_EVChargeParameterType,
 		&ett_v2gdin_struct_dinDC_EVStatusType,
+		&ett_v2gdin_struct_dinEVSEChargeParameterType,
+		&ett_v2gdin_struct_dinEVSEStatusType,
+		&ett_v2gdin_struct_dinAC_EVSEChargeParameterType,
+		&ett_v2gdin_struct_dinAC_EVSEStatusType,
+		&ett_v2gdin_struct_dinDC_EVSEChargeParameterType,
 		&ett_v2gdin_struct_dinDC_EVSEStatusType,
+		&ett_v2gdin_struct_dinSASchedulesType,
+		&ett_v2gdin_struct_dinSAScheduleListType,
+		&ett_v2gdin_struct_dinSAScheduleTupleType,
+		&ett_v2gdin_struct_dinPMaxScheduleType,
+		&ett_v2gdin_struct_dinPMaxScheduleEntryType,
+		&ett_v2gdin_struct_dinRelativeTimeIntervalType,
+		&ett_v2gdin_struct_dinIntervalType,
+		&ett_v2gdin_struct_dinSalesTariffType,
+		&ett_v2gdin_struct_dinSalesTariffEntryType,
+		&ett_v2gdin_struct_dinConsumptionCostType,
+		&ett_v2gdin_struct_dinCostType,
+		&ett_v2gdin_struct_dinChargingProfileType,
+		&ett_v2gdin_struct_dinEVPowerDeliveryParameterType,
+		&ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
+		&ett_v2gdin_struct_dinProfileEntryType,
 
 		&ett_v2gdin_header,
 		&ett_v2gdin_body,
@@ -3225,28 +5063,28 @@ proto_register_v2gdin(void)
 		&ett_v2gdin_body_PaymentDetailsRes,
 		&ett_v2gdin_body_ContractAuthenticationReq,
 		&ett_v2gdin_body_ContractAuthenticationRes,
-		&ett_v2gdin_body_chargeparameterdiscoveryreq,
-		&ett_v2gdin_body_chargeparameterdiscoveryres,
-		&ett_v2gdin_body_powerdeliveryreq,
-		&ett_v2gdin_body_powerdeliveryres,
-		&ett_v2gdin_body_chargingstatusreq,
-		&ett_v2gdin_body_chargingstatusres,
-		&ett_v2gdin_body_meteringreceiptreq,
-		&ett_v2gdin_body_meteringreceiptres,
-		&ett_v2gdin_body_sessionstopreq,
-		&ett_v2gdin_body_sessionstopres,
-		&ett_v2gdin_body_certificateupdatereq,
-		&ett_v2gdin_body_certificateupdateres,
-		&ett_v2gdin_body_certificateinstallationreq,
-		&ett_v2gdin_body_certificateinstallationres,
-		&ett_v2gdin_body_cablecheckreq,
-		&ett_v2gdin_body_cablecheckres,
-		&ett_v2gdin_body_prechargereq,
-		&ett_v2gdin_body_prechargeres,
+		&ett_v2gdin_body_ChargeParameterDiscoveryReq,
+		&ett_v2gdin_body_ChargeParameterDiscoveryRes,
+		&ett_v2gdin_body_PowerDeliveryReq,
+		&ett_v2gdin_body_PowerDeliveryRes,
+		&ett_v2gdin_body_ChargingStatusReq,
+		&ett_v2gdin_body_ChargingStatusRes,
+		&ett_v2gdin_body_MeteringReceiptReq,
+		&ett_v2gdin_body_MeteringReceiptRes,
+		&ett_v2gdin_body_SessionStopReq,
+		&ett_v2gdin_body_SessionStopRes,
+		&ett_v2gdin_body_CertificateUpdateReq,
+		&ett_v2gdin_body_CertificateUpdateRes,
+		&ett_v2gdin_body_CertificateInstallationReq,
+		&ett_v2gdin_body_CertificateInstallationRes,
+		&ett_v2gdin_body_CableCheckReq,
+		&ett_v2gdin_body_CableCheckRes,
+		&ett_v2gdin_body_PreChargeReq,
+		&ett_v2gdin_body_PreChargeRes,
 		&ett_v2gdin_body_CurrentDemandReq,
 		&ett_v2gdin_body_CurrentDemandRes,
-		&ett_v2gdin_body_weldingdetectionreq,
-		&ett_v2gdin_body_weldingdetectionres
+		&ett_v2gdin_body_WeldingDetectionReq,
+		&ett_v2gdin_body_WeldingDetectionRes
 	};
 
 	proto_v2gdin = proto_register_protocol (
