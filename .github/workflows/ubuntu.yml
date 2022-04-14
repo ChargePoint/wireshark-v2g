@@ -4,7 +4,15 @@
 
 name: Build and test Ubuntu plug-in
 
-on: [push, pull_request]
+on:
+   push:
+      branches:
+         - main
+      tags:
+         - '**'
+   pull_request:
+      branches:
+         - main
 
 env:
    WIRESHARK_BRANCH: release-3.6
@@ -77,7 +85,7 @@ jobs:
            run: |
               mkdir v2g-artifact
               cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
-              cp build/run/plugins/3.6/epan/v2gexi.so v2g-artifact/v2g-source.so
+              cp build/run/plugins/3.6/epan/v2gexi.so v2g-artifact/v2gexi.so
          - name: Upload Ubuntu artifacts
            uses: actions/upload-artifact@v2
            with:
