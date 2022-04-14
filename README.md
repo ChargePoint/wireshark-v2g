@@ -10,6 +10,50 @@ Vehicle to Grid protocols are used in charging applications, this
 project provides a reference for protocol decode and analysis.
 
 Wireshark's LUA documentation:  https://wiki.wireshark.org/Lua
+Wireshark's Development documentation: https://wiki.wireshark.org/Development
+
+## Quickstart
+
+Select the approviate archive for the host machine that is being used
+* linux-x86_64
+* macos-x86_64
+* win64
+
+Follow the instructions to install the prebuilt release images into
+Wireshark based on the platform.
+
+After the files are copied, restart Wireshark and these v2g plugins
+should now be listed in the __About Wirekshark__ screen on the Plugins
+tab. In the case of tshark, a command line option using `tshark -G plugins`
+will list what has been loaded.
+
+### Linux and MacOS
+
+The personal plugin folder is `~/.local/lib/wireshark/plugins` and so
+the v2g.lua and v2gexi.so files from the asset should be extracted and
+placed in this directory.
+
+For Linux
+- copy v2g.lua to `~/.local/lib/wireshark/plugins`
+- copy v2gexi.so to `~/.local/lib/wireshark/plugins/3.6/epan`
+
+For Mac
+- copy v2g.lua to `~/.local/lib/wireshark/plugins`
+- copy v2gexi.so to `~/.local/lib/wireshark/plugins/3-6/epan`
+
+### Windows
+
+The personal plugin forlder for Windows is `%APPDATA%/Wireshark/plugins`
+and this can have a bit of a different layout to ensure the dll will
+load on windows.
+
+- copy the v2g.lua to `%APPDATA%/Wireshark/plugins`
+- copy the v2gexi.dll to `%APPDATA%/Wireshark/plugins/3.6/epan`
+
+__NOTE__: The global plugin folder can also be used in the "Wireshark"
+directory under `Program Files` where Wireshark.exe is located. The
+plugin folder there can be used as the destination for the v2g files to
+be copied.
 
 ## Building
 
