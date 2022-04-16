@@ -17,6 +17,13 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH True)
+    set(CMAKE_SKIP_BUILD_RPATH False)
+    set(CMAKE_INSTALL_NAME_DIR "@rpath/")
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH False)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH False)
+endif()
 
 # Add some cmake modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -26,10 +33,15 @@ include(BuildType)
 # Add external dependencies (should be included first)
 include(extern/dependencies.cmake)
 
-set(PLUGIN_FILES
+set(DISSECTOR_SRC
     src/packet-v2gexi.c
     src/packet-v2gdin.c
     src/packet-v2giso1.c
+)
+
+set(PLUGIN_FILES
+    plugin.c
+    ${DISSECTOR_SRC}
 )
 
 set_source_files_properties(${PLUGIN_FILES}
@@ -59,17 +71,16 @@ if(Wireshark_FOUND)
     include_directories(${Wireshark_INCLUDE_DIR})
     link_directories(${Wireshark_LIB_DIR})
     if(APPLE)
-        link_directories(/usr/local/lib)
+        link_directories(/usr/local/lib /usr/local/opt/glib/lib)
     endif(APPLE)
 
     # Keep in sync with in-tree build
     register_plugin_files(plugin.c
         plugin
-        ${PLUGIN_FILES}
+        ${DISSECTOR_SRC}
     )
 
     add_library(v2gexi MODULE
-        plugin.c
         ${PLUGIN_FILES}
         ${PLUGIN_RC_FILE}
     )
@@ -106,11 +117,12 @@ else(Wireshark_FOUND)
     # Keep in sync with standalone build
     register_plugin_files(plugin.c
         plugin
-        ${PLUGIN_FILES}
+        ${DISSECTOR_SRC}
     )
 
     add_plugin_library(v2gexi epan)
     target_link_libraries(v2gexi epan openv2g)
+    install_plugin(v2gexi epan)
 
     file(GLOB PLUGIN_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.h")
     CHECKAPI(
@@ -119,8 +131,8 @@ else(Wireshark_FOUND)
         SWITCHES
             -g abort -g termoutput
         SOURCES
-            ${PLUGIN_FILES}
-            ${PLUGIN_HEADERS}
+            ${DISSECTOR_SRC}
+            ${DISSECTOR_HEADERS}
     )
 
 endif(Wireshark_FOUND)
