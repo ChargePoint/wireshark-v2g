@@ -86,7 +86,7 @@ jobs:
            run: |
               mkdir v2g-artifact
               cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
-              cp build/run/Wireshark.app/Contents/PlugIns/wireshark/3-6/epan/v2gexi.so v2g-artifact/v2gexi-source.so
+              cp build/run/Wireshark.app/Contents/PlugIns/wireshark/3-6/epan/v2gexi.so v2g-artifact/v2gexi.so
          - name: Upload MacOS artifacts
            uses: actions/upload-artifact@v2
            with:
