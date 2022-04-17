@@ -187,79 +187,79 @@ static int hf_v2gdin_struct_dinMeterInfoType_SigMeterReading = -1;
 static int hf_v2gdin_struct_dinMeterInfoType_MeterStatus = -1;
 static int hf_v2gdin_struct_dinMeterInfoType_TMeter = -1;
 
-static int hf_v2gdin_header_SessionID = -1;
+static int hf_v2gdin_struct_dinMessageHeaderType_SessionID = -1;
 
-static int hf_v2gdin_body_SessionSetupReq_EVCCID = -1;
-static int hf_v2gdin_body_SessionSetupRes_ResponseCode = -1;
-static int hf_v2gdin_body_SessionSetupRes_EVSEID = -1;
-static int hf_v2gdin_body_SessionSetupRes_DateTimeNow = -1;
-static int hf_v2gdin_body_ServiceDiscoveryReq_ServiceScope = -1;
-static int hf_v2gdin_body_ServiceDiscoveryReq_ServiceCategory = -1;
-static int hf_v2gdin_body_ServiceDiscoveryRes_ResponseCode = -1;
-static int hf_v2gdin_body_ServiceDetailReq_ServiceID = -1;
-static int hf_v2gdin_body_ServiceDetailRes_ResponseCode = -1;
-static int hf_v2gdin_body_ServiceDetailRes_ServiceID = -1;
-static int hf_v2gdin_body_ServicePaymentSelectionReq_SelectedPaymentOption = -1;
-static int hf_v2gdin_body_ServicePaymentSelectionRes_ResponseCode = -1;
-static int hf_v2gdin_body_PaymentDetailsReq_ContractID = -1;
-static int hf_v2gdin_body_PaymentDetailsRes_ResponseCode = -1;
-static int hf_v2gdin_body_PaymentDetailsRes_GenChallenge = -1;
-static int hf_v2gdin_body_PaymentDetailsRes_DateTimeNow = -1;
-static int hf_v2gdin_body_ContractAuthenticationReq_Id = -1;
-static int hf_v2gdin_body_ContractAuthenticationReq_GenChallenge = -1;
-static int hf_v2gdin_body_ContractAuthenticationRes_ResponseCode = -1;
-static int hf_v2gdin_body_ContractAuthenticationRes_EVSEProcessing = -1;
-static int hf_v2gdin_body_ChargeParameterDiscoveryReq_EVRequestedEnergyTransferType = -1;
-static int hf_v2gdin_body_ChargeParameterDiscoveryRes_ResponseCode = -1;
-static int hf_v2gdin_body_ChargeParameterDiscoveryRes_EVSEProcessing = -1;
+static int hf_v2gdin_struct_dinSessionSetupReqType_EVCCID = -1;
+static int hf_v2gdin_struct_dinSessionSetupResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinSessionSetupResType_EVSEID = -1;
+static int hf_v2gdin_struct_dinSessionSetupResType_DateTimeNow = -1;
+static int hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceScope = -1;
+static int hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceCategory = -1;
+static int hf_v2gdin_struct_dinServiceDiscoveryResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinServiceDetailReqType_ServiceID = -1;
+static int hf_v2gdin_struct_dinServiceDetailResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinServiceDetailResType_ServiceID = -1;
+static int hf_v2gdin_struct_dinServicePaymentSelectionReqType_SelectedPaymentOption = -1;
+static int hf_v2gdin_struct_dinServicePaymentSelectionResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinPaymentDetailsReqType_ContractID = -1;
+static int hf_v2gdin_struct_dinPaymentDetailsResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinPaymentDetailsResType_GenChallenge = -1;
+static int hf_v2gdin_struct_dinPaymentDetailsResType_DateTimeNow = -1;
+static int hf_v2gdin_struct_dinContractAuthenticationReqType_Id = -1;
+static int hf_v2gdin_struct_dinContractAuthenticationReqType_GenChallenge = -1;
+static int hf_v2gdin_struct_dinContractAuthenticationResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinContractAuthenticationResType_EVSEProcessing = -1;
+static int hf_v2gdin_struct_dinChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType = -1;
+static int hf_v2gdin_struct_dinChargeParameterDiscoveryResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinChargeParameterDiscoveryResType_EVSEProcessing = -1;
 
-static int hf_v2gdin_body_PowerDeliveryReq_ReadyToChargeState = -1;
-static int hf_v2gdin_body_PowerDeliveryRes_ResponseCode = -1;
+static int hf_v2gdin_struct_dinPowerDeliveryReqType_ReadyToChargeState = -1;
+static int hf_v2gdin_struct_dinPowerDeliveryResType_ResponseCode = -1;
 
-static int hf_v2gdin_body_ChargingStatusRes_ResponseCode = -1;
-static int hf_v2gdin_body_ChargingStatusRes_EVSEID = -1;
-static int hf_v2gdin_body_ChargingStatusRes_SAScheduleTupleID = -1;
-static int hf_v2gdin_body_ChargingStatusRes_ReceiptRequired = -1;
+static int hf_v2gdin_struct_dinChargingStatusResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinChargingStatusResType_EVSEID = -1;
+static int hf_v2gdin_struct_dinChargingStatusResType_SAScheduleTupleID = -1;
+static int hf_v2gdin_struct_dinChargingStatusResType_ReceiptRequired = -1;
 
-static int hf_v2gdin_body_MeteringReceiptReq_Id = -1;
-static int hf_v2gdin_body_MeteringReceiptReq_SessionID = -1;
-static int hf_v2gdin_body_MeteringReceiptReq_SAScheduleTupleID = -1;
-static int hf_v2gdin_body_MeteringReceiptRes_ResponseCode = -1;
+static int hf_v2gdin_struct_dinMeteringReceiptReqType_Id = -1;
+static int hf_v2gdin_struct_dinMeteringReceiptReqType_SessionID = -1;
+static int hf_v2gdin_struct_dinMeteringReceiptReqType_SAScheduleTupleID = -1;
+static int hf_v2gdin_struct_dinMeteringReceiptResType_ResponseCode = -1;
 
-static int hf_v2gdin_body_SessionStopRes_ResponseCode = -1;
+static int hf_v2gdin_struct_dinSessionStopResType_ResponseCode = -1;
 
-static int hf_v2gdin_body_CertificateUpdateReq_Id = -1;
-static int hf_v2gdin_body_CertificateUpdateReq_ContractID = -1;
-static int hf_v2gdin_body_CertificateUpdateReq_DHParams = -1;
-static int hf_v2gdin_body_CertificateUpdateRes_Id = -1;
-static int hf_v2gdin_body_CertificateUpdateRes_ResponseCode = -1;
-static int hf_v2gdin_body_CertificateUpdateRes_ContractID = -1;
-static int hf_v2gdin_body_CertificateUpdateRes_DHParams = -1;
-static int hf_v2gdin_body_CertificateUpdateRes_RetryCounter = -1;
-static int hf_v2gdin_body_CertificateUpdateRes_ContractSignatureEncryptedPrivateKey = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateReqType_Id = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateReqType_ContractID = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateReqType_DHParams = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateResType_Id = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateResType_ContractID = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateResType_DHParams = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateResType_RetryCounter = -1;
+static int hf_v2gdin_struct_dinCertificateUpdateResType_ContractSignatureEncryptedPrivateKey = -1;
 
-static int hf_v2gdin_body_CertificateInstallationReq_Id = -1;
-static int hf_v2gdin_body_CertificateInstallationReq_OEMProvisioningCert = -1;
-static int hf_v2gdin_body_CertificateInstallationReq_DHParams = -1;
-static int hf_v2gdin_body_CertificateInstallationRes_Id = -1;
-static int hf_v2gdin_body_CertificateInstallationRes_ResponseCode = -1;
-static int hf_v2gdin_body_CertificateInstallationRes_ContractSignatureEncryptedPrivateKey = -1;
-static int hf_v2gdin_body_CertificateInstallationRes_DHParams = -1;
-static int hf_v2gdin_body_CertificateInstallationRes_ContractID = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationReqType_Id = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationReqType_OEMProvisioningCert = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationReqType_DHParams = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationResType_Id = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationResType_ContractSignatureEncryptedPrivateKey = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationResType_DHParams = -1;
+static int hf_v2gdin_struct_dinCertificateInstallationResType_ContractID = -1;
 
-static int hf_v2gdin_body_CableCheckRes_ResponseCode = -1;
-static int hf_v2gdin_body_CableCheckRes_EVSEProcessing = -1;
+static int hf_v2gdin_struct_dinCableCheckResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinCableCheckResType_EVSEProcessing = -1;
 
-static int hf_v2gdin_body_PreChargeRes_ResponseCode = -1;
+static int hf_v2gdin_struct_dinPreChargeResType_ResponseCode = -1;
 
-static int hf_v2gdin_body_CurrentDemandReq_ChargingComplete = -1;
-static int hf_v2gdin_body_CurrentDemandReq_BulkChargingComplete = -1;
-static int hf_v2gdin_body_CurrentDemandRes_ResponseCode = -1;
-static int hf_v2gdin_body_CurrentDemandRes_EVSECurrentLimitAchieved = -1;
-static int hf_v2gdin_body_CurrentDemandRes_EVSEVoltageLimitAchieved = -1;
-static int hf_v2gdin_body_CurrentDemandRes_EVSEPowerLimitAchieved = -1;
+static int hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete = -1;
+static int hf_v2gdin_struct_dinCurrentDemandReqType_BulkChargingComplete = -1;
+static int hf_v2gdin_struct_dinCurrentDemandResType_ResponseCode = -1;
+static int hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved = -1;
+static int hf_v2gdin_struct_dinCurrentDemandResType_EVSEVoltageLimitAchieved = -1;
+static int hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved = -1;
 
-static int hf_v2gdin_body_WeldingDetectionRes_ResponseCode = -1;
+static int hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode = -1;
 
 
 /* Initialize the subtree pointers */
@@ -330,40 +330,40 @@ static gint ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType = -1;
 static gint ett_v2gdin_struct_dinProfileEntryType = -1;
 static gint ett_v2gdin_struct_dinMeterInfoType = -1;
 
-static gint ett_v2gdin_body_SessionSetupReq = -1;
-static gint ett_v2gdin_body_SessionSetupRes = -1;
-static gint ett_v2gdin_body_ServiceDiscoveryReq = -1;
-static gint ett_v2gdin_body_ServiceDiscoveryRes = -1;
-static gint ett_v2gdin_body_ServiceDetailReq = -1;
-static gint ett_v2gdin_body_ServiceDetailRes = -1;
-static gint ett_v2gdin_body_ServicePaymentSelectionReq = -1;
-static gint ett_v2gdin_body_ServicePaymentSelectionRes = -1;
-static gint ett_v2gdin_body_PaymentDetailsReq = -1;
-static gint ett_v2gdin_body_PaymentDetailsRes = -1;
-static gint ett_v2gdin_body_ContractAuthenticationReq = -1;
-static gint ett_v2gdin_body_ContractAuthenticationRes = -1;
-static gint ett_v2gdin_body_ChargeParameterDiscoveryReq = -1;
-static gint ett_v2gdin_body_ChargeParameterDiscoveryRes = -1;
-static gint ett_v2gdin_body_PowerDeliveryReq = -1;
-static gint ett_v2gdin_body_PowerDeliveryRes = -1;
-static gint ett_v2gdin_body_ChargingStatusReq = -1;
-static gint ett_v2gdin_body_ChargingStatusRes = -1;
-static gint ett_v2gdin_body_MeteringReceiptReq = -1;
-static gint ett_v2gdin_body_MeteringReceiptRes = -1;
-static gint ett_v2gdin_body_SessionStopReq = -1;
-static gint ett_v2gdin_body_SessionStopRes = -1;
-static gint ett_v2gdin_body_CertificateUpdateReq = -1;
-static gint ett_v2gdin_body_CertificateUpdateRes = -1;
-static gint ett_v2gdin_body_CertificateInstallationReq = -1;
-static gint ett_v2gdin_body_CertificateInstallationRes = -1;
-static gint ett_v2gdin_body_CableCheckReq = -1;
-static gint ett_v2gdin_body_CableCheckRes = -1;
-static gint ett_v2gdin_body_PreChargeReq = -1;
-static gint ett_v2gdin_body_PreChargeRes = -1;
-static gint ett_v2gdin_body_CurrentDemandReq = -1;
-static gint ett_v2gdin_body_CurrentDemandRes = -1;
-static gint ett_v2gdin_body_WeldingDetectionReq = -1;
-static gint ett_v2gdin_body_WeldingDetectionRes = -1;
+static gint ett_v2gdin_struct_dinSessionSetupReqType = -1;
+static gint ett_v2gdin_struct_dinSessionSetupResType = -1;
+static gint ett_v2gdin_struct_dinServiceDiscoveryReqType = -1;
+static gint ett_v2gdin_struct_dinServiceDiscoveryResType = -1;
+static gint ett_v2gdin_struct_dinServiceDetailReqType = -1;
+static gint ett_v2gdin_struct_dinServiceDetailResType = -1;
+static gint ett_v2gdin_struct_dinServicePaymentSelectionReqType = -1;
+static gint ett_v2gdin_struct_dinServicePaymentSelectionResType = -1;
+static gint ett_v2gdin_struct_dinPaymentDetailsReqType = -1;
+static gint ett_v2gdin_struct_dinPaymentDetailsResType = -1;
+static gint ett_v2gdin_struct_dinContractAuthenticationReqType = -1;
+static gint ett_v2gdin_struct_dinContractAuthenticationResType = -1;
+static gint ett_v2gdin_struct_dinChargeParameterDiscoveryReqType = -1;
+static gint ett_v2gdin_struct_dinChargeParameterDiscoveryResType = -1;
+static gint ett_v2gdin_struct_dinPowerDeliveryReqType = -1;
+static gint ett_v2gdin_struct_dinPowerDeliveryResType = -1;
+static gint ett_v2gdin_struct_dinChargingStatusReqType = -1;
+static gint ett_v2gdin_struct_dinChargingStatusResType = -1;
+static gint ett_v2gdin_struct_dinMeteringReceiptReqType = -1;
+static gint ett_v2gdin_struct_dinMeteringReceiptResType = -1;
+static gint ett_v2gdin_struct_dinSessionStopType = -1;
+static gint ett_v2gdin_struct_dinSessionStopResType = -1;
+static gint ett_v2gdin_struct_dinCertificateUpdateReqType = -1;
+static gint ett_v2gdin_struct_dinCertificateUpdateResType = -1;
+static gint ett_v2gdin_struct_dinCertificateInstallationReqType = -1;
+static gint ett_v2gdin_struct_dinCertificateInstallationResType = -1;
+static gint ett_v2gdin_struct_dinCableCheckReqType = -1;
+static gint ett_v2gdin_struct_dinCableCheckResType = -1;
+static gint ett_v2gdin_struct_dinPreChargeReqType = -1;
+static gint ett_v2gdin_struct_dinPreChargeResType = -1;
+static gint ett_v2gdin_struct_dinCurrentDemandReqType = -1;
+static gint ett_v2gdin_struct_dinCurrentDemandResType = -1;
+static gint ett_v2gdin_struct_dinWeldingDetectionReqType = -1;
+static gint ett_v2gdin_struct_dinWeldingDetectionResType = -1;
 
 static const value_string v2gdin_fault_code_names[] = {
 	{ dinfaultCodeType_ParsingError, "ParsingError" },
@@ -2861,7 +2861,7 @@ dissect_v2gdin_header(const struct dinMessageHeaderType *header,
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	exi_add_bytes(subtree, hf_v2gdin_header_SessionID, tvb,
+	exi_add_bytes(subtree, hf_v2gdin_struct_dinMessageHeaderType_SessionID, tvb,
 		header->SessionID.bytes,
 		header->SessionID.bytesLen,
 		sizeof(header->SessionID.bytes));
@@ -2884,1044 +2884,1552 @@ dissect_v2gdin_header(const struct dinMessageHeaderType *header,
 }
 
 static void
+dissect_v2gdin_sessionsetupreq(
+	const struct dinSessionSetupReqType *sessionsetupreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinSessionSetupReqType_EVCCID,
+		tvb,
+		sessionsetupreq->EVCCID.bytes,
+		sessionsetupreq->EVCCID.bytesLen,
+		sizeof(sessionsetupreq->EVCCID.bytes));
+
+	return;
+}
+
+static void
+dissect_v2gdin_sessionsetupres(
+	const struct dinSessionSetupResType *sessionsetupres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinSessionSetupResType_ResponseCode,
+		tvb, 0, 0, sessionsetupres->ResponseCode);
+	proto_item_set_generated(it);
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinSessionSetupResType_EVSEID,
+		tvb,
+		sessionsetupres->EVSEID.bytes,
+		sessionsetupres->EVSEID.bytesLen,
+		sizeof(sessionsetupres->EVSEID.bytes));
+
+	if (sessionsetupres->DateTimeNow_isUsed) {
+		it = proto_tree_add_int64(subtree,
+			hf_v2gdin_struct_dinSessionSetupResType_DateTimeNow,
+			tvb, 0, 0, sessionsetupres->DateTimeNow);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_servicediscoveryreq(
+	const struct dinServiceDiscoveryReqType *servicediscoveryreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (servicediscoveryreq->ServiceScope_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceScope,
+			tvb,
+			servicediscoveryreq->ServiceScope.characters,
+			servicediscoveryreq->ServiceScope.charactersLen,
+			sizeof(servicediscoveryreq->ServiceScope.characters));
+	}
+
+	if (servicediscoveryreq->ServiceCategory_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceCategory,
+			tvb, 0, 0, servicediscoveryreq->ServiceCategory);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_servicediscoveryres(
+	const struct dinServiceDiscoveryResType *servicediscoveryres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinServiceDiscoveryResType_ResponseCode,
+		tvb, 0, 0, servicediscoveryres->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_paymentoptions(
+		&servicediscoveryres->PaymentOptions,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPaymentOptionsType,
+		"PaymentOptions");
+
+	dissect_v2gdin_servicecharge(
+		&servicediscoveryres->ChargeService,
+		tvb, subtree,
+		ett_v2gdin_struct_dinServiceChargeType,
+		"ChargeService");
+
+	if (servicediscoveryres->ServiceList_isUsed) {
+		dissect_v2gdin_servicetaglist(
+			&servicediscoveryres->ServiceList,
+			tvb, subtree,
+			ett_v2gdin_struct_dinServiceTagListType,
+			"ServiceList");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_servicedetailreq(
+	const struct dinServiceDetailReqType *servicedetailreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinServiceDetailReqType_ServiceID,
+		tvb, 0, 0, servicedetailreq->ServiceID);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_servicedetailres(
+	const struct dinServiceDetailResType *servicedetailres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinServiceDetailResType_ResponseCode,
+		tvb, 0, 0, servicedetailres->ResponseCode);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinServiceDetailResType_ServiceID,
+		tvb, 0, 0, servicedetailres->ServiceID);
+	proto_item_set_generated(it);
+
+	if (servicedetailres->ServiceParameterList_isUsed) {
+		dissect_v2gdin_serviceparameterlist(
+			&servicedetailres->ServiceParameterList,
+			tvb, subtree,
+			ett_v2gdin_struct_dinServiceParameterListType,
+			"ServiceParameterList");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_servicepaymentselectionreq(
+	const struct dinServicePaymentSelectionReqType
+		*servicepaymentselectionreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinServicePaymentSelectionReqType_SelectedPaymentOption,
+		tvb, 0, 0, servicepaymentselectionreq->SelectedPaymentOption);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_selectedservicelist(
+		&servicepaymentselectionreq->SelectedServiceList,
+		tvb, subtree,
+		ett_v2gdin_struct_dinSelectedServiceListType,
+		"SelectedServiceList");
+
+	return;
+}
+
+static void
+dissect_v2gdin_servicepaymentselectionres(
+	const struct dinServicePaymentSelectionResType
+		*servicepaymentselectionres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinServicePaymentSelectionResType_ResponseCode,
+		tvb, 0, 0,
+		servicepaymentselectionres->ResponseCode);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_paymentdetailsreq(
+	const struct dinPaymentDetailsReqType *paymentdetailsreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinPaymentDetailsReqType_ContractID,
+		tvb,
+		paymentdetailsreq->ContractID.characters,
+		paymentdetailsreq->ContractID.charactersLen,
+		sizeof(paymentdetailsreq->ContractID.characters));
+
+	dissect_v2gdin_certificatechain(
+		&paymentdetailsreq->ContractSignatureCertChain,
+		tvb, subtree,
+		ett_v2gdin_struct_dinCertificateChainType,
+		"ContractSignatureCertChain");
+
+	return;
+}
+
+static void
+dissect_v2gdin_paymentdetailsres(
+	const struct dinPaymentDetailsResType *paymentdetailsres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinPaymentDetailsResType_ResponseCode,
+		tvb, 0, 0,
+		paymentdetailsres->ResponseCode);
+	proto_item_set_generated(it);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinPaymentDetailsResType_GenChallenge,
+		tvb,
+		paymentdetailsres->GenChallenge.characters,
+		paymentdetailsres->GenChallenge.charactersLen,
+		sizeof(paymentdetailsres->GenChallenge.characters));
+
+	it = proto_tree_add_int64(subtree,
+		hf_v2gdin_struct_dinPaymentDetailsResType_DateTimeNow,
+		tvb, 0, 0,
+		paymentdetailsres->DateTimeNow);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_contractauthenticationreq(
+	const struct dinContractAuthenticationReqType
+		*contractauthenticationreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (contractauthenticationreq->Id_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_dinContractAuthenticationReqType_Id,
+			tvb,
+			contractauthenticationreq->Id.characters,
+			contractauthenticationreq->Id.charactersLen,
+			sizeof(contractauthenticationreq->Id.characters));
+	}
+	if (contractauthenticationreq->GenChallenge_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_dinContractAuthenticationReqType_GenChallenge,
+			tvb,
+			contractauthenticationreq->GenChallenge.characters,
+			contractauthenticationreq->GenChallenge.charactersLen,
+			sizeof(contractauthenticationreq->GenChallenge.characters));
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_contractauthenticationres(
+	const struct dinContractAuthenticationResType
+		*contractauthenticationres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinContractAuthenticationResType_ResponseCode,
+		tvb, 0, 0,
+		contractauthenticationres->ResponseCode);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinContractAuthenticationResType_EVSEProcessing,
+		tvb, 0, 0,
+		contractauthenticationres->EVSEProcessing);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_chargeparameterdiscoveryreq(
+	const struct dinChargeParameterDiscoveryReqType
+		*chargeparameterdiscoveryreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType,
+		tvb, 0, 0,
+		chargeparameterdiscoveryreq->EVRequestedEnergyTransferType);
+	proto_item_set_generated(it);
+
+	if (chargeparameterdiscoveryreq->EVChargeParameter_isUsed) {
+		dissect_v2gdin_evchargeparameter(
+			&chargeparameterdiscoveryreq->EVChargeParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinEVChargeParameterType,
+			"EVChargeParameter");
+	}
+
+	if (chargeparameterdiscoveryreq->AC_EVChargeParameter_isUsed) {
+		dissect_v2gdin_ac_evchargeparameter(
+			&chargeparameterdiscoveryreq->AC_EVChargeParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinAC_EVChargeParameterType,
+			"AC_EVChargeParameter");
+	}
+
+	if (chargeparameterdiscoveryreq->DC_EVChargeParameter_isUsed) {
+		dissect_v2gdin_dc_evchargeparameter(
+			&chargeparameterdiscoveryreq->DC_EVChargeParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinDC_EVChargeParameterType,
+			"DC_EVChargeParameter");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_chargeparameterdiscoveryres(
+	const struct dinChargeParameterDiscoveryResType
+		*chargeparameterdiscoveryres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinChargeParameterDiscoveryResType_ResponseCode,
+		tvb, 0, 0,
+		chargeparameterdiscoveryres->ResponseCode);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinChargeParameterDiscoveryResType_EVSEProcessing,
+		tvb, 0, 0,
+		chargeparameterdiscoveryres->EVSEProcessing);
+	proto_item_set_generated(it);
+
+	if (chargeparameterdiscoveryres->SASchedules_isUsed) {
+		dissect_v2gdin_saschedules(
+			&chargeparameterdiscoveryres->SASchedules,
+			tvb, subtree,
+			ett_v2gdin_struct_dinSASchedulesType,
+			"SASchedules");
+	}
+	if (chargeparameterdiscoveryres->SAScheduleList_isUsed) {
+		dissect_v2gdin_saschedulelist(
+			&chargeparameterdiscoveryres->SAScheduleList,
+			tvb, subtree,
+			ett_v2gdin_struct_dinSAScheduleListType,
+			"SAScheduleList");
+	}
+	if (chargeparameterdiscoveryres->EVSEChargeParameter_isUsed) {
+		dissect_v2gdin_evsechargeparameter(&chargeparameterdiscoveryres->EVSEChargeParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinEVSEChargeParameterType,
+			"EVSEChargeParameter");
+	}
+	if (chargeparameterdiscoveryres->AC_EVSEChargeParameter_isUsed) {
+		dissect_v2gdin_ac_evsechargeparameter(
+			&chargeparameterdiscoveryres->AC_EVSEChargeParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinAC_EVSEChargeParameterType,
+			"AC_EVSEChargeParameter");
+	}
+	if (chargeparameterdiscoveryres->DC_EVSEChargeParameter_isUsed) {
+		dissect_v2gdin_dc_evsechargeparameter(
+			&chargeparameterdiscoveryres->DC_EVSEChargeParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinDC_EVSEChargeParameterType,
+			"DC_EVSEChargeParameter");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_powerdeliveryreq(
+	const struct dinPowerDeliveryReqType *powerdeliveryreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinPowerDeliveryReqType_ReadyToChargeState,
+		tvb, 0, 0, powerdeliveryreq->ReadyToChargeState);
+	proto_item_set_generated(it);
+
+	if (powerdeliveryreq->ChargingProfile_isUsed) {
+		dissect_v2gdin_chargingprofile(
+			&powerdeliveryreq->ChargingProfile,
+			tvb, subtree,
+			ett_v2gdin_struct_dinChargingProfileType,
+			"ChargingProfile");
+	}
+	if (powerdeliveryreq->EVPowerDeliveryParameter_isUsed) {
+		dissect_v2gdin_evpowerdeliveryparameter(
+			&powerdeliveryreq->EVPowerDeliveryParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinEVPowerDeliveryParameterType,
+			"EVPowerDeliveryParameter");
+	}
+	if (powerdeliveryreq->DC_EVPowerDeliveryParameter_isUsed) {
+		dissect_v2gdin_dc_evpowerdeliveryparameter(
+			&powerdeliveryreq->DC_EVPowerDeliveryParameter,
+			tvb, subtree,
+			ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
+			"DC_EVPowerDeliveryParameter");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_powerdeliveryres(
+	const struct dinPowerDeliveryResType *powerdeliveryres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinPowerDeliveryResType_ResponseCode,
+		tvb, 0, 0,
+		powerdeliveryres->ResponseCode);
+	proto_item_set_generated(it);
+
+	if (powerdeliveryres->EVSEStatus_isUsed) {
+		dissect_v2gdin_evsestatus(
+			&powerdeliveryres->EVSEStatus,
+			tvb, subtree,
+			ett_v2gdin_struct_dinEVSEStatusType,
+			"EVSEStatus");
+	}
+	if (powerdeliveryres->AC_EVSEStatus_isUsed) {
+		dissect_v2gdin_ac_evsestatus(
+			&powerdeliveryres->AC_EVSEStatus,
+			tvb, subtree,
+			ett_v2gdin_struct_dinAC_EVSEStatusType,
+			"AC_EVSEStatus");
+	}
+	if (powerdeliveryres->DC_EVSEStatus_isUsed) {
+		dissect_v2gdin_dc_evsestatus(
+			&powerdeliveryres->DC_EVSEStatus,
+			tvb, subtree,
+			ett_v2gdin_struct_dinDC_EVSEStatusType,
+			"DC_EVSEStatus");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_chargingstatusreq(
+	const struct dinChargingStatusReqType *chargingstatusreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_chargingstatusres(
+	const struct dinChargingStatusResType *chargingstatusres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinChargingStatusResType_ResponseCode,
+		tvb, 0, 0,
+		chargingstatusres->ResponseCode);
+	proto_item_set_generated(it);
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinChargingStatusResType_EVSEID,
+		tvb,
+		chargingstatusres->EVSEID.bytes,
+		chargingstatusres->EVSEID.bytesLen,
+		sizeof(chargingstatusres->EVSEID.bytes));
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinChargingStatusResType_SAScheduleTupleID,
+		tvb, 0, 0,
+		chargingstatusres->SAScheduleTupleID);
+	proto_item_set_generated(it);
+
+	if (chargingstatusres->EVSEMaxCurrent_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&chargingstatusres->EVSEMaxCurrent,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEMaxCurrent");
+	}
+	if (chargingstatusres->MeterInfo_isUsed) {
+		dissect_v2gdin_meterinfo(
+			&chargingstatusres->MeterInfo,
+			tvb, subtree,
+			ett_v2gdin_struct_dinMeterInfoType,
+			"MeterInfo");
+	}
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinChargingStatusResType_ReceiptRequired,
+		tvb, 0, 0,
+		chargingstatusres->ReceiptRequired);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_ac_evsestatus(
+		&chargingstatusres->AC_EVSEStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinAC_EVSEStatusType,
+		"AC_EVSEStatus");
+
+	return;
+}
+
+static void
+dissect_v2gdin_meteringreceiptreq(
+	const struct dinMeteringReceiptReqType *meteringreceiptreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (meteringreceiptreq->Id_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_dinMeteringReceiptReqType_Id,
+			tvb,
+			meteringreceiptreq->Id.characters,
+			meteringreceiptreq->Id.charactersLen,
+			sizeof(meteringreceiptreq->Id.characters));
+	}
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinMeteringReceiptReqType_SessionID,
+		tvb,
+		meteringreceiptreq->SessionID.bytes,
+		meteringreceiptreq->SessionID.bytesLen,
+		sizeof(meteringreceiptreq->SessionID.bytes));
+
+	if (meteringreceiptreq->SAScheduleTupleID_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinMeteringReceiptReqType_SAScheduleTupleID,
+			tvb, 0, 0,
+			meteringreceiptreq->SAScheduleTupleID);
+		proto_item_set_generated(it);
+	}
+
+	dissect_v2gdin_meterinfo(
+		&meteringreceiptreq->MeterInfo,
+		tvb, subtree,
+		ett_v2gdin_struct_dinMeterInfoType,
+		"MeterInfo");
+
+	return;
+}
+
+static void
+dissect_v2gdin_meteringreceiptres(
+	const struct dinMeteringReceiptResType *meteringreceiptres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinMeteringReceiptResType_ResponseCode,
+		tvb, 0, 0,
+		meteringreceiptres->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_ac_evsestatus(
+		&meteringreceiptres->AC_EVSEStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinAC_EVSEStatusType,
+		"AC_EVSEStatus");
+
+	return;
+}
+
+static void
+dissect_v2gdin_sessionstop(
+	const struct dinSessionStopType *sessionstop,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	/* no content */
+	return;
+}
+
+static void
+dissect_v2gdin_sessionstopres(
+	const struct dinSessionStopResType *sessionstopres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinSessionStopResType_ResponseCode,
+		tvb, 0, 0, sessionstopres->ResponseCode);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_certificateupdatereq(
+	const struct dinCertificateUpdateReqType *req,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateReqType_Id,
+		tvb,
+		req->Id.characters,
+		req->Id.charactersLen,
+		sizeof(req->Id.characters));
+
+	dissect_v2gdin_certificatechain(
+		&req->ContractSignatureCertChain,
+		tvb, subtree,
+		ett_v2gdin_struct_dinCertificateChainType,
+		"ContractSignatureCertChain");
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateReqType_ContractID,
+		tvb,
+		req->ContractID.characters,
+		req->ContractID.charactersLen,
+		sizeof(req->ContractID.characters));
+
+	dissect_v2gdin_listofrootcertificateids(
+		&req->ListOfRootCertificateIDs,
+		tvb, subtree,
+		ett_v2gdin_struct_dinListOfRootCertificateIDsType,
+		"ListOfRootCertificateIDs");
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateReqType_DHParams,
+		tvb,
+		req->DHParams.bytes,
+		req->DHParams.bytesLen,
+		sizeof(req->DHParams.bytes));
+
+	return;
+}
+
+static void
+dissect_v2gdin_certificateupdateres(
+	const struct dinCertificateUpdateResType *res,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateResType_Id,
+		tvb,
+		res->Id.characters,
+		res->Id.charactersLen,
+		sizeof(res->Id.characters));
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateResType_ResponseCode,
+		tvb, 0, 0, res->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_certificatechain(
+		&res->ContractSignatureCertChain,
+		tvb, subtree,
+		ett_v2gdin_struct_dinCertificateChainType,
+		"ContractSignatureCertChain");
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateResType_ContractSignatureEncryptedPrivateKey,
+		tvb,
+		res->ContractSignatureEncryptedPrivateKey.bytes,
+		res->ContractSignatureEncryptedPrivateKey.bytesLen,
+		sizeof(res->ContractSignatureEncryptedPrivateKey.bytes));
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateResType_DHParams,
+		tvb,
+		res->DHParams.bytes,
+		res->DHParams.bytesLen,
+		sizeof(res->DHParams.bytes));
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateResType_ContractID,
+		tvb,
+		res->ContractID.characters,
+		res->ContractID.charactersLen,
+		sizeof(res->ContractID.characters));
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCertificateUpdateResType_RetryCounter,
+		tvb, 0, 0, res->RetryCounter);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_certificateinstallationreq(
+	const struct dinCertificateInstallationReqType *req,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (req->Id_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_dinCertificateInstallationReqType_Id,
+			tvb,
+			req->Id.characters,
+			req->Id.charactersLen,
+			sizeof(req->Id.characters));
+	}
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationReqType_OEMProvisioningCert,
+		tvb,
+		req->OEMProvisioningCert.bytes,
+		req->OEMProvisioningCert.bytesLen,
+		sizeof(req->OEMProvisioningCert.bytes));
+	dissect_v2gdin_listofrootcertificateids(
+		&req->ListOfRootCertificateIDs,
+		tvb, subtree,
+		ett_v2gdin_struct_dinListOfRootCertificateIDsType,
+		"ListOfRootCertificateIDs");
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationReqType_DHParams,
+		tvb,
+		req->DHParams.bytes,
+		req->DHParams.bytesLen,
+		sizeof(req->DHParams.bytes));
+
+	return;
+}
+
+static void
+dissect_v2gdin_certificateinstallationres(
+	const struct dinCertificateInstallationResType *res,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationResType_Id,
+		tvb,
+		res->Id.characters,
+		res->Id.charactersLen,
+		sizeof(res->Id.characters));
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationResType_ResponseCode,
+		tvb, 0, 0, res->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_certificatechain(
+		&res->ContractSignatureCertChain,
+		tvb, subtree,
+		ett_v2gdin_struct_dinCertificateChainType,
+		"ContractSignatureCertChain");
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationResType_ContractSignatureEncryptedPrivateKey,
+		tvb,
+		res->ContractSignatureEncryptedPrivateKey.bytes,
+		res->ContractSignatureEncryptedPrivateKey.bytesLen,
+		sizeof(res->ContractSignatureEncryptedPrivateKey.bytes));
+
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationResType_DHParams,
+		tvb,
+		res->DHParams.bytes,
+		res->DHParams.bytesLen,
+		sizeof(res->DHParams.bytes));
+
+	exi_add_characters(subtree,
+		hf_v2gdin_struct_dinCertificateInstallationResType_ContractID,
+		tvb,
+		res->ContractID.characters,
+		res->ContractID.charactersLen,
+		sizeof(res->ContractID.characters));
+
+	return;
+}
+
+static void
+dissect_v2gdin_cablecheckreq(
+	const struct dinCableCheckReqType *req,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evstatus(
+		&req->DC_EVStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinDC_EVStatusType,
+		"DC_EVStatus");
+
+	return;
+}
+
+static void
+dissect_v2gdin_cablecheckres(
+	const struct dinCableCheckResType *res,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCableCheckResType_ResponseCode,
+		tvb, 0, 0, res->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_dc_evsestatus(
+		&res->DC_EVSEStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		"DC_EVSEStatus");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCableCheckResType_EVSEProcessing,
+		tvb, 0, 0, res->EVSEProcessing);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_v2gdin_prechargereq(
+	const struct dinPreChargeReqType *req,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evstatus(
+		&req->DC_EVStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinDC_EVStatusType,
+		"DC_EVStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&req->EVTargetVoltage,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVTargetVoltage");
+
+	dissect_v2gdin_physicalvalue(
+		&req->EVTargetCurrent,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVTargetCurrent");
+
+	return;
+}
+
+static void
+dissect_v2gdin_prechargeres(
+	const struct dinPreChargeResType *res,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinPreChargeResType_ResponseCode,
+		tvb, 0, 0, res->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_dc_evsestatus(
+		&res->DC_EVSEStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		"DC_EVSEStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&res->EVSEPresentVoltage,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEPresentVoltage");
+
+	return;
+}
+
+static void
+dissect_v2gdin_currentdemandreq(
+	const struct dinCurrentDemandReqType *req,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evstatus(
+		&req->DC_EVStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinDC_EVStatusType,
+		"DC_EVStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&req->EVTargetVoltage,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVTargetVoltage");
+
+	dissect_v2gdin_physicalvalue(
+		&req->EVTargetCurrent,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVTargetCurrent");
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete,
+		tvb, 0, 0, req->ChargingComplete);
+	proto_item_set_generated(it);
+
+	if (req->BulkChargingComplete_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2gdin_struct_dinCurrentDemandReqType_BulkChargingComplete,
+			tvb, 0, 0, req->BulkChargingComplete);
+		proto_item_set_generated(it);
+	}
+
+	if (req->EVMaximumVoltageLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&req->EVMaximumVoltageLimit,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVMaximumVoltageLimit");
+	}
+
+	if (req->EVMaximumCurrentLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&req->EVMaximumCurrentLimit,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVMaximumCurrentLimit");
+	}
+
+	if (req->EVMaximumPowerLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&req->EVMaximumPowerLimit,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVMaximumPowerLimit");
+	}
+
+	if (req->RemainingTimeToFullSoC_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&req->RemainingTimeToFullSoC,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"RemainingTimeToFullSoC");
+	}
+
+	if (req->RemainingTimeToBulkSoC_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&req->RemainingTimeToBulkSoC,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"RemainingTimeToBulkSoC");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_currentdemandres(
+	const struct dinCurrentDemandResType *res,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinCurrentDemandResType_ResponseCode,
+		tvb, 0, 0, res->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_dc_evsestatus(
+		&res->DC_EVSEStatus,
+		tvb, subtree,
+		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		"DC_EVSEStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&res->EVSEPresentVoltage,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEPresentVoltage");
+
+	dissect_v2gdin_physicalvalue(
+		&res->EVSEPresentCurrent,
+		tvb, subtree,
+		ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEPresentCurrent");
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved,
+		tvb, 0, 0, res->EVSECurrentLimitAchieved);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinCurrentDemandResType_EVSEVoltageLimitAchieved,
+		tvb, 0, 0, res->EVSEVoltageLimitAchieved);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved,
+		tvb, 0, 0, res->EVSEPowerLimitAchieved);
+	proto_item_set_generated(it);
+
+	if (res->EVSEMaximumVoltageLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&res->EVSEMaximumVoltageLimit,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEMaximumVoltageLimit");
+	}
+	if (res->EVSEMaximumCurrentLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&res->EVSEMaximumCurrentLimit,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEMaximumCurrentLimit");
+	}
+	if (res->EVSEMaximumPowerLimit_isUsed) {
+		dissect_v2gdin_physicalvalue(
+			&res->EVSEMaximumPowerLimit,
+			tvb, subtree,
+			ett_v2gdin_struct_dinPhysicalValueType,
+			"EVSEMaximumPowerLimit");
+	}
+
+	return;
+}
+
+static void
+dissect_v2gdin_weldingdetectionreq(
+	const struct dinWeldingDetectionReqType *req,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_v2gdin_dc_evstatus(
+		&req->DC_EVStatus,
+		tvb, subtree, ett_v2gdin_struct_dinDC_EVStatusType,
+		"DC_EVStatus");
+
+	return;
+}
+
+static void
+dissect_v2gdin_weldingdetectionres(
+	const struct dinWeldingDetectionResType *res,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode,
+		tvb, 0, 0, res->ResponseCode);
+	proto_item_set_generated(it);
+
+	dissect_v2gdin_dc_evsestatus(
+		&res->DC_EVSEStatus,
+		tvb, subtree, ett_v2gdin_struct_dinDC_EVSEStatusType,
+		"DC_EVSEStatus");
+
+	dissect_v2gdin_physicalvalue(
+		&res->EVSEPresentVoltage,
+		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
+		"EVSEPresentVoltage");
+
+	return;
+}
+
+static void
 dissect_v2gdin_body(const struct dinBodyType *body,
 		    tvbuff_t *tvb,
 		    proto_tree *tree,
 		    gint idx,
 		    const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *body_tree;
 
 	body_tree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (body->SessionSetupReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_SessionSetupReq,
-			NULL, "SessionSetupReq");
-
-		exi_add_bytes(req_tree,
-			hf_v2gdin_body_SessionSetupReq_EVCCID,
-			tvb,
-			body->SessionSetupReq.EVCCID.bytes,
-			body->SessionSetupReq.EVCCID.bytesLen,
-			sizeof(body->SessionSetupReq.EVCCID.bytes));
+		dissect_v2gdin_sessionsetupreq(
+			&body->SessionSetupReq, tvb, body_tree,
+			ett_v2gdin_struct_dinSessionSetupReqType,
+			"SessionSetupReq");
 	}
 	if (body->SessionSetupRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_SessionSetupRes,
-			NULL, "SessionSetupRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_SessionSetupRes_ResponseCode,
-			tvb, 0, 0, body->SessionSetupRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		char evseid[2*dinSessionSetupResType_EVSEID_BYTES_SIZE + 1];
-		for (i = 0; i < body->SessionSetupRes.EVSEID.bytesLen; i++) {
-			snprintf(&evseid[2*i], sizeof(evseid) - 2*i,
-				"%02X", body->SessionSetupRes.EVSEID.bytes[i]);
-		}
-		evseid[2*i] = '\0';
-		it = proto_tree_add_string(res_tree,
-			hf_v2gdin_body_SessionSetupRes_EVSEID,
-			tvb, 0, 0, evseid);
-		proto_item_set_generated(it);
-
-		if (body->SessionSetupRes.DateTimeNow_isUsed) {
-			it = proto_tree_add_int64(res_tree,
-				hf_v2gdin_body_SessionSetupRes_DateTimeNow,
-				tvb, 0, 0, body->SessionSetupRes.DateTimeNow);
-			proto_item_set_generated(it);
-		}
+		dissect_v2gdin_sessionsetupres(
+			&body->SessionSetupRes, tvb, body_tree,
+			ett_v2gdin_struct_dinSessionSetupResType,
+			"SessionSetupRes");
 	}
 
 	if (body->ServiceDiscoveryReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ServiceDiscoveryReq,
-			NULL, "ServiceDiscoveryReq");
-
-		if (body->ServiceDiscoveryReq.ServiceScope_isUsed) {
-			exi_add_characters(req_tree,
-				hf_v2gdin_body_ServiceDiscoveryReq_ServiceScope,
-				tvb,
-				body->ServiceDiscoveryReq.ServiceScope.characters,
-				body->ServiceDiscoveryReq.ServiceScope.charactersLen,
-				sizeof(body->ServiceDiscoveryReq.ServiceScope.characters));
-		}
-
-		if (body->ServiceDiscoveryReq.ServiceCategory_isUsed) {
-			it = proto_tree_add_uint(req_tree,
-				hf_v2gdin_body_ServiceDiscoveryReq_ServiceCategory,
-				tvb, 0, 0, body->ServiceDiscoveryReq.ServiceCategory);
-			proto_item_set_generated(it);
-		}
+		dissect_v2gdin_servicediscoveryreq(
+			&body->ServiceDiscoveryReq, tvb, body_tree,
+			ett_v2gdin_struct_dinServiceDiscoveryReqType,
+			"ServiceDiscoveryReq");
 	}
 	if (body->ServiceDiscoveryRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ServiceDiscoveryRes,
-			NULL, "ServiceDiscoveryRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ServiceDiscoveryRes_ResponseCode,
-			tvb, 0, 0, body->ServiceDiscoveryRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_paymentoptions(
-			&body->ServiceDiscoveryRes.PaymentOptions,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinPaymentOptionsType,
-			"PaymentOptions");
-
-		dissect_v2gdin_servicecharge(
-			&body->ServiceDiscoveryRes.ChargeService,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinServiceChargeType,
-			"ChargeService");
-
-		if (body->ServiceDiscoveryRes.ServiceList_isUsed) {
-			dissect_v2gdin_servicetaglist(
-				&body->ServiceDiscoveryRes.ServiceList,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinServiceTagListType,
-				"ServiceList");
-		}
+		dissect_v2gdin_servicediscoveryres(
+			&body->ServiceDiscoveryRes, tvb, body_tree,
+			ett_v2gdin_struct_dinServiceDiscoveryResType,
+			"ServiceDiscoveryRes");
 	}
 
 	if (body->ServiceDetailReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ServiceDetailReq,
-			NULL, "ServiceDetailReq");
-
-		it = proto_tree_add_uint(req_tree,
-			hf_v2gdin_body_ServiceDetailReq_ServiceID,
-			tvb, 0, 0, body->ServiceDetailReq.ServiceID);
-		proto_item_set_generated(it);
+		dissect_v2gdin_servicedetailreq(
+			&body->ServiceDetailReq, tvb, body_tree,
+			ett_v2gdin_struct_dinServiceDetailReqType,
+			"ServiceDetailReq");
 	}
 	if (body->ServiceDetailRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ServiceDetailRes,
-			NULL, "ServiceDetailRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ServiceDetailRes_ResponseCode,
-			tvb, 0, 0, body->ServiceDetailRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ServiceDetailRes_ServiceID,
-			tvb, 0, 0, body->ServiceDetailRes.ServiceID);
-		proto_item_set_generated(it);
-
-		if (body->ServiceDetailRes.ServiceParameterList_isUsed) {
-			dissect_v2gdin_serviceparameterlist(
-				&body->ServiceDetailRes.ServiceParameterList,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinServiceParameterListType,
-				"ServiceParameterList");
-		}
+		dissect_v2gdin_servicedetailres(
+			&body->ServiceDetailRes, tvb, body_tree,
+			ett_v2gdin_struct_dinServiceDetailResType,
+			"ServiceDetailRes");
 	}
 
 	if (body->ServicePaymentSelectionReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ServicePaymentSelectionReq,
-			NULL, "ServicePaymentSelectionReq");
-
-		it = proto_tree_add_uint(req_tree,
-			hf_v2gdin_body_ServicePaymentSelectionReq_SelectedPaymentOption,
-			tvb, 0, 0, body->ServicePaymentSelectionReq.SelectedPaymentOption);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_selectedservicelist(
-			&body->ServicePaymentSelectionReq.SelectedServiceList,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinSelectedServiceListType,
-			"SelectedServiceList");
+		dissect_v2gdin_servicepaymentselectionreq(
+			&body->ServicePaymentSelectionReq, tvb, body_tree,
+			ett_v2gdin_struct_dinServicePaymentSelectionReqType,
+			"ServicePaymentSelectionReq");
 	}
 	if (body->ServicePaymentSelectionRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ServicePaymentSelectionRes,
-			NULL, "ServicePaymentSelectionRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ServicePaymentSelectionRes_ResponseCode,
-			tvb, 0, 0,
-			body->ServicePaymentSelectionRes.ResponseCode);
-		proto_item_set_generated(it);
+		dissect_v2gdin_servicepaymentselectionres(
+			&body->ServicePaymentSelectionRes, tvb, body_tree,
+			ett_v2gdin_struct_dinServicePaymentSelectionResType,
+			"ServicePaymentSelectionRes");
 	}
 
 	if (body->PaymentDetailsReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_PaymentDetailsReq,
-			NULL, "PaymentDetailsReq");
-
-		exi_add_characters(req_tree,
-			hf_v2gdin_body_PaymentDetailsReq_ContractID,
-			tvb,
-			body->PaymentDetailsReq.ContractID.characters,
-			body->PaymentDetailsReq.ContractID.charactersLen,
-			sizeof(body->PaymentDetailsReq.ContractID.characters));
-
-		dissect_v2gdin_certificatechain(
-			&body->PaymentDetailsReq.ContractSignatureCertChain,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinCertificateChainType,
-			"ContractSignatureCertChain");
+		dissect_v2gdin_paymentdetailsreq(
+			&body->PaymentDetailsReq, tvb, body_tree,
+			ett_v2gdin_struct_dinPaymentDetailsReqType,
+			"PaymentDetailsReq");
 	}
 	if (body->PaymentDetailsRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_PaymentDetailsRes,
-			NULL, "PaymentDetailsRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_PaymentDetailsRes_ResponseCode,
-			tvb, 0, 0,
-			body->PaymentDetailsRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		exi_add_characters(res_tree,
-			hf_v2gdin_body_PaymentDetailsRes_GenChallenge,
-			tvb,
-			body->PaymentDetailsRes.GenChallenge.characters,
-			body->PaymentDetailsRes.GenChallenge.charactersLen,
-			sizeof(body->PaymentDetailsRes.GenChallenge.characters));
-
-		it = proto_tree_add_int64(res_tree,
-			hf_v2gdin_body_PaymentDetailsRes_DateTimeNow,
-			tvb, 0, 0,
-			body->PaymentDetailsRes.DateTimeNow);
-		proto_item_set_generated(it);
+		dissect_v2gdin_paymentdetailsres(
+			&body->PaymentDetailsRes, tvb, body_tree,
+			ett_v2gdin_struct_dinPaymentDetailsResType,
+			"PaymentDetailsRes");
 	}
 
 	if (body->ContractAuthenticationReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ContractAuthenticationReq,
-			NULL, "ContractAuthenticationReq");
-
-		if (body->ContractAuthenticationReq.Id_isUsed) {
-			exi_add_characters(req_tree,
-				hf_v2gdin_body_ContractAuthenticationReq_Id,
-				tvb,
-				body->ContractAuthenticationReq.Id.characters,
-				body->ContractAuthenticationReq.Id.charactersLen,
-				sizeof(body->ContractAuthenticationReq.Id.characters));
-		}
-		if (body->ContractAuthenticationReq.GenChallenge_isUsed) {
-			exi_add_characters(req_tree,
-				hf_v2gdin_body_ContractAuthenticationReq_GenChallenge,
-				tvb,
-				body->ContractAuthenticationReq.GenChallenge.characters,
-				body->ContractAuthenticationReq.GenChallenge.charactersLen,
-				sizeof(body->ContractAuthenticationReq.GenChallenge.characters));
-		}
+		dissect_v2gdin_contractauthenticationreq(
+			&body->ContractAuthenticationReq, tvb, body_tree,
+			ett_v2gdin_struct_dinContractAuthenticationReqType,
+			"ContractAuthenticationReq");
 	}
 	if (body->ContractAuthenticationRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ContractAuthenticationRes,
-			NULL, "ContractAuthenticationRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ContractAuthenticationRes_ResponseCode,
-			tvb, 0, 0,
-			body->ContractAuthenticationRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ContractAuthenticationRes_EVSEProcessing,
-			tvb, 0, 0,
-			body->ContractAuthenticationRes.EVSEProcessing);
-		proto_item_set_generated(it);
+		dissect_v2gdin_contractauthenticationres(
+			&body->ContractAuthenticationRes, tvb, body_tree,
+			ett_v2gdin_struct_dinContractAuthenticationResType,
+			"ContractAuthenticationRes");
 	}
 
 	if (body->ChargeParameterDiscoveryReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ChargeParameterDiscoveryReq,
-			NULL, "ChargeParameterDiscoveryReq");
-
-		it = proto_tree_add_uint(req_tree,
-			hf_v2gdin_body_ChargeParameterDiscoveryReq_EVRequestedEnergyTransferType,
-			tvb, 0, 0,
-			body->ChargeParameterDiscoveryReq.EVRequestedEnergyTransferType);
-		proto_item_set_generated(it);
-
-		if (body->ChargeParameterDiscoveryReq.EVChargeParameter_isUsed) {
-
-			dissect_v2gdin_evchargeparameter(
-				&body->ChargeParameterDiscoveryReq.EVChargeParameter,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinEVChargeParameterType,
-				"EVChargeParameter");
-		}
-
-		if (body->ChargeParameterDiscoveryReq.AC_EVChargeParameter_isUsed) {
-			dissect_v2gdin_ac_evchargeparameter(
-				&body->ChargeParameterDiscoveryReq.AC_EVChargeParameter,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinAC_EVChargeParameterType,
-				"AC_EVChargeParameter");
-		}
-
-		if (body->ChargeParameterDiscoveryReq.DC_EVChargeParameter_isUsed) {
-			dissect_v2gdin_dc_evchargeparameter(
-				&body->ChargeParameterDiscoveryReq.DC_EVChargeParameter,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinDC_EVChargeParameterType,
-				"DC_EVChargeParameter");
-		}
+		dissect_v2gdin_chargeparameterdiscoveryreq(
+			&body->ChargeParameterDiscoveryReq, tvb, body_tree,
+			ett_v2gdin_struct_dinChargeParameterDiscoveryReqType,
+			"ChargeParameterDiscoveryReq");
 	}
 	if (body->ChargeParameterDiscoveryRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ChargeParameterDiscoveryRes,
-			NULL, "ChargeParameterDiscoveryRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ChargeParameterDiscoveryRes_ResponseCode,
-			tvb, 0, 0,
-			body->ChargeParameterDiscoveryRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ChargeParameterDiscoveryRes_EVSEProcessing,
-			tvb, 0, 0,
-			body->ChargeParameterDiscoveryRes.EVSEProcessing);
-		proto_item_set_generated(it);
-
-		if (body->ChargeParameterDiscoveryRes.SASchedules_isUsed) {
-			dissect_v2gdin_saschedules(
-				&body->ChargeParameterDiscoveryRes.SASchedules,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinSASchedulesType,
-				"SASchedules");
-		}
-		if (body->ChargeParameterDiscoveryRes.SAScheduleList_isUsed) {
-			dissect_v2gdin_saschedulelist(
-				&body->ChargeParameterDiscoveryRes.SAScheduleList,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinSAScheduleListType,
-				"SAScheduleList");
-		}
-		if (body->ChargeParameterDiscoveryRes.EVSEChargeParameter_isUsed) {
-			dissect_v2gdin_evsechargeparameter(&body->ChargeParameterDiscoveryRes.EVSEChargeParameter,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinEVSEChargeParameterType,
-				"EVSEChargeParameter");
-		}
-		if (body->ChargeParameterDiscoveryRes.AC_EVSEChargeParameter_isUsed) {
-			dissect_v2gdin_ac_evsechargeparameter(
-				&body->ChargeParameterDiscoveryRes.AC_EVSEChargeParameter,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinAC_EVSEChargeParameterType,
-				"AC_EVSEChargeParameter");
-		}
-		if (body->ChargeParameterDiscoveryRes.DC_EVSEChargeParameter_isUsed) {
-			dissect_v2gdin_dc_evsechargeparameter(
-				&body->ChargeParameterDiscoveryRes.DC_EVSEChargeParameter,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinDC_EVSEChargeParameterType,
-				"DC_EVSEChargeParameter");
-		}
+		dissect_v2gdin_chargeparameterdiscoveryres(
+			&body->ChargeParameterDiscoveryRes, tvb, body_tree,
+			ett_v2gdin_struct_dinChargeParameterDiscoveryResType,
+			"ChargeParameterDiscoveryRes");
 	}
 
 	if (body->PowerDeliveryReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_PowerDeliveryReq,
-			NULL, "PowerDeliveryReq");
-
-		it = proto_tree_add_int(req_tree,
-			hf_v2gdin_body_PowerDeliveryReq_ReadyToChargeState,
-			tvb, 0, 0, body->PowerDeliveryReq.ReadyToChargeState);
-		proto_item_set_generated(it);
-
-		if (body->PowerDeliveryReq.ChargingProfile_isUsed) {
-			dissect_v2gdin_chargingprofile(
-				&body->PowerDeliveryReq.ChargingProfile,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinChargingProfileType,
-				"ChargingProfile");
-		}
-		if (body->PowerDeliveryReq.EVPowerDeliveryParameter_isUsed) {
-			dissect_v2gdin_evpowerdeliveryparameter(
-				&body->PowerDeliveryReq.EVPowerDeliveryParameter,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinEVPowerDeliveryParameterType,
-				"EVPowerDeliveryParameter");
-		}
-		if (body->PowerDeliveryReq.DC_EVPowerDeliveryParameter_isUsed) {
-			dissect_v2gdin_dc_evpowerdeliveryparameter(
-				&body->PowerDeliveryReq.DC_EVPowerDeliveryParameter,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
-				"DC_EVPowerDeliveryParameter");
-		}
+		dissect_v2gdin_powerdeliveryreq(
+			&body->PowerDeliveryReq, tvb, body_tree,
+			ett_v2gdin_struct_dinPowerDeliveryReqType,
+			"PowerDeliveryReq");
 	}
 	if (body->PowerDeliveryRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_PowerDeliveryRes,
-			NULL, "PowerDeliveryRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_PowerDeliveryRes_ResponseCode,
-			tvb, 0, 0,
-			body->PowerDeliveryRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		if (body->PowerDeliveryRes.EVSEStatus_isUsed) {
-			dissect_v2gdin_evsestatus(
-				&body->PowerDeliveryRes.EVSEStatus,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinEVSEStatusType,
-				"EVSEStatus");
-		}
-		if (body->PowerDeliveryRes.AC_EVSEStatus_isUsed) {
-			dissect_v2gdin_ac_evsestatus(
-				&body->PowerDeliveryRes.AC_EVSEStatus,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinAC_EVSEStatusType,
-				"AC_EVSEStatus");
-		}
-		if (body->PowerDeliveryRes.DC_EVSEStatus_isUsed) {
-			dissect_v2gdin_dc_evsestatus(
-				&body->PowerDeliveryRes.DC_EVSEStatus,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinDC_EVSEStatusType,
-				"DC_EVSEStatus");
-		}
+		dissect_v2gdin_powerdeliveryres(
+			&body->PowerDeliveryRes, tvb, body_tree,
+			ett_v2gdin_struct_dinPowerDeliveryResType,
+			"PowerDeliveryRes");
 	}
 
 	if (body->ChargingStatusReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ChargingStatusReq,
-			NULL, "ChargingStatusReq");
-
-		/* no content */
+		dissect_v2gdin_chargingstatusreq(
+			&body->ChargingStatusReq, tvb, body_tree,
+			ett_v2gdin_struct_dinChargingStatusReqType,
+			"ChargingStatusReq");
 	}
 	if (body->ChargingStatusRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_ChargingStatusRes,
-			NULL, "ChargingStatusRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_ChargingStatusRes_ResponseCode,
-			tvb, 0, 0,
-			body->ChargingStatusRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		exi_add_bytes(res_tree,
-			hf_v2gdin_body_ChargingStatusRes_EVSEID,
-			tvb,
-			body->ChargingStatusRes.EVSEID.bytes,
-			body->ChargingStatusRes.EVSEID.bytesLen,
-			sizeof(body->ChargingStatusRes.EVSEID.bytes));
-
-		it = proto_tree_add_int(res_tree,
-			hf_v2gdin_body_ChargingStatusRes_SAScheduleTupleID,
-			tvb, 0, 0,
-			body->ChargingStatusRes.SAScheduleTupleID);
-		proto_item_set_generated(it);
-
-		if (body->ChargingStatusRes.EVSEMaxCurrent_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->ChargingStatusRes.EVSEMaxCurrent,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVSEMaxCurrent");
-		}
-		if (body->ChargingStatusRes.MeterInfo_isUsed) {
-			dissect_v2gdin_meterinfo(
-				&body->ChargingStatusRes.MeterInfo,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinMeterInfoType,
-				"MeterInfo");
-		}
-
-		it = proto_tree_add_int(res_tree,
-			hf_v2gdin_body_ChargingStatusRes_ReceiptRequired,
-			tvb, 0, 0,
-			body->ChargingStatusRes.ReceiptRequired);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_ac_evsestatus(
-			&body->ChargingStatusRes.AC_EVSEStatus,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinAC_EVSEStatusType,
-			"AC_EVSEStatus");
+		dissect_v2gdin_chargingstatusres(
+			&body->ChargingStatusRes, tvb, body_tree,
+			ett_v2gdin_struct_dinChargingStatusResType,
+			"ChargingStatusRes");
 	}
 
 	if (body->MeteringReceiptReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_MeteringReceiptReq,
-			NULL, "MeteringReceiptReq");
-
-		if (body->MeteringReceiptReq.Id_isUsed) {
-			exi_add_characters(req_tree,
-				hf_v2gdin_body_MeteringReceiptReq_Id,
-				tvb,
-				body->MeteringReceiptReq.Id.characters,
-				body->MeteringReceiptReq.Id.charactersLen,
-				sizeof(body->MeteringReceiptReq.Id.characters));
-		}
-
-		exi_add_bytes(req_tree,
-			hf_v2gdin_body_MeteringReceiptReq_SessionID,
-			tvb,
-			body->MeteringReceiptReq.SessionID.bytes,
-			body->MeteringReceiptReq.SessionID.bytesLen,
-			sizeof(body->MeteringReceiptReq.SessionID.bytes));
-
-		if (body->MeteringReceiptReq.SAScheduleTupleID_isUsed) {
-			it = proto_tree_add_int(req_tree,
-				hf_v2gdin_body_MeteringReceiptReq_SAScheduleTupleID,
-				tvb, 0, 0,
-				body->MeteringReceiptReq.SAScheduleTupleID);
-			proto_item_set_generated(it);
-		}
-
-		dissect_v2gdin_meterinfo(
-			&body->MeteringReceiptReq.MeterInfo,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinMeterInfoType,
-			"MeterInfo");
+		dissect_v2gdin_meteringreceiptreq(
+			&body->MeteringReceiptReq, tvb, body_tree,
+			ett_v2gdin_struct_dinMeteringReceiptReqType,
+			"MeteringReceiptReq");
 	}
 	if (body->MeteringReceiptRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_MeteringReceiptRes,
-			NULL, "MeteringReceiptRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_MeteringReceiptRes_ResponseCode,
-			tvb, 0, 0,
-			body->MeteringReceiptRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_ac_evsestatus(
-			&body->MeteringReceiptRes.AC_EVSEStatus,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinAC_EVSEStatusType,
-			"AC_EVSEStatus");
+		dissect_v2gdin_meteringreceiptres(
+			&body->MeteringReceiptRes, tvb, body_tree,
+			ett_v2gdin_struct_dinMeteringReceiptResType,
+			"MeteringReceiptRes");
 	}
 
 	if (body->SessionStopReq_isUsed) {
-		proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_SessionStopReq,
-			NULL, "SessionStopReq");
-
-		/* no content */
+		dissect_v2gdin_sessionstop(
+			&body->SessionStopReq, tvb, body_tree,
+			ett_v2gdin_struct_dinSessionStopType,
+			"SessionStopReq");
 	}
 	if (body->SessionStopRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_SessionStopRes,
-			NULL, "SessionStopRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_SessionStopRes_ResponseCode,
-			tvb, 0, 0, body->SessionStopRes.ResponseCode);
-		proto_item_set_generated(it);
+		dissect_v2gdin_sessionstopres(
+			&body->SessionStopRes, tvb, body_tree,
+			ett_v2gdin_struct_dinSessionStopResType,
+			"SessionStopRes");
 	}
 
 	if (body->CertificateUpdateReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CertificateUpdateReq,
-			NULL, "CertificateUpdateReq");
-
-		exi_add_characters(req_tree,
-			hf_v2gdin_body_CertificateUpdateReq_Id,
-			tvb,
-			body->CertificateUpdateReq.Id.characters,
-			body->CertificateUpdateReq.Id.charactersLen,
-			sizeof(body->CertificateUpdateReq.Id.characters));
-
-		dissect_v2gdin_certificatechain(
-			&body->CertificateUpdateReq.ContractSignatureCertChain,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinCertificateChainType,
-			"ContractSignatureCertChain");
-
-		exi_add_characters(req_tree,
-			hf_v2gdin_body_CertificateUpdateReq_ContractID,
-			tvb,
-			body->CertificateUpdateReq.ContractID.characters,
-			body->CertificateUpdateReq.ContractID.charactersLen,
-			sizeof(body->CertificateUpdateReq.ContractID.characters));
-
-		dissect_v2gdin_listofrootcertificateids(
-			&body->CertificateUpdateReq.ListOfRootCertificateIDs,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinListOfRootCertificateIDsType,
-			"ListOfRootCertificateIDs");
-
-		exi_add_bytes(req_tree,
-			hf_v2gdin_body_CertificateUpdateReq_DHParams,
-			tvb,
-			body->CertificateUpdateReq.DHParams.bytes,
-			body->CertificateUpdateReq.DHParams.bytesLen,
-			sizeof(body->CertificateUpdateReq.DHParams.bytes));
+		dissect_v2gdin_certificateupdatereq(
+			&body->CertificateUpdateReq, tvb, body_tree,
+			ett_v2gdin_struct_dinCertificateUpdateReqType,
+			"CertificateUpdateReq");
 	}
 	if (body->CertificateUpdateRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CertificateUpdateRes,
-			NULL, "CertificateUpdateRes");
-
-		exi_add_characters(res_tree,
-			hf_v2gdin_body_CertificateUpdateRes_Id,
-			tvb,
-			body->CertificateUpdateRes.Id.characters,
-			body->CertificateUpdateRes.Id.charactersLen,
-			sizeof(body->CertificateUpdateRes.Id.characters));
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_CertificateUpdateRes_ResponseCode,
-			tvb, 0, 0, body->CertificateUpdateRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_certificatechain(
-			&body->CertificateUpdateRes.ContractSignatureCertChain,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinCertificateChainType,
-			"ContractSignatureCertChain");
-
-		exi_add_bytes(res_tree,
-			hf_v2gdin_body_CertificateUpdateRes_ContractSignatureEncryptedPrivateKey,
-			tvb,
-			body->CertificateUpdateRes.ContractSignatureEncryptedPrivateKey.bytes,
-			body->CertificateUpdateRes.ContractSignatureEncryptedPrivateKey.bytesLen,
-			sizeof(body->CertificateUpdateRes.ContractSignatureEncryptedPrivateKey.bytes));
-
-		exi_add_bytes(res_tree,
-			hf_v2gdin_body_CertificateUpdateRes_DHParams,
-			tvb,
-			body->CertificateUpdateRes.DHParams.bytes,
-			body->CertificateUpdateRes.DHParams.bytesLen,
-			sizeof(body->CertificateUpdateRes.DHParams.bytes));
-
-		exi_add_characters(res_tree,
-			hf_v2gdin_body_CertificateUpdateRes_ContractID,
-			tvb,
-			body->CertificateUpdateRes.ContractID.characters,
-			body->CertificateUpdateRes.ContractID.charactersLen,
-			sizeof(body->CertificateUpdateRes.ContractID.characters));
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_CertificateUpdateRes_RetryCounter,
-			tvb, 0, 0, body->CertificateUpdateRes.RetryCounter);
-		proto_item_set_generated(it);
+		dissect_v2gdin_certificateupdateres(
+			&body->CertificateUpdateRes, tvb, body_tree,
+			ett_v2gdin_struct_dinCertificateUpdateResType,
+			"CertificateUpdateRes");
 	}
 
 	if (body->CertificateInstallationReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CertificateInstallationReq,
-			NULL, "CertificateInstallationReq");
-
-		if (body->CertificateInstallationReq.Id_isUsed) {
-			exi_add_characters(req_tree,
-				hf_v2gdin_body_CertificateInstallationReq_Id,
-				tvb,
-				body->CertificateInstallationRes.Id.characters,
-				body->CertificateInstallationRes.Id.charactersLen,
-				sizeof(body->CertificateInstallationRes.Id.characters));
-		}
-
-		exi_add_bytes(req_tree,
-			hf_v2gdin_body_CertificateInstallationReq_OEMProvisioningCert,
-			tvb,
-			body->CertificateInstallationReq.OEMProvisioningCert.bytes,
-			body->CertificateInstallationReq.OEMProvisioningCert.bytesLen,
-			sizeof(body->CertificateInstallationReq.OEMProvisioningCert.bytes));
-		dissect_v2gdin_listofrootcertificateids(
-			&body->CertificateInstallationReq.ListOfRootCertificateIDs,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinListOfRootCertificateIDsType,
-			"ListOfRootCertificateIDs");
-
-		exi_add_bytes(req_tree,
-			hf_v2gdin_body_CertificateInstallationReq_DHParams,
-			tvb,
-			body->CertificateInstallationReq.DHParams.bytes,
-			body->CertificateInstallationReq.DHParams.bytesLen,
-			sizeof(body->CertificateInstallationReq.DHParams.bytes));
+		dissect_v2gdin_certificateinstallationreq(
+			&body->CertificateInstallationReq, tvb, body_tree,
+			ett_v2gdin_struct_dinCertificateInstallationReqType,
+			"CertificateInstallationReq");
 	}
 	if (body->CertificateInstallationRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CertificateInstallationRes,
-			NULL, "CertificateInstallationRes");
-
-		exi_add_characters(res_tree,
-			hf_v2gdin_body_CertificateInstallationRes_Id,
-			tvb,
-			body->CertificateInstallationRes.Id.characters,
-			body->CertificateInstallationRes.Id.charactersLen,
-			sizeof(body->CertificateInstallationRes.Id.characters));
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_CertificateInstallationRes_ResponseCode,
-			tvb, 0, 0, body->CertificateInstallationRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_certificatechain(
-			&body->CertificateInstallationRes.ContractSignatureCertChain,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinCertificateChainType,
-			"ContractSignatureCertChain");
-
-		exi_add_bytes(res_tree,
-			hf_v2gdin_body_CertificateInstallationRes_ContractSignatureEncryptedPrivateKey,
-			tvb,
-			body->CertificateInstallationRes.ContractSignatureEncryptedPrivateKey.bytes,
-			body->CertificateInstallationRes.ContractSignatureEncryptedPrivateKey.bytesLen,
-			sizeof(body->CertificateInstallationRes.ContractSignatureEncryptedPrivateKey.bytes));
-
-		exi_add_bytes(res_tree,
-			hf_v2gdin_body_CertificateInstallationRes_DHParams,
-			tvb,
-			body->CertificateInstallationRes.DHParams.bytes,
-			body->CertificateInstallationRes.DHParams.bytesLen,
-			sizeof(body->CertificateInstallationRes.DHParams.bytes));
-
-		exi_add_characters(res_tree,
-			hf_v2gdin_body_CertificateInstallationRes_ContractID,
-			tvb,
-			body->CertificateInstallationRes.ContractID.characters,
-			body->CertificateInstallationRes.ContractID.charactersLen,
-			sizeof(body->CertificateInstallationRes.ContractID.characters));
+		dissect_v2gdin_certificateinstallationres(
+			&body->CertificateInstallationRes, tvb, body_tree,
+			ett_v2gdin_struct_dinCertificateInstallationResType,
+			"CertificateInstallationRes");
 	}
 
 	if (body->CableCheckReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CableCheckReq,
-			NULL, "CableCheckReq");
-
-		dissect_v2gdin_dc_evstatus(
-			&body->CableCheckReq.DC_EVStatus,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinDC_EVStatusType,
-			"DC_EVStatus");
+		dissect_v2gdin_cablecheckreq(
+			&body->CableCheckReq, tvb, body_tree,
+			ett_v2gdin_struct_dinCableCheckReqType,
+			"CableCheckReq");
 	}
 	if (body->CableCheckRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CableCheckRes,
-			NULL, "CableCheckRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_CableCheckRes_ResponseCode,
-			tvb, 0, 0, body->CableCheckRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_dc_evsestatus(
-			&body->CableCheckRes.DC_EVSEStatus,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinDC_EVSEStatusType,
-			"DC_EVSEStatus");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_CableCheckRes_EVSEProcessing,
-			tvb, 0, 0, body->CableCheckRes.EVSEProcessing);
-		proto_item_set_generated(it);
+		dissect_v2gdin_cablecheckres(
+			&body->CableCheckRes, tvb, body_tree,
+			ett_v2gdin_struct_dinCableCheckResType,
+			"CableCheckRes");
 	}
 
 	if (body->PreChargeReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_PreChargeReq,
-			NULL, "PreChargeReq");
-
-		dissect_v2gdin_dc_evstatus(
-			&body->PreChargeReq.DC_EVStatus,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinDC_EVStatusType,
-			"DC_EVStatus");
-
-		dissect_v2gdin_physicalvalue(
-			&body->PreChargeReq.EVTargetVoltage,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVTargetVoltage");
-
-		dissect_v2gdin_physicalvalue(
-			&body->PreChargeReq.EVTargetCurrent,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVTargetCurrent");
+		dissect_v2gdin_prechargereq(
+			&body->PreChargeReq, tvb, body_tree,
+			ett_v2gdin_struct_dinPreChargeReqType,
+			"PreChargeReq");
 	}
 	if (body->PreChargeRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_PreChargeRes,
-			NULL, "PreChargeRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_PreChargeRes_ResponseCode,
-			tvb, 0, 0, body->PreChargeRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_dc_evsestatus(
-			&body->PreChargeRes.DC_EVSEStatus,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinDC_EVSEStatusType,
-			"DC_EVSEStatus");
-
-		dissect_v2gdin_physicalvalue(
-			&body->PreChargeRes.EVSEPresentVoltage,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVSEPresentVoltage");
+		dissect_v2gdin_prechargeres(
+			&body->PreChargeRes, tvb, body_tree,
+			ett_v2gdin_struct_dinPreChargeResType,
+			"PreChargeRes");
 	}
 
 	if (body->CurrentDemandReq_isUsed) {
-		proto_tree *req_tree;
-		proto_item *it;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CurrentDemandReq,
-			NULL, "CurrentDemandReq");
-
-		dissect_v2gdin_dc_evstatus(
-			&body->CurrentDemandReq.DC_EVStatus,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinDC_EVStatusType,
-			"DC_EVStatus");
-
-		dissect_v2gdin_physicalvalue(
-			&body->CurrentDemandReq.EVTargetVoltage,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVTargetVoltage");
-
-		dissect_v2gdin_physicalvalue(
-			&body->CurrentDemandReq.EVTargetCurrent,
-			tvb, req_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVTargetCurrent");
-
-		it = proto_tree_add_int(req_tree,
-			hf_v2gdin_body_CurrentDemandReq_ChargingComplete,
-			tvb, 0, 0, body->CurrentDemandReq.ChargingComplete);
-		proto_item_set_generated(it);
-
-		if (body->CurrentDemandReq.BulkChargingComplete_isUsed) {
-			it = proto_tree_add_int(req_tree,
-				hf_v2gdin_body_CurrentDemandReq_BulkChargingComplete,
-				tvb, 0, 0, body->CurrentDemandReq.BulkChargingComplete);
-			proto_item_set_generated(it);
-		}
-
-		if (body->CurrentDemandReq.EVMaximumVoltageLimit_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandReq.EVMaximumVoltageLimit,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVMaximumVoltageLimit");
-		}
-
-		if (body->CurrentDemandReq.EVMaximumCurrentLimit_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandReq.EVMaximumCurrentLimit,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVMaximumCurrentLimit");
-		}
-
-		if (body->CurrentDemandReq.EVMaximumPowerLimit_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandReq.EVMaximumPowerLimit,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVMaximumPowerLimit");
-		}
-
-		if (body->CurrentDemandReq.RemainingTimeToFullSoC_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandReq.RemainingTimeToFullSoC,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"RemainingTimeToFullSoC");
-		}
-
-		if (body->CurrentDemandReq.RemainingTimeToBulkSoC_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandReq.RemainingTimeToBulkSoC,
-				tvb, req_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"RemainingTimeToBulkSoC");
-		}
+		dissect_v2gdin_currentdemandreq(
+			&body->CurrentDemandReq, tvb, body_tree,
+			ett_v2gdin_struct_dinCurrentDemandReqType,
+			"CurrentDemandReq");
 	}
 	if (body->CurrentDemandRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_CurrentDemandRes,
-			NULL, "CurrentDemandRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_CurrentDemandRes_ResponseCode,
-			tvb, 0, 0, body->CurrentDemandRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_dc_evsestatus(
-			&body->CurrentDemandRes.DC_EVSEStatus,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinDC_EVSEStatusType,
-			"DC_EVSEStatus");
-
-		dissect_v2gdin_physicalvalue(
-			&body->CurrentDemandRes.EVSEPresentVoltage,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVSEPresentVoltage");
-
-		dissect_v2gdin_physicalvalue(
-			&body->CurrentDemandRes.EVSEPresentCurrent,
-			tvb, res_tree,
-			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVSEPresentCurrent");
-
-		it = proto_tree_add_int(res_tree,
-			hf_v2gdin_body_CurrentDemandRes_EVSECurrentLimitAchieved,
-			tvb, 0, 0, body->CurrentDemandRes.EVSECurrentLimitAchieved);
-		proto_item_set_generated(it);
-
-		it = proto_tree_add_int(res_tree,
-			hf_v2gdin_body_CurrentDemandRes_EVSEVoltageLimitAchieved,
-			tvb, 0, 0, body->CurrentDemandRes.EVSEVoltageLimitAchieved);
-		proto_item_set_generated(it);
-
-		it = proto_tree_add_int(res_tree,
-			hf_v2gdin_body_CurrentDemandRes_EVSEPowerLimitAchieved,
-			tvb, 0, 0, body->CurrentDemandRes.EVSEPowerLimitAchieved);
-		proto_item_set_generated(it);
-
-		if (body->CurrentDemandRes.EVSEMaximumVoltageLimit_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandRes.EVSEMaximumVoltageLimit,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVSEMaximumVoltageLimit");
-		}
-		if (body->CurrentDemandRes.EVSEMaximumCurrentLimit_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandRes.EVSEMaximumCurrentLimit,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVSEMaximumCurrentLimit");
-		}
-		if (body->CurrentDemandRes.EVSEMaximumPowerLimit_isUsed) {
-			dissect_v2gdin_physicalvalue(
-				&body->CurrentDemandRes.EVSEMaximumPowerLimit,
-				tvb, res_tree,
-				ett_v2gdin_struct_dinPhysicalValueType,
-				"EVSEMaximumPowerLimit");
-		}
+		dissect_v2gdin_currentdemandres(
+			&body->CurrentDemandRes, tvb, body_tree,
+			ett_v2gdin_struct_dinCurrentDemandResType,
+			"CurrentDemandRes");
 	}
 
 	if (body->WeldingDetectionReq_isUsed) {
-		proto_tree *req_tree;
-
-		req_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_WeldingDetectionReq,
-			NULL, "WeldingDetectionReq");
-
-		dissect_v2gdin_dc_evstatus(
-			&body->WeldingDetectionReq.DC_EVStatus,
-			tvb, req_tree, ett_v2gdin_struct_dinDC_EVStatusType,
-			"DC_EVStatus");
+		dissect_v2gdin_weldingdetectionreq(
+			&body->WeldingDetectionReq, tvb, body_tree,
+			ett_v2gdin_struct_dinWeldingDetectionReqType,
+			"WeldingDetectionReq");
 	}
 	if (body->WeldingDetectionRes_isUsed) {
-		proto_tree *res_tree;
-		proto_item *it;
-
-		res_tree = proto_tree_add_subtree(body_tree,
-			tvb, 0, 0, ett_v2gdin_body_WeldingDetectionRes,
-			NULL, "WeldingDetectionRes");
-
-		it = proto_tree_add_uint(res_tree,
-			hf_v2gdin_body_WeldingDetectionRes_ResponseCode,
-			tvb, 0, 0, body->WeldingDetectionRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		dissect_v2gdin_dc_evsestatus(
-			&body->WeldingDetectionRes.DC_EVSEStatus,
-			tvb, res_tree, ett_v2gdin_struct_dinDC_EVSEStatusType,
-			"DC_EVSEStatus");
-
-		dissect_v2gdin_physicalvalue(
-			&body->WeldingDetectionRes.EVSEPresentVoltage,
-			tvb, res_tree, ett_v2gdin_struct_dinPhysicalValueType,
-			"EVSEPresentVoltage");
+		dissect_v2gdin_weldingdetectionres(
+			&body->WeldingDetectionRes, tvb, body_tree,
+			ett_v2gdin_struct_dinWeldingDetectionResType,
+			"WeldingDetectionRes");
 	}
 
 	return;
@@ -4551,75 +5059,76 @@ proto_register_v2gdin(void)
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		{ &hf_v2gdin_header_SessionID,
-		  { "SessionID", "v2gdin.header.sessionid",
+		/* struct dinMessageHeaderType */
+		{ &hf_v2gdin_struct_dinMessageHeaderType_SessionID,
+		  { "SessionID", "v2gdin.struct.messageheader.sessionid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* SessionSetupReq */
-		{ &hf_v2gdin_body_SessionSetupReq_EVCCID,
+		{ &hf_v2gdin_struct_dinSessionSetupReqType_EVCCID,
 		  { "EVCCID", "v2gdin.body.sessionsetupreq.evccid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* SessionSetupRes */
-		{ &hf_v2gdin_body_SessionSetupRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinSessionSetupResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.sessionsetupres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_SessionSetupRes_EVSEID,
+		{ &hf_v2gdin_struct_dinSessionSetupResType_EVSEID,
 		  { "EVSEID", "v2gdin.body.sessionsetupres.evseid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_SessionSetupRes_DateTimeNow,
+		{ &hf_v2gdin_struct_dinSessionSetupResType_DateTimeNow,
 		  { "DateTimeNow", "v2gdin.body.sessionsetupres.datetimenow",
 		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* ServiceDiscoveryReq */
-		{ &hf_v2gdin_body_ServiceDiscoveryReq_ServiceScope,
+		{ &hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceScope,
 		  { "ServiceScope", "v2gdin.body.servicediscoveryreq.servicescope",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ServiceDiscoveryReq_ServiceCategory,
+		{ &hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceCategory,
 		  { "ServiceCategory", "v2gdin.body.servicediscoveryreq.servicecategory",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_service_category_names),
 		    0x0, NULL, HFILL }
 		},
 		/* ServiceDiscoveryRes */
-		{ &hf_v2gdin_body_ServiceDiscoveryRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinServiceDiscoveryResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.servicediscoveryres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
 
 		/* ServiceDetailReq */
-		{ &hf_v2gdin_body_ServiceDetailReq_ServiceID,
+		{ &hf_v2gdin_struct_dinServiceDetailReqType_ServiceID,
 		  { "ServiceID",
 		    "v2gdin.body.servicedetailreq.serviceid",
 		    FT_UINT16, BASE_HEX, NULL, 0x0, NULL, HFILL }
 		},
 		/* ServiceDiscoveryRes */
-		{ &hf_v2gdin_body_ServiceDetailRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinServiceDetailResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.servicedetailres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ServiceDetailRes_ServiceID,
+		{ &hf_v2gdin_struct_dinServiceDetailResType_ServiceID,
 		  { "ServiceID",
 		    "v2gdin.body.servicedetailres.serviceid",
 		    FT_UINT16, BASE_HEX, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* ServicePaymentSelectionReq */
-		{ &hf_v2gdin_body_ServicePaymentSelectionReq_SelectedPaymentOption,
+		{ &hf_v2gdin_struct_dinServicePaymentSelectionReqType_SelectedPaymentOption,
 		  { "SelectedPaymentOption",
 		    "v2gdin.body.servicepaymentselectionreq.selectedpaymentoption",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_payment_option_names),
 		    0x0, NULL, HFILL }
 		},
 		/* ServicePaymentSelectionRes */
-		{ &hf_v2gdin_body_ServicePaymentSelectionRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinServicePaymentSelectionResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.servicepaymentselectionres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -4627,45 +5136,45 @@ proto_register_v2gdin(void)
 		},
 
 		/* PaymentDetailsReq */
-		{ &hf_v2gdin_body_PaymentDetailsReq_ContractID,
+		{ &hf_v2gdin_struct_dinPaymentDetailsReqType_ContractID,
 		  { "ContractID", "v2gdin.body.paymentdetailsreq.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* PaymentDetailsRes */
-		{ &hf_v2gdin_body_PaymentDetailsRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinPaymentDetailsResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.paymentdetailsres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_PaymentDetailsRes_GenChallenge,
+		{ &hf_v2gdin_struct_dinPaymentDetailsResType_GenChallenge,
 		  { "GenChallenge",
 		    "v2gdin.body.paymentdetailsres.genchallenge",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_PaymentDetailsRes_DateTimeNow,
+		{ &hf_v2gdin_struct_dinPaymentDetailsResType_DateTimeNow,
 		  { "DateTimeNow", "v2gdin.body.paymentdetailsress.datetimenow",
 		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* ContractAuthenticationReq */
-		{ &hf_v2gdin_body_ContractAuthenticationReq_Id,
+		{ &hf_v2gdin_struct_dinContractAuthenticationReqType_Id,
 		  { "Id", "v2gdin.body.paymentdetailsreq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ContractAuthenticationReq_GenChallenge,
+		{ &hf_v2gdin_struct_dinContractAuthenticationReqType_GenChallenge,
 		  { "GenChallenge",
 		    "v2gdin.body.paymentdetailsreq.genchallenge",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* ContractAuthenticationRes */
-		{ &hf_v2gdin_body_ContractAuthenticationRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinContractAuthenticationResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.contractauthenticationres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ContractAuthenticationRes_EVSEProcessing,
+		{ &hf_v2gdin_struct_dinContractAuthenticationResType_EVSEProcessing,
 		  { "EVSEProcessing",
 		    "v2gdin.body.contractauthenticationres.evseprocessing",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
@@ -4673,7 +5182,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* ChargeParameterDiscoveryReq */
-		{ &hf_v2gdin_body_ChargeParameterDiscoveryReq_EVRequestedEnergyTransferType,
+		{ &hf_v2gdin_struct_dinChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType,
 		  { "EVRequestedEnergyTransferType",
 		    "v2gdin.body.chargeparameterdiscoveryreq.evrequestenergytransfer",
 		    FT_UINT32, BASE_DEC,
@@ -4681,13 +5190,13 @@ proto_register_v2gdin(void)
 		    0x0, NULL, HFILL }
 		},
 		/* ChargeParameterDiscoveryRes */
-		{ &hf_v2gdin_body_ChargeParameterDiscoveryRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinChargeParameterDiscoveryResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.chargeparametersdiscoveryres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ChargeParameterDiscoveryRes_EVSEProcessing,
+		{ &hf_v2gdin_struct_dinChargeParameterDiscoveryResType_EVSEProcessing,
 		  { "EVSEProcessing",
 		    "v2gdin.body.chargeparametersdiscoveryres.evseprocessing",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
@@ -4695,13 +5204,13 @@ proto_register_v2gdin(void)
 		},
 
 		/* PowerDeliveryReq */
-		{ &hf_v2gdin_body_PowerDeliveryReq_ReadyToChargeState,
+		{ &hf_v2gdin_struct_dinPowerDeliveryReqType_ReadyToChargeState,
 		  { "_ReadyToChargeState",
 		    "v2gdin.body.powerdeliveryreq.readytochargestate",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* PowerDeliveryRes */
-		{ &hf_v2gdin_body_PowerDeliveryRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinPowerDeliveryResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.powerdeliveryres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -4709,43 +5218,43 @@ proto_register_v2gdin(void)
 		},
 
 		/* ChargingStatusRes */
-		{ &hf_v2gdin_body_ChargingStatusRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinChargingStatusResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.chargingstatusres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ChargingStatusRes_EVSEID,
+		{ &hf_v2gdin_struct_dinChargingStatusResType_EVSEID,
 		  { "EVSEID", "v2gdin.body.chargingstatusres.evseid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ChargingStatusRes_SAScheduleTupleID,
+		{ &hf_v2gdin_struct_dinChargingStatusResType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",
 		    "v2gdin.body.chargingstatusres.sascheduletupleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_ChargingStatusRes_ReceiptRequired,
+		{ &hf_v2gdin_struct_dinChargingStatusResType_ReceiptRequired,
 		  { "ReceiptRequired",
 		    "v2gdin.body.chargingstatusres.receiptrequired",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* MeteringReceiptReq */
-		{ &hf_v2gdin_body_MeteringReceiptReq_Id,
+		{ &hf_v2gdin_struct_dinMeteringReceiptReqType_Id,
 		  { "Id", "v2gdin.body.meteringreceiptreq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_MeteringReceiptReq_SessionID,
+		{ &hf_v2gdin_struct_dinMeteringReceiptReqType_SessionID,
 		  { "SessionID", "v2gdin.body.meteringreceiptreq.sessionid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_MeteringReceiptReq_SAScheduleTupleID,
+		{ &hf_v2gdin_struct_dinMeteringReceiptReqType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",
 		    "v2gdin.body.meteringreceiptreq.sascheduletupleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* MeteringReceiptRes */
-		{ &hf_v2gdin_body_MeteringReceiptRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinMeteringReceiptResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.meteringreceiptres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -4753,7 +5262,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* SessionStopRes */
-		{ &hf_v2gdin_body_SessionStopRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinSessionStopResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.sessionstopres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -4761,99 +5270,99 @@ proto_register_v2gdin(void)
 		},
 
 		/* CertificateUpdateReq */
-		{ &hf_v2gdin_body_CertificateUpdateReq_Id,
+		{ &hf_v2gdin_struct_dinCertificateUpdateReqType_Id,
 		  { "Id", "v2gdin.body.certificateupdatereq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateReq_ContractID,
+		{ &hf_v2gdin_struct_dinCertificateUpdateReqType_ContractID,
 		  { "ContractID",
 		    "v2gdin.body.certificateupdatereq.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateReq_DHParams,
+		{ &hf_v2gdin_struct_dinCertificateUpdateReqType_DHParams,
 		  { "DHParams", "v2gdin.body.certificateupdatereq.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* CertificateUpdateRes */
-		{ &hf_v2gdin_body_CertificateUpdateRes_Id,
+		{ &hf_v2gdin_struct_dinCertificateUpdateResType_Id,
 		  { "Id", "v2gdin.body.certificateupdateres.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinCertificateUpdateResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.certificateupdateres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateRes_ContractSignatureEncryptedPrivateKey,
+		{ &hf_v2gdin_struct_dinCertificateUpdateResType_ContractSignatureEncryptedPrivateKey,
 		  { "ContractSignatureEncryptedPrivateKey",
 		    "v2gdin.body.certificateupdateres.contractsignatureencryptedprivatekey",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateRes_DHParams,
+		{ &hf_v2gdin_struct_dinCertificateUpdateResType_DHParams,
 		  { "DHParams",
 		    "v2gdin.body.certificateupdateres.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateRes_ContractID,
+		{ &hf_v2gdin_struct_dinCertificateUpdateResType_ContractID,
 		  { "ContractID", "v2gdin.body.certificateupdateres.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateUpdateRes_RetryCounter,
+		{ &hf_v2gdin_struct_dinCertificateUpdateResType_RetryCounter,
 		  { "RetryCounter",
 		    "v2gdin.body.certificateupdateres.retrycounts",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* CertificateInstallationReq */
-		{ &hf_v2gdin_body_CertificateInstallationReq_Id,
+		{ &hf_v2gdin_struct_dinCertificateInstallationReqType_Id,
 		  { "Id", "v2gdin.body.certificateinstallationreq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateInstallationReq_OEMProvisioningCert,
+		{ &hf_v2gdin_struct_dinCertificateInstallationReqType_OEMProvisioningCert,
 		  { "OEMProvisioningCert",
 		    "v2gdin.body.certificateinstallationreq.oemprovisioningcert",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateInstallationReq_DHParams,
+		{ &hf_v2gdin_struct_dinCertificateInstallationReqType_DHParams,
 		  { "DHParams", "v2gdin.body.certificateinstallationreq.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* CertificateInstallationRes */
-		{ &hf_v2gdin_body_CertificateInstallationRes_Id,
+		{ &hf_v2gdin_struct_dinCertificateInstallationResType_Id,
 		  { "Id", "v2gdin.body.certificateinstallationres.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateInstallationRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinCertificateInstallationResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.certificateinstallationres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateInstallationRes_ContractSignatureEncryptedPrivateKey,
+		{ &hf_v2gdin_struct_dinCertificateInstallationResType_ContractSignatureEncryptedPrivateKey,
 		  { "ContractSignatureEncryptedPrivateKey",
 		    "v2gdin.body.certificateinstallationres.contractsignatureencryptedprivatekey",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateInstallationRes_DHParams,
+		{ &hf_v2gdin_struct_dinCertificateInstallationResType_DHParams,
 		  { "DHParams",
 		    "v2gdin.body.certificateinstallationres.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CertificateInstallationRes_ContractID,
+		{ &hf_v2gdin_struct_dinCertificateInstallationResType_ContractID,
 		  { "ContractID",
 		    "v2gdin.body.certificateinstallationres.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* CableCheckRes */
-		{ &hf_v2gdin_body_CableCheckRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinCableCheckResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.cablecheckres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CableCheckRes_EVSEProcessing,
+		{ &hf_v2gdin_struct_dinCableCheckResType_EVSEProcessing,
 		  { "EVSEProcessing",
 		    "v2gdin.body.cablecheckres.evseprocessing",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
@@ -4861,7 +5370,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* PreChargeRes */
-		{ &hf_v2gdin_body_PreChargeRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinPreChargeResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.prechargeres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -4869,35 +5378,35 @@ proto_register_v2gdin(void)
 		},
 
 		/* CurrentDemandReq */
-		{ &hf_v2gdin_body_CurrentDemandReq_ChargingComplete,
+		{ &hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete,
 		  { "ChargingComplete",
 		    "v2gdin.body.currentdemandreq.chargingcomplete",
 		    FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CurrentDemandReq_BulkChargingComplete,
+		{ &hf_v2gdin_struct_dinCurrentDemandReqType_BulkChargingComplete,
 		  { "BulkChargingComplete",
 		    "v2gdin.body.currentdemandreq.bulkchargingcomplete",
 		    FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* CurrentDemandRes */
-		{ &hf_v2gdin_body_CurrentDemandRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinCurrentDemandResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.currentdemandres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CurrentDemandRes_EVSECurrentLimitAchieved,
+		{ &hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved,
 		  { "EVSECurrentLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsecurrentlimitachieved",
 		    FT_INT32, BASE_DEC, 0,
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CurrentDemandRes_EVSEVoltageLimitAchieved,
+		{ &hf_v2gdin_struct_dinCurrentDemandResType_EVSEVoltageLimitAchieved,
 		  { "EVSEVoltageLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsevoltagelimitachieved",
 		    FT_INT32, BASE_DEC, 0,
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_body_CurrentDemandRes_EVSEPowerLimitAchieved,
+		{ &hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved,
 		  { "EVSEPowerLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsepowerlimitachieved",
 		    FT_INT32, BASE_DEC, 0,
@@ -4905,7 +5414,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* WeldingDetectionRes */
-		{ &hf_v2gdin_body_WeldingDetectionRes_ResponseCode,
+		{ &hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.weldingdetectionres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -4979,40 +5488,40 @@ proto_register_v2gdin(void)
 		&ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
 		&ett_v2gdin_struct_dinProfileEntryType,
 
-		&ett_v2gdin_body_SessionSetupReq,
-		&ett_v2gdin_body_SessionSetupRes,
-		&ett_v2gdin_body_ServiceDiscoveryReq,
-		&ett_v2gdin_body_ServiceDiscoveryRes,
-		&ett_v2gdin_body_ServiceDetailReq,
-		&ett_v2gdin_body_ServiceDetailRes,
-		&ett_v2gdin_body_ServicePaymentSelectionReq,
-		&ett_v2gdin_body_ServicePaymentSelectionRes,
-		&ett_v2gdin_body_PaymentDetailsReq,
-		&ett_v2gdin_body_PaymentDetailsRes,
-		&ett_v2gdin_body_ContractAuthenticationReq,
-		&ett_v2gdin_body_ContractAuthenticationRes,
-		&ett_v2gdin_body_ChargeParameterDiscoveryReq,
-		&ett_v2gdin_body_ChargeParameterDiscoveryRes,
-		&ett_v2gdin_body_PowerDeliveryReq,
-		&ett_v2gdin_body_PowerDeliveryRes,
-		&ett_v2gdin_body_ChargingStatusReq,
-		&ett_v2gdin_body_ChargingStatusRes,
-		&ett_v2gdin_body_MeteringReceiptReq,
-		&ett_v2gdin_body_MeteringReceiptRes,
-		&ett_v2gdin_body_SessionStopReq,
-		&ett_v2gdin_body_SessionStopRes,
-		&ett_v2gdin_body_CertificateUpdateReq,
-		&ett_v2gdin_body_CertificateUpdateRes,
-		&ett_v2gdin_body_CertificateInstallationReq,
-		&ett_v2gdin_body_CertificateInstallationRes,
-		&ett_v2gdin_body_CableCheckReq,
-		&ett_v2gdin_body_CableCheckRes,
-		&ett_v2gdin_body_PreChargeReq,
-		&ett_v2gdin_body_PreChargeRes,
-		&ett_v2gdin_body_CurrentDemandReq,
-		&ett_v2gdin_body_CurrentDemandRes,
-		&ett_v2gdin_body_WeldingDetectionReq,
-		&ett_v2gdin_body_WeldingDetectionRes
+		&ett_v2gdin_struct_dinSessionSetupReqType,
+		&ett_v2gdin_struct_dinSessionSetupResType,
+		&ett_v2gdin_struct_dinServiceDiscoveryReqType,
+		&ett_v2gdin_struct_dinServiceDiscoveryResType,
+		&ett_v2gdin_struct_dinServiceDetailReqType,
+		&ett_v2gdin_struct_dinServiceDetailResType,
+		&ett_v2gdin_struct_dinServicePaymentSelectionReqType,
+		&ett_v2gdin_struct_dinServicePaymentSelectionResType,
+		&ett_v2gdin_struct_dinPaymentDetailsReqType,
+		&ett_v2gdin_struct_dinPaymentDetailsResType,
+		&ett_v2gdin_struct_dinContractAuthenticationReqType,
+		&ett_v2gdin_struct_dinContractAuthenticationResType,
+		&ett_v2gdin_struct_dinChargeParameterDiscoveryReqType,
+		&ett_v2gdin_struct_dinChargeParameterDiscoveryResType,
+		&ett_v2gdin_struct_dinPowerDeliveryReqType,
+		&ett_v2gdin_struct_dinPowerDeliveryResType,
+		&ett_v2gdin_struct_dinChargingStatusReqType,
+		&ett_v2gdin_struct_dinChargingStatusResType,
+		&ett_v2gdin_struct_dinMeteringReceiptReqType,
+		&ett_v2gdin_struct_dinMeteringReceiptResType,
+		&ett_v2gdin_struct_dinSessionStopType,
+		&ett_v2gdin_struct_dinSessionStopResType,
+		&ett_v2gdin_struct_dinCertificateUpdateReqType,
+		&ett_v2gdin_struct_dinCertificateUpdateResType,
+		&ett_v2gdin_struct_dinCertificateInstallationReqType,
+		&ett_v2gdin_struct_dinCertificateInstallationResType,
+		&ett_v2gdin_struct_dinCableCheckReqType,
+		&ett_v2gdin_struct_dinCableCheckResType,
+		&ett_v2gdin_struct_dinPreChargeReqType,
+		&ett_v2gdin_struct_dinPreChargeResType,
+		&ett_v2gdin_struct_dinCurrentDemandReqType,
+		&ett_v2gdin_struct_dinCurrentDemandResType,
+		&ett_v2gdin_struct_dinWeldingDetectionReqType,
+		&ett_v2gdin_struct_dinWeldingDetectionResType
 	};
 
 	proto_v2gdin = proto_register_protocol (
