@@ -37,6 +37,7 @@ set(DISSECTOR_SRC
     src/packet-v2gexi.c
     src/packet-v2gdin.c
     src/packet-v2giso1.c
+    src/packet-v2giso2.c
 )
 
 set(PLUGIN_FILES

@@ -16,7 +16,6 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
-#include <ctype.h>
 
 #include <epan/packet.h>
 #include <epan/conversation.h>
@@ -28,32 +27,41 @@
 #include <appHandshake/appHandEXIDatatypes.h>
 #include <appHandshake/appHandEXIDatatypesDecoder.h>
 
+#include "v2gexi.h"
+
+
 /* forward declare */
 void proto_register_v2gexi(void);
 void proto_reg_handoff_v2gexi(void);
 
 
 static dissector_handle_t v2g_handle;
+static dissector_handle_t v2gexi_handle;
+static dissector_handle_t v2gdin_handle;
+static dissector_handle_t v2giso1_handle;
+static dissector_handle_t v2giso2_handle;
 
 static int proto_v2gexi = -1;
+
 static int hf_v2gexi_mode = -1;
 
 static int hf_v2gexi_handshake_request = -1;
-static int hf_v2gexi_handshake_request_ap_arraylen = -1;
-static int hf_v2gexi_handshake_request_ap_array_i_protocolnamespace = -1;
-static int hf_v2gexi_handshake_request_ap_array_i_version_major = -1;
-static int hf_v2gexi_handshake_request_ap_array_i_version_minor = -1;
-static int hf_v2gexi_handshake_request_ap_array_i_schemaid = -1;
-static int hf_v2gexi_handshake_request_ap_array_i_priority = -1;
+static int hf_v2gexi_struct_appHandAppProtocolType_ProtocolNamespace = -1;
+static int hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMajor = -1;
+static int hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMinor = -1;
+static int hf_v2gexi_struct_appHandAppProtocolType_SchemaID = -1;
+static int hf_v2gexi_struct_appHandAppProtocolType_Priority = -1;
 
 static int hf_v2gexi_handshake_response = -1;
-static int hf_v2gexi_handshake_response_code = -1;
-static int hf_v2gexi_handshake_response_schemaid = -1;
+static int hf_v2gexi_struct_supportedAppProtocolRes_ResponseCode = -1;
+static int hf_v2gexi_struct_supportedAppProtocolRes_SchemaID = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2gexi = -1;
-static gint ett_v2gexi_handshake_request_ap_array = -1;
-static gint ett_v2gexi_handshake_request_ap_array_i = -1;
+static gint ett_v2gexi_array = -1;
+static gint ett_v2gexi_struct_supportedAppProtocolReq = -1;
+static gint ett_v2gexi_struct_supportedAppProtocolRes = -1;
+static gint ett_v2gexi_struct_appHandAppProtocolType = -1;
 
 
 typedef enum _v2gexi_mode {
@@ -64,6 +72,20 @@ typedef enum _v2gexi_mode {
 	V2GEXI_ISO1,
 	V2GEXI_ISO2
 } v2gexi_mode_t;
+
+typedef struct _v2gexi_schemaid_mode {
+	guint schemaid;
+	v2gexi_mode_t mode;
+} v2gexi_schemaid_mode_t;
+
+typedef struct _v2gexi_conv {
+	guint32 handshake_request;
+	guint32 handshake_response;
+	v2gexi_mode_t mode;
+	wmem_map_t *schemaid_mode;
+	wmem_map_t *pdus;
+} v2gexi_conv_t;
+
 
 static const value_string v2gexi_mode_names[] = {
 	{ V2GEXI_HANDSHAKE, "Handshake" },
@@ -80,49 +102,176 @@ static const value_string v2gexi_response_code_names[] = {
 	{ appHandresponseCodeType_Failed_NoNegotiation, "Failed" }
 };
 
-typedef struct _v2gexi_schemaid_mode {
-	guint schemaid;
-	v2gexi_mode_t mode;
-} v2gexi_schemaid_mode_t;
 
-typedef struct _v2gexi_conv {
-	v2gexi_mode_t mode;
-	wmem_map_t *schemaid_mode;
-	wmem_map_t *pdus;
-} v2gexi_conv_t;
-
-
-static int
-exi_strncasecmp(const exi_string_character_t *s1, const char *s2, size_t n)
+static void
+dissect_v2gexi_apphandappprotocoltype(
+	v2gexi_conv_t *v2gexi_conv,
+	const struct appHandAppProtocolType *apphandappprotocol,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	size_t pos;
+	proto_tree *subtree;
+	proto_item *it;
+	v2gexi_schemaid_mode_t *vsm;
 
-	if (n == 0)
-		return 0;
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
 
-	for (pos = 0; pos < n; pos++) {
-		unsigned char c1;
-		unsigned char c2;
+	exi_add_characters(subtree,
+		hf_v2gexi_struct_appHandAppProtocolType_ProtocolNamespace,
+		tvb,
+		apphandappprotocol->ProtocolNamespace.characters,
+		apphandappprotocol->ProtocolNamespace.charactersLen,
+		sizeof(apphandappprotocol->ProtocolNamespace.characters));
 
-		c1 = s1[pos];
-		c2 = s2[pos];
-		if (tolower(c1) != tolower(c2)) {
-			return c1 - (c2 - 1);
-		}
-		if (c1 == '\0')
-			break;
+	it = proto_tree_add_uint(subtree,
+		hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMajor,
+		tvb, 0, 0,
+		apphandappprotocol->VersionNumberMajor);
+	proto_item_set_generated(it);
+	it = proto_tree_add_uint(subtree,
+		hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMinor,
+		tvb, 0, 0,
+		apphandappprotocol->VersionNumberMinor);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gexi_struct_appHandAppProtocolType_SchemaID,
+		tvb, 0, 0,
+		apphandappprotocol->SchemaID);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gexi_struct_appHandAppProtocolType_Priority,
+		tvb, 0, 0,
+		apphandappprotocol->Priority);
+	proto_item_set_generated(it);
+
+	/* DIN */
+	const char ns0[] = "urn:din:70121:2012:MsgDef";
+	if ((strlen(ns0) ==
+	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
+	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
+			     ns0, strlen(ns0)) == 0)) {
+		vsm = wmem_new0(wmem_file_scope(), v2gexi_schemaid_mode_t);
+		vsm->schemaid = apphandappprotocol->SchemaID;
+		vsm->mode = V2GEXI_DIN;
+		wmem_map_insert(v2gexi_conv->schemaid_mode,
+			&(vsm->schemaid), vsm);
 	}
-	return 0;
+
+	/* ISO1 */
+	const char ns1[] = "urn:iso:15118:2:2010:MsgDef";
+	if ((strlen(ns1) ==
+	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
+	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
+			     ns1, strlen(ns1)) == 0)) {
+		vsm = wmem_new0(wmem_file_scope(), v2gexi_schemaid_mode_t);
+		vsm->schemaid = apphandappprotocol->SchemaID;
+		vsm->mode = V2GEXI_ISO1;
+		wmem_map_insert(v2gexi_conv->schemaid_mode,
+			&(vsm->schemaid), vsm);
+	}
+
+	/* ISO2 */
+	const char ns2[] = "urn:iso:15118:2:2016:MsgDef";
+	if ((strlen(ns2) ==
+	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
+	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
+			     ns2, strlen(ns2)) == 0)) {
+		vsm = wmem_new0(wmem_file_scope(), v2gexi_schemaid_mode_t);
+		vsm->schemaid = apphandappprotocol->SchemaID;
+		vsm->mode = V2GEXI_ISO2;
+		wmem_map_insert(v2gexi_conv->schemaid_mode,
+			&(vsm->schemaid), vsm);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gexi_supportedappprotocolreq(
+	v2gexi_conv_t *v2gexi_conv,
+	const struct appHandAnonType_supportedAppProtocolReq
+		*supportedappprotocolreq,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *appprotocol_tree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	appprotocol_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2gexi_array, NULL, "AppProtocol");
+	for (i = 0; i < supportedappprotocolreq->AppProtocol.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2gexi_apphandappprotocoltype(v2gexi_conv,
+			&supportedappprotocolreq->AppProtocol.array[i],
+			tvb, appprotocol_tree,
+			ett_v2gexi_struct_appHandAppProtocolType, index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2gexi_supportedappprotocolres(
+	v2gexi_conv_t *v2gexi_conv,
+	struct appHandAnonType_supportedAppProtocolRes *supportedappprotocolres,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+	v2gexi_schemaid_mode_t *vsm;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2gexi_struct_supportedAppProtocolRes_ResponseCode,
+		tvb, 0, 0,
+		supportedappprotocolres->ResponseCode);
+	proto_item_set_generated(it);
+
+	if (supportedappprotocolres->SchemaID_isUsed) {
+		guint schemaid;
+
+		schemaid = supportedappprotocolres->SchemaID;
+
+		it = proto_tree_add_uint(subtree,
+			hf_v2gexi_struct_supportedAppProtocolRes_SchemaID,
+			tvb, 0, 0,
+			supportedappprotocolres->SchemaID);
+		proto_item_set_generated(it);
+
+		vsm = wmem_map_lookup(v2gexi_conv->schemaid_mode, &schemaid);
+		v2gexi_conv->mode = (vsm != NULL) ? vsm->mode : -1;
+	}
+
+	return;
 }
 
 static int
-dissect_v2gexi_hs(tvbuff_t *tvb, packet_info *pinfo,
-		  proto_tree *v2gexi_tree, v2gexi_conv_t *v2gexi_conv)
+dissect_v2gexi_hs(v2gexi_conv_t *v2gexi_conv,
+		  tvbuff_t *tvb,
+		  packet_info *pinfo,
+		  proto_tree *v2gexi_tree)
 {
 	size_t pos;
 	bitstream_t stream;
 	int errn;
-	unsigned int i, j;
 	struct appHandEXIDocument ahexi;
 
 	pos = 0;
@@ -138,127 +287,34 @@ dissect_v2gexi_hs(tvbuff_t *tvb, packet_info *pinfo,
 
 	if (ahexi.supportedAppProtocolReq_isUsed) {
 		proto_item *it;
-		proto_tree *ap_array_tree;
-		proto_tree *ap_array_i_tree;
-		v2gexi_schemaid_mode_t *vsm;
 
+		if (!PINFO_FD_VISITED(pinfo)) {
+			v2gexi_conv->handshake_request = pinfo->num;
+		}
 		it = proto_tree_add_uint(v2gexi_tree,
 					 hf_v2gexi_handshake_request,
 					 tvb, 0, 0, pinfo->num);
 		proto_item_set_generated(it);
 
-		it = proto_tree_add_uint(v2gexi_tree,
-					 hf_v2gexi_handshake_request_ap_arraylen,
-					 tvb, 0, 0,
-					 ahexi.supportedAppProtocolReq.AppProtocol.arrayLen);
-		proto_item_set_generated(it);
-
-		ap_array_tree = proto_tree_add_subtree(v2gexi_tree,
-			tvb, 0, 0, ett_v2gexi_handshake_request_ap_array, NULL,
-			"AppProtocols Array");
-		for (i = 0; i < ahexi.supportedAppProtocolReq.AppProtocol.arrayLen; i++) {
-			ap_array_i_tree = proto_tree_add_subtree_format(ap_array_tree,
-				tvb, 0, 0, ett_v2gexi_handshake_request_ap_array_i,
-				NULL, "AppProtocol Entry: %u", i);
-
-			char protocolnamespace[appHandAppProtocolType_ProtocolNamespace_CHARACTERS_SIZE + 1];
-			for (j = 0; j < ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.charactersLen; j++) {
-				protocolnamespace[j] =
-					ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.characters[j];
-			}
-			protocolnamespace[j] = '\0';
-			it = proto_tree_add_string(ap_array_i_tree,
-				hf_v2gexi_handshake_request_ap_array_i_protocolnamespace,
-				tvb, 0, 0, protocolnamespace);
-			proto_item_set_generated(it);
-
-			it = proto_tree_add_uint(ap_array_i_tree,
-				hf_v2gexi_handshake_request_ap_array_i_version_major,
-				tvb, 0, 0,
-				ahexi.supportedAppProtocolReq.AppProtocol.array[i].VersionNumberMajor);
-			proto_item_set_generated(it);
-			it = proto_tree_add_uint(ap_array_i_tree,
-				hf_v2gexi_handshake_request_ap_array_i_version_minor,
-				tvb, 0, 0,
-				ahexi.supportedAppProtocolReq.AppProtocol.array[i].VersionNumberMinor);
-			proto_item_set_generated(it);
-
-			it = proto_tree_add_uint(ap_array_i_tree,
-				hf_v2gexi_handshake_request_ap_array_i_schemaid,
-				tvb, 0, 0,
-				ahexi.supportedAppProtocolReq.AppProtocol.array[i].SchemaID);
-			proto_item_set_generated(it);
-
-			it = proto_tree_add_uint(ap_array_i_tree,
-				hf_v2gexi_handshake_request_ap_array_i_priority,
-				tvb, 0, 0,
-				ahexi.supportedAppProtocolReq.AppProtocol.array[i].Priority);
-			proto_item_set_generated(it);
-
-			/* DIN */
-			const char ns0[] = "urn:din:70121:2012:MsgDef";
-			if ((strlen(ns0) ==
-			     ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.charactersLen) &&
-			    (exi_strncasecmp(ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.characters, ns0, strlen(ns0)) == 0)) {
-				vsm = wmem_new0(wmem_file_scope(), v2gexi_schemaid_mode_t);
-				vsm->schemaid = ahexi.supportedAppProtocolReq.AppProtocol.array[i].SchemaID;
-				vsm->mode = V2GEXI_DIN;
-				wmem_map_insert(v2gexi_conv->schemaid_mode, &(vsm->schemaid), vsm);
-			}
-
-			/* ISO1 */
-			const char ns1[] = "urn:iso:15118:2:2010:MsgDef";
-			if ((strlen(ns1) ==
-			     ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.charactersLen) &&
-			    (exi_strncasecmp(ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.characters, ns1, strlen(ns1)) == 0)) {
-				vsm = wmem_new0(wmem_file_scope(), v2gexi_schemaid_mode_t);
-				vsm->schemaid = ahexi.supportedAppProtocolReq.AppProtocol.array[i].SchemaID;
-				vsm->mode = V2GEXI_ISO1;
-				wmem_map_insert(v2gexi_conv->schemaid_mode, &(vsm->schemaid), vsm);
-			}
-
-			/* ISO2 */
-			const char ns2[] = "urn:iso:15118:2:2016:MsgDef";
-			if ((strlen(ns2) ==
-			     ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.charactersLen) &&
-			    (exi_strncasecmp(ahexi.supportedAppProtocolReq.AppProtocol.array[i].ProtocolNamespace.characters, ns2, strlen(ns2)) == 0)) {
-				vsm = wmem_new0(wmem_file_scope(), v2gexi_schemaid_mode_t);
-				vsm->schemaid = ahexi.supportedAppProtocolReq.AppProtocol.array[i].SchemaID;
-				vsm->mode = V2GEXI_ISO2;
-				wmem_map_insert(v2gexi_conv->schemaid_mode, &(vsm->schemaid), vsm);
-			}
-		}
+		dissect_v2gexi_supportedappprotocolreq(v2gexi_conv,
+			&ahexi.supportedAppProtocolReq, tvb, v2gexi_tree,
+			ett_v2gexi_struct_supportedAppProtocolReq,
+			"supportedAppProtocolReq");
 	} else if (ahexi.supportedAppProtocolRes_isUsed) {
 		proto_item *it;
-		v2gexi_schemaid_mode_t *vsm;
 
+		if (!PINFO_FD_VISITED(pinfo)) {
+			v2gexi_conv->handshake_response = pinfo->num;
+		}
 		it = proto_tree_add_uint(v2gexi_tree,
 					 hf_v2gexi_handshake_response,
 					 tvb, 0, 0, pinfo->num);
 		proto_item_set_generated(it);
 
-		proto_tree_add_uint(v2gexi_tree,
-				    hf_v2gexi_handshake_response_code,
-				    tvb, 0, 0,
-				    ahexi.supportedAppProtocolRes.ResponseCode);
-		proto_item_set_generated(it);
-
-		if (ahexi.supportedAppProtocolRes.SchemaID_isUsed) {
-			guint schemaid;
-
-			schemaid = ahexi.supportedAppProtocolRes.SchemaID;
-
-			proto_tree_add_uint(v2gexi_tree,
-					    hf_v2gexi_handshake_response_schemaid,
-					    tvb, 0, 0,
-				            ahexi.supportedAppProtocolRes.SchemaID);
-			proto_item_set_generated(it);
-
-			vsm = wmem_map_lookup(v2gexi_conv->schemaid_mode, &schemaid);
-			fprintf(stderr, "\tresponse schemaid=%d mode=%d\n",
-				schemaid, (vsm != NULL) ? vsm->mode : -1);
-			v2gexi_conv->mode = (vsm != NULL) ? vsm->mode : -1;
-		}
+		dissect_v2gexi_supportedappprotocolres(v2gexi_conv,
+			&ahexi.supportedAppProtocolRes, tvb, v2gexi_tree,
+			ett_v2gexi_struct_supportedAppProtocolRes,
+			"supportedAppProtocolRes");
 	}
 
 	return tvb_captured_length(tvb);
@@ -271,6 +327,7 @@ dissect_v2gexi(tvbuff_t *tvb,
 	proto_tree *v2gexi_tree;
 	conversation_t *conversation;
 	v2gexi_conv_t *v2gexi_conv;
+	v2gexi_mode_t v2gexi_mode;
 	gint offset;
 
 	col_set_str(pinfo->cinfo, COL_PROTOCOL, "V2GEXI");
@@ -296,37 +353,43 @@ dissect_v2gexi(tvbuff_t *tvb,
 		v2gexi_conv = wmem_new0(wmem_file_scope(), v2gexi_conv_t);
 		v2gexi_conv->mode = V2GEXI_HANDSHAKE;
 		v2gexi_conv->schemaid_mode = wmem_map_new(wmem_file_scope(),
-							  g_int_hash, g_int_equal);
+			g_int_hash, g_int_equal);
 		v2gexi_conv->pdus = wmem_map_new(wmem_file_scope(),
-						 g_direct_hash, g_direct_equal);
+			g_direct_hash, g_direct_equal);
 		conversation_add_proto_data(conversation,
-					    proto_v2gexi, v2gexi_conv);
+			proto_v2gexi, v2gexi_conv);
 	}
 
-	col_add_fstr(pinfo->cinfo, COL_INFO, "Mode %s",
-		     val_to_str(v2gexi_conv->mode, v2gexi_mode_names, "Unknown (%d)"));
-
 	offset = 0;
-	if (!pinfo->fd->visited) {
-		dissector_handle_t dissector_handle;
+	v2gexi_mode = v2gexi_conv->mode;
+	if (PINFO_FD_VISITED(pinfo) &&
+	    ((v2gexi_conv->handshake_request == pinfo->num) ||
+	     (v2gexi_conv->handshake_response == pinfo->num))) {
+		v2gexi_mode = V2GEXI_HANDSHAKE;
+	}
+	col_append_fstr(pinfo->cinfo, COL_INFO, "%s",
+		val_to_str(v2gexi_mode, v2gexi_mode_names, "Unknown"));
 
-		switch(v2gexi_conv->mode) {
-		default:
-			/* unknown mode - stop dissection */
-			break;
-		case V2GEXI_HANDSHAKE:
-			offset += dissect_v2gexi_hs(tvb, pinfo,
-						    v2gexi_tree, v2gexi_conv);
-			break;
-		case V2GEXI_DIN:
-			dissector_handle = find_dissector("v2gdin");
-			call_dissector_only(dissector_handle, tvb, pinfo,
-					    v2gexi_tree, data);
-			offset += tvb_captured_length(tvb);
-			break;
-		}
-	} else {
-		/* lookup this transaction */
+	switch(v2gexi_mode) {
+	default:
+		/* unknown mode - stop dissection */
+		break;
+	case V2GEXI_HANDSHAKE:
+		offset += dissect_v2gexi_hs(v2gexi_conv, tvb, pinfo,
+					    v2gexi_tree);
+		break;
+	case V2GEXI_DIN:
+		call_dissector(v2gdin_handle, tvb, pinfo, v2gexi_tree);
+		offset += tvb_captured_length(tvb);
+		break;
+	case V2GEXI_ISO1:
+		call_dissector(v2giso1_handle, tvb, pinfo, v2gexi_tree);
+		offset += tvb_captured_length(tvb);
+		break;
+	case V2GEXI_ISO2:
+		call_dissector(v2giso2_handle, tvb, pinfo, v2gexi_tree);
+		offset += tvb_captured_length(tvb);
+		break;
 	}
 
 	return offset;
@@ -346,58 +409,59 @@ proto_register_v2gexi(void)
 		    FT_FRAMENUM, BASE_NONE, NULL, 0x0,
 		    "The handshake request for this V2GEXI is in this frame", HFILL }
 		},
-		{ &hf_v2gexi_handshake_request_ap_arraylen,
-		  { "AppProtocol Array Len",
-		    "v2gexi.handshake.request.appprotocol.arraylen",
-		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL }
-		},
-		{ &hf_v2gexi_handshake_request_ap_array_i_protocolnamespace,
-		  { "AppProtocol Namespace",
-		    "v2gexi.handshake.request.appprotocol.array.namespace",
-		    FT_STRING, BASE_NONE, NULL, 0x0, NULL }
-		},
-		{ &hf_v2gexi_handshake_request_ap_array_i_version_major,
-		  { "AppProtocol Version Major",
-		    "v2gexi.handshake.request.appprotocol.array.versionmajor",
-		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL }
-		},
-		{ &hf_v2gexi_handshake_request_ap_array_i_version_minor,
-		  { "AppProtocol Version Minor",
-		    "v2gexi.handshake.request.appprotocol.array.versionminor",
-		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL }
-		},
-		{ &hf_v2gexi_handshake_request_ap_array_i_schemaid,
-		  { "AppProtocol SchemaID",
-		    "v2gexi.handshake.request.appprotocol.array.schemaid",
-		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL }
-		},
-		{ &hf_v2gexi_handshake_request_ap_array_i_priority,
-		  { "AppProtocol Priority",
-		    "v2gexi.handshake.request.appprotocol.array.priority",
-		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL }
-		},
 		{ &hf_v2gexi_handshake_response,
 		  { "Handshake Response", "v2gexi.handshake.response",
 		    FT_FRAMENUM, BASE_NONE, NULL, 0x0,
 		    "The handshake response for this V2GEXI is in this frame", HFILL }
 		},
-		{ &hf_v2gexi_handshake_response_code,
-		  { "Handshake ResponseCode", "v2gexi.handshake.response_code",
-		    FT_UINT16, BASE_DEC, VALS(v2gexi_response_code_names), 0x0,
-		    "The handshake response code", HFILL }
+
+		/* struct appHandAppProtocolType */
+		{ &hf_v2gexi_struct_appHandAppProtocolType_ProtocolNamespace,
+		  { "ProtocolNamespace",
+		    "v2gexi.struct.apphandappprotocoltype.protocolnamespace",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL }
 		},
-		{ &hf_v2gexi_handshake_response_schemaid,
-		  { "Handshake ResponseSchemaID",
-		    "v2gexi.handshake.response_schemaid",
-		    FT_UINT8, BASE_DEC, NULL, 0x0,
-		    "The handshake response schemaid", HFILL }
+		{ &hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMajor,
+		  { "VersionNumberMajor",
+		    "v2gexi.struct.apphandappprotocoltype.versionnumbermajor",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL }
+		},
+		{ &hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMinor,
+		  { "VersionNumberMinor",
+		    "v2gexi.struct.apphandappprotocoltype.versionnumberminor",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL }
+		},
+		{ &hf_v2gexi_struct_appHandAppProtocolType_SchemaID,
+		  { "SchemaID",
+		    "v2gexi.struct.apphandappprotocoltype.schemaid",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL }
+		},
+		{ &hf_v2gexi_struct_appHandAppProtocolType_Priority,
+		  { "Priority",
+		    "v2gexi.struct.apphandappprotocoltype.priority",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL }
+		},
+
+		/* struct appHandAnonType_supportedAppProtocolRes */
+		{ &hf_v2gexi_struct_supportedAppProtocolRes_ResponseCode,
+		  { "ResponseCode",
+		    "v2gexi.struct.supportedappprotocolres.responsecode",
+		    FT_UINT16, BASE_DEC, VALS(v2gexi_response_code_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_v2gexi_struct_supportedAppProtocolRes_SchemaID,
+		  { "SchemaID",
+		    "v2gexi.struct.supportedappprotocolres.schemaid",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		}
 	};
 
 	static gint *ett[] = {
 		&ett_v2gexi,
-		&ett_v2gexi_handshake_request_ap_array,
-		&ett_v2gexi_handshake_request_ap_array_i
+		&ett_v2gexi_array,
+		&ett_v2gexi_struct_supportedAppProtocolReq,
+		&ett_v2gexi_struct_supportedAppProtocolRes,
+		&ett_v2gexi_struct_appHandAppProtocolType
 	};
 
 	proto_v2gexi = proto_register_protocol (
@@ -408,19 +472,23 @@ proto_register_v2gexi(void)
 	proto_register_field_array(proto_v2gexi, hf, array_length(hf));
 	proto_register_subtree_array(ett, array_length(ett));
 
-	register_dissector("v2gexi", dissect_v2gexi, proto_v2gexi);
+	v2gexi_handle = register_dissector("v2gexi",
+		dissect_v2gexi, proto_v2gexi);
 }
 
 void
 proto_reg_handoff_v2gexi(void)
 {
-	dissector_handle_t v2gexi_handle;
+	/* add the dependency to the parent v2g dissector */
+	v2g_handle = find_dissector_add_dependency("v2g", proto_v2gexi);
 
-	v2gexi_handle = create_dissector_handle(dissect_v2gexi, proto_v2gexi);
+	/* lookup the handles for the dissection after the handshake */
+	v2gdin_handle = find_dissector_add_dependency("v2gdin", proto_v2gexi);
+	v2giso1_handle = find_dissector_add_dependency("v2giso1", proto_v2gexi);
+	v2giso2_handle = find_dissector_add_dependency("v2giso2", proto_v2gexi);
+
 	dissector_add_for_decode_as_with_preference("udp.port", v2gexi_handle);
 	dissector_add_for_decode_as_with_preference("tcp.port", v2gexi_handle);
-
-	v2g_handle = find_dissector_add_dependency("v2g", proto_v2gexi);
 }
 
 /*

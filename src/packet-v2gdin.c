@@ -25,6 +25,9 @@
 #include <din/dinEXIDatatypes.h>
 #include <din/dinEXIDatatypesDecoder.h>
 
+#include "v2gexi.h"
+
+
 /* forward declare */
 void proto_register_v2gdin(void);
 void proto_reg_handoff_v2gdin(void);
@@ -261,6 +264,8 @@ static int hf_v2gdin_body_WeldingDetectionRes_ResponseCode = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2gdin = -1;
+static gint ett_v2gdin_header = -1;
+static gint ett_v2gdin_body = -1;
 static gint ett_v2gdin_array = -1;
 static gint ett_v2gdin_array_i = -1;
 
@@ -325,8 +330,6 @@ static gint ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType = -1;
 static gint ett_v2gdin_struct_dinProfileEntryType = -1;
 static gint ett_v2gdin_struct_dinMeterInfoType = -1;
 
-static gint ett_v2gdin_header = -1;
-static gint ett_v2gdin_body = -1;
 static gint ett_v2gdin_body_SessionSetupReq = -1;
 static gint ett_v2gdin_body_SessionSetupRes = -1;
 static gint ett_v2gdin_body_ServiceDiscoveryReq = -1;
@@ -540,90 +543,6 @@ static const value_string v2gdin_cost_kind_names[] = {
 	  "RenewableGenerationPercentage" },
 	{ dincostKindType_CarbonDioxideEmission, "CarbonDioxideEmission" }
 };
-
-
-/*
- * Decode the exi string character (int) into a c string
- */
-static inline void
-exi_add_characters(proto_tree *tree,
-		   int hfindex,
-		   tvbuff_t *tvb,
-		   const exi_string_character_t *characters,
-		   unsigned int characterslen,
-		   size_t charactersmaxsize)
-{
-	unsigned int i;
-	char *str;
-	proto_item *it;
-
-	if (characterslen > charactersmaxsize) {
-		proto_tree_add_debug_text(tree,
-					  "characterslen %u > maxsize %zu",
-					  characterslen, charactersmaxsize);
-		return;
-	}
-
-	str = alloca(characterslen + 1);
-	if (str == NULL) {
-		return;
-	}
-
-	for (i = 0; i < characterslen; i++) {
-		str[i] = characters[i];
-	}
-	str[i] = '\0';
-
-	/*
-	 * internally the proto string is a g_strdup - so, it's ok
-	 * to use the alloca stack reference from above
-	 */
-	it = proto_tree_add_string(tree, hfindex, tvb, 0, 0, str);
-	proto_item_set_generated(it);
-
-	return;
-}
-
-/*
- * Decode the exi bytes into a c string
- */
-static inline void
-exi_add_bytes(proto_tree *tree,
-	      int hfindex,
-	      tvbuff_t *tvb,
-	      const uint8_t *bytes,
-	      unsigned int byteslen,
-	      size_t bytesmaxsize)
-{
-	unsigned int i;
-	char *str;
-	proto_item *it;
-
-	if (byteslen > bytesmaxsize) {
-		proto_tree_add_debug_text(tree, "byteslen %u > maxsize %zu",
-					  byteslen, bytesmaxsize);
-		return;
-	}
-
-	str = alloca(2*byteslen + 1);
-	if (str == NULL) {
-		return;
-	}
-
-	for (i = 0; i < byteslen; i++) {
-		snprintf(&str[2*i], bytesmaxsize - 2*i, "%02X", bytes[i]);
-	}
-	str[2*i] = '\0';
-
-	/*
-	 * internally the proto string is a g_strdup - so, it's ok
-	 * to use the alloca stack reference from above
-	 */
-	it = proto_tree_add_string(tree, hfindex, tvb, 0, 0, str);
-	proto_item_set_generated(it);
-
-	return;
-}
 
 
 static void
@@ -2931,29 +2850,32 @@ dissect_v2gdin_dc_evpowerdeliveryparameter(
 
 
 static void
-dissect_v2gdin_header(tvbuff_t *tvb, packet_info *pinfo,
-		      proto_tree *v2gdin_tree, struct dinMessageHeaderType *hdr)
+dissect_v2gdin_header(const struct dinMessageHeaderType *header,
+		      tvbuff_t *tvb,
+		      proto_tree *tree,
+		      gint idx,
+		      const char *subtree_name)
 {
-	proto_tree *hdr_tree;
+	proto_tree *subtree;
 
-	hdr_tree = proto_tree_add_subtree(v2gdin_tree,
-		tvb, 0, 0, ett_v2gdin_header, NULL, "Header");
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
 
-	exi_add_bytes(hdr_tree, hf_v2gdin_header_SessionID, tvb,
-		hdr->SessionID.bytes,
-		hdr->SessionID.bytesLen,
-		sizeof(hdr->SessionID.bytes));
+	exi_add_bytes(subtree, hf_v2gdin_header_SessionID, tvb,
+		header->SessionID.bytes,
+		header->SessionID.bytesLen,
+		sizeof(header->SessionID.bytes));
 
-	if (hdr->Notification_isUsed) {
+	if (header->Notification_isUsed) {
 		dissect_v2gdin_notification(
-			&hdr->Notification, tvb, hdr_tree,
+			&header->Notification, tvb, subtree,
 			ett_v2gdin_struct_dinNotificationType,
 			"Notification");
 	}
 
-	if (hdr->Signature_isUsed) {
+	if (header->Signature_isUsed) {
 		dissect_v2gdin_signature(
-			&hdr->Signature, tvb, hdr_tree,
+			&header->Signature, tvb, subtree,
 			ett_v2gdin_struct_dinSignatureType,
 			"Signature");
 	}
@@ -2962,14 +2884,17 @@ dissect_v2gdin_header(tvbuff_t *tvb, packet_info *pinfo,
 }
 
 static void
-dissect_v2gdin_body(tvbuff_t *tvb, packet_info *pinfo,
-		    proto_tree *v2gdin_tree, struct dinBodyType *body)
+dissect_v2gdin_body(const struct dinBodyType *body,
+		    tvbuff_t *tvb,
+		    proto_tree *tree,
+		    gint idx,
+		    const char *subtree_name)
 {
 	unsigned int i;
 	proto_tree *body_tree;
 
-	body_tree = proto_tree_add_subtree(v2gdin_tree,
-		tvb, 0, 0, ett_v2gdin_body, NULL, "Body");
+	body_tree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (body->SessionSetupReq_isUsed) {
 		proto_tree *req_tree;
@@ -4036,10 +3961,10 @@ dissect_v2gdin(tvbuff_t *tvb,
 		v2gdin_tree = proto_tree_add_subtree(tree,
 			tvb, 0, 0, ett_v2gdin, NULL, "V2G Message");
 
-		dissect_v2gdin_header(tvb, pinfo, v2gdin_tree,
-			&exidin.V2G_Message.Header);
-		dissect_v2gdin_body(tvb, pinfo, v2gdin_tree,
-			&exidin.V2G_Message.Body);
+		dissect_v2gdin_header(&exidin.V2G_Message.Header,
+			tvb, v2gdin_tree, ett_v2gdin_header, "Header");
+		dissect_v2gdin_body(&exidin.V2G_Message.Body,
+			tvb, v2gdin_tree, ett_v2gdin_body, "Body");
 	}
 
 	return tvb_captured_length(tvb);
@@ -4990,6 +4915,8 @@ proto_register_v2gdin(void)
 
 	static gint *ett[] = {
 		&ett_v2gdin,
+		&ett_v2gdin_header,
+		&ett_v2gdin_body,
 		&ett_v2gdin_array,
 		&ett_v2gdin_array_i,
 
@@ -5052,8 +4979,6 @@ proto_register_v2gdin(void)
 		&ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
 		&ett_v2gdin_struct_dinProfileEntryType,
 
-		&ett_v2gdin_header,
-		&ett_v2gdin_body,
 		&ett_v2gdin_body_SessionSetupReq,
 		&ett_v2gdin_body_SessionSetupRes,
 		&ett_v2gdin_body_ServiceDiscoveryReq,
