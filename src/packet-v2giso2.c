@@ -117,7 +117,7 @@ dissect_v2giso2(tvbuff_t *tvb,
 		proto_tree *v2giso2_tree;
 
 		v2giso2_tree = proto_tree_add_subtree(tree,
-			tvb, 0, 0, ett_v2giso2, NULL, "V2G Message");
+			tvb, 0, 0, ett_v2giso2, NULL, "V2G ISO2 Message");
 
 		dissect_v2giso2_header(&exiiso2.V2G_Message.Header,
 			tvb, v2giso2_tree, ett_v2giso2_header, "Header");

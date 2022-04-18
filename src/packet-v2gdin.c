@@ -1973,6 +1973,7 @@ dissect_v2gdin_listofrootcertificateids(
 			listofrootcertificateids->RootCertificateID.array[i].charactersLen,
 			sizeof(listofrootcertificateids->RootCertificateID.array[i].characters));
 	}
+
 	return;
 }
 
@@ -2476,7 +2477,6 @@ dissect_v2gdin_cost(const struct dinCostType *cost,
 	return;
 }
 
-
 static void
 dissect_v2gdin_consumptioncost(
 	const struct dinConsumptionCostType *consumptioncost,
@@ -2792,7 +2792,7 @@ dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
 	}
 
 	if (meterinfo->TMeter_isUsed) {
-		it = proto_tree_add_int(subtree,
+		it = proto_tree_add_int64(subtree,
 			hf_v2gdin_struct_dinMeterInfoType_TMeter,
 			tvb, 0, 0, meterinfo->TMeter);
 		proto_item_set_generated(it);
@@ -3513,6 +3513,7 @@ dissect_v2gdin_chargingstatusres(
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVSEMaxCurrent");
 	}
+
 	if (chargingstatusres->MeterInfo_isUsed) {
 		dissect_v2gdin_meterinfo(
 			&chargingstatusres->MeterInfo,
@@ -4467,7 +4468,7 @@ dissect_v2gdin(tvbuff_t *tvb,
 	 */
 	if (exidin.V2G_Message_isUsed) {
 		v2gdin_tree = proto_tree_add_subtree(tree,
-			tvb, 0, 0, ett_v2gdin, NULL, "V2G Message");
+			tvb, 0, 0, ett_v2gdin, NULL, "V2G DIN Message");
 
 		dissect_v2gdin_header(&exidin.V2G_Message.Header,
 			tvb, v2gdin_tree, ett_v2gdin_header, "Header");
