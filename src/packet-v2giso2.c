@@ -71,6 +71,7 @@ dissect_v2giso2_header(const struct iso2MessageHeaderType *header,
 static void
 dissect_v2giso2_body(const struct iso2BodyType *body,
 		     tvbuff_t *tvb,
+		     packet_info *pinfo,
 		     proto_tree *tree,
 		     gint idx,
 		     const char *subtree_name)
@@ -122,7 +123,7 @@ dissect_v2giso2(tvbuff_t *tvb,
 		dissect_v2giso2_header(&exiiso2.V2G_Message.Header,
 			tvb, v2giso2_tree, ett_v2giso2_header, "Header");
 		dissect_v2giso2_body(& exiiso2.V2G_Message.Body,
-			tvb, v2giso2_tree, ett_v2giso2_body, "Body");
+			tvb, pinfo, v2giso2_tree, ett_v2giso2_body, "Body");
 	}
 
 	return tvb_captured_length(tvb);

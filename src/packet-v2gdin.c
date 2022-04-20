@@ -4203,6 +4203,7 @@ dissect_v2gdin_weldingdetectionres(
 static void
 dissect_v2gdin_body(const struct dinBodyType *body,
 		    tvbuff_t *tvb,
+		    packet_info *pinfo,
 		    proto_tree *tree,
 		    gint idx,
 		    const char *subtree_name)
@@ -4213,12 +4214,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (body->SessionSetupReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionSetupReq");
 		dissect_v2gdin_sessionsetupreq(
 			&body->SessionSetupReq, tvb, body_tree,
 			ett_v2gdin_struct_dinSessionSetupReqType,
 			"SessionSetupReq");
 	}
 	if (body->SessionSetupRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionSetupRes");
 		dissect_v2gdin_sessionsetupres(
 			&body->SessionSetupRes, tvb, body_tree,
 			ett_v2gdin_struct_dinSessionSetupResType,
@@ -4226,12 +4229,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->ServiceDiscoveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDiscoveryReq");
 		dissect_v2gdin_servicediscoveryreq(
 			&body->ServiceDiscoveryReq, tvb, body_tree,
 			ett_v2gdin_struct_dinServiceDiscoveryReqType,
 			"ServiceDiscoveryReq");
 	}
 	if (body->ServiceDiscoveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDiscoveryRes");
 		dissect_v2gdin_servicediscoveryres(
 			&body->ServiceDiscoveryRes, tvb, body_tree,
 			ett_v2gdin_struct_dinServiceDiscoveryResType,
@@ -4239,12 +4244,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->ServiceDetailReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDetailReq");
 		dissect_v2gdin_servicedetailreq(
 			&body->ServiceDetailReq, tvb, body_tree,
 			ett_v2gdin_struct_dinServiceDetailReqType,
 			"ServiceDetailReq");
 	}
 	if (body->ServiceDetailRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDetailRes");
 		dissect_v2gdin_servicedetailres(
 			&body->ServiceDetailRes, tvb, body_tree,
 			ett_v2gdin_struct_dinServiceDetailResType,
@@ -4252,12 +4259,16 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->ServicePaymentSelectionReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ServicePaymentSelectionReq");
 		dissect_v2gdin_servicepaymentselectionreq(
 			&body->ServicePaymentSelectionReq, tvb, body_tree,
 			ett_v2gdin_struct_dinServicePaymentSelectionReqType,
 			"ServicePaymentSelectionReq");
 	}
 	if (body->ServicePaymentSelectionRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ServicePaymentSelectionRes");
 		dissect_v2gdin_servicepaymentselectionres(
 			&body->ServicePaymentSelectionRes, tvb, body_tree,
 			ett_v2gdin_struct_dinServicePaymentSelectionResType,
@@ -4265,12 +4276,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->PaymentDetailsReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PaymentDetailsReq");
 		dissect_v2gdin_paymentdetailsreq(
 			&body->PaymentDetailsReq, tvb, body_tree,
 			ett_v2gdin_struct_dinPaymentDetailsReqType,
 			"PaymentDetailsReq");
 	}
 	if (body->PaymentDetailsRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PaymentDetailsRes");
 		dissect_v2gdin_paymentdetailsres(
 			&body->PaymentDetailsRes, tvb, body_tree,
 			ett_v2gdin_struct_dinPaymentDetailsResType,
@@ -4278,12 +4291,16 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->ContractAuthenticationReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ContractAuthenticationReq");
 		dissect_v2gdin_contractauthenticationreq(
 			&body->ContractAuthenticationReq, tvb, body_tree,
 			ett_v2gdin_struct_dinContractAuthenticationReqType,
 			"ContractAuthenticationReq");
 	}
 	if (body->ContractAuthenticationRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ContractAuthenticationRes");
 		dissect_v2gdin_contractauthenticationres(
 			&body->ContractAuthenticationRes, tvb, body_tree,
 			ett_v2gdin_struct_dinContractAuthenticationResType,
@@ -4291,12 +4308,16 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->ChargeParameterDiscoveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ChargeParameterDiscoveryReq");
 		dissect_v2gdin_chargeparameterdiscoveryreq(
 			&body->ChargeParameterDiscoveryReq, tvb, body_tree,
 			ett_v2gdin_struct_dinChargeParameterDiscoveryReqType,
 			"ChargeParameterDiscoveryReq");
 	}
 	if (body->ChargeParameterDiscoveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ChargeParameterDiscoveryRes");
 		dissect_v2gdin_chargeparameterdiscoveryres(
 			&body->ChargeParameterDiscoveryRes, tvb, body_tree,
 			ett_v2gdin_struct_dinChargeParameterDiscoveryResType,
@@ -4304,12 +4325,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->PowerDeliveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PowerDeliveryReq");
 		dissect_v2gdin_powerdeliveryreq(
 			&body->PowerDeliveryReq, tvb, body_tree,
 			ett_v2gdin_struct_dinPowerDeliveryReqType,
 			"PowerDeliveryReq");
 	}
 	if (body->PowerDeliveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PowerDeliveryRes");
 		dissect_v2gdin_powerdeliveryres(
 			&body->PowerDeliveryRes, tvb, body_tree,
 			ett_v2gdin_struct_dinPowerDeliveryResType,
@@ -4317,12 +4340,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->ChargingStatusReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ChargingStatusReq");
 		dissect_v2gdin_chargingstatusreq(
 			&body->ChargingStatusReq, tvb, body_tree,
 			ett_v2gdin_struct_dinChargingStatusReqType,
 			"ChargingStatusReq");
 	}
 	if (body->ChargingStatusRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ChargingStatusRes");
 		dissect_v2gdin_chargingstatusres(
 			&body->ChargingStatusRes, tvb, body_tree,
 			ett_v2gdin_struct_dinChargingStatusResType,
@@ -4330,12 +4355,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->MeteringReceiptReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "MeteringReceiptReq");
 		dissect_v2gdin_meteringreceiptreq(
 			&body->MeteringReceiptReq, tvb, body_tree,
 			ett_v2gdin_struct_dinMeteringReceiptReqType,
 			"MeteringReceiptReq");
 	}
 	if (body->MeteringReceiptRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "MeteringReceiptRes");
 		dissect_v2gdin_meteringreceiptres(
 			&body->MeteringReceiptRes, tvb, body_tree,
 			ett_v2gdin_struct_dinMeteringReceiptResType,
@@ -4343,12 +4370,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->SessionStopReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionStopReq");
 		dissect_v2gdin_sessionstop(
 			&body->SessionStopReq, tvb, body_tree,
 			ett_v2gdin_struct_dinSessionStopType,
 			"SessionStopReq");
 	}
 	if (body->SessionStopRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionStopRes");
 		dissect_v2gdin_sessionstopres(
 			&body->SessionStopRes, tvb, body_tree,
 			ett_v2gdin_struct_dinSessionStopResType,
@@ -4356,12 +4385,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->CertificateUpdateReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CertificateUpdateReq");
 		dissect_v2gdin_certificateupdatereq(
 			&body->CertificateUpdateReq, tvb, body_tree,
 			ett_v2gdin_struct_dinCertificateUpdateReqType,
 			"CertificateUpdateReq");
 	}
 	if (body->CertificateUpdateRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CertificateUpdateRes");
 		dissect_v2gdin_certificateupdateres(
 			&body->CertificateUpdateRes, tvb, body_tree,
 			ett_v2gdin_struct_dinCertificateUpdateResType,
@@ -4369,12 +4400,16 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->CertificateInstallationReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"CertificateInstallationReq");
 		dissect_v2gdin_certificateinstallationreq(
 			&body->CertificateInstallationReq, tvb, body_tree,
 			ett_v2gdin_struct_dinCertificateInstallationReqType,
 			"CertificateInstallationReq");
 	}
 	if (body->CertificateInstallationRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"CertificateInstallationRes");
 		dissect_v2gdin_certificateinstallationres(
 			&body->CertificateInstallationRes, tvb, body_tree,
 			ett_v2gdin_struct_dinCertificateInstallationResType,
@@ -4382,12 +4417,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->CableCheckReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CableCheckReq");
 		dissect_v2gdin_cablecheckreq(
 			&body->CableCheckReq, tvb, body_tree,
 			ett_v2gdin_struct_dinCableCheckReqType,
 			"CableCheckReq");
 	}
 	if (body->CableCheckRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CableCheckRes");
 		dissect_v2gdin_cablecheckres(
 			&body->CableCheckRes, tvb, body_tree,
 			ett_v2gdin_struct_dinCableCheckResType,
@@ -4395,12 +4432,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->PreChargeReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PreChargeReq");
 		dissect_v2gdin_prechargereq(
 			&body->PreChargeReq, tvb, body_tree,
 			ett_v2gdin_struct_dinPreChargeReqType,
 			"PreChargeReq");
 	}
 	if (body->PreChargeRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PreChargeRes");
 		dissect_v2gdin_prechargeres(
 			&body->PreChargeRes, tvb, body_tree,
 			ett_v2gdin_struct_dinPreChargeResType,
@@ -4408,12 +4447,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->CurrentDemandReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CurrentDemandReq");
 		dissect_v2gdin_currentdemandreq(
 			&body->CurrentDemandReq, tvb, body_tree,
 			ett_v2gdin_struct_dinCurrentDemandReqType,
 			"CurrentDemandReq");
 	}
 	if (body->CurrentDemandRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CurrentDemandRes");
 		dissect_v2gdin_currentdemandres(
 			&body->CurrentDemandRes, tvb, body_tree,
 			ett_v2gdin_struct_dinCurrentDemandResType,
@@ -4421,12 +4462,14 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	}
 
 	if (body->WeldingDetectionReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "WeldingDetectionReq");
 		dissect_v2gdin_weldingdetectionreq(
 			&body->WeldingDetectionReq, tvb, body_tree,
 			ett_v2gdin_struct_dinWeldingDetectionReqType,
 			"WeldingDetectionReq");
 	}
 	if (body->WeldingDetectionRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "WeldingDetectionRes");
 		dissect_v2gdin_weldingdetectionres(
 			&body->WeldingDetectionRes, tvb, body_tree,
 			ett_v2gdin_struct_dinWeldingDetectionResType,
@@ -4473,7 +4516,7 @@ dissect_v2gdin(tvbuff_t *tvb,
 		dissect_v2gdin_header(&exidin.V2G_Message.Header,
 			tvb, v2gdin_tree, ett_v2gdin_header, "Header");
 		dissect_v2gdin_body(&exidin.V2G_Message.Body,
-			tvb, v2gdin_tree, ett_v2gdin_body, "Body");
+			tvb, pinfo, v2gdin_tree, ett_v2gdin_body, "Body");
 	}
 
 	return tvb_captured_length(tvb);
