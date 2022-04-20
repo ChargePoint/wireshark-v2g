@@ -4367,6 +4367,7 @@ dissect_v2giso1_weldingdetectionres(
 static void
 dissect_v2giso1_body(const struct iso1BodyType *body,
 		     tvbuff_t *tvb,
+		     packet_info *pinfo,
 		     proto_tree *tree,
 		     gint idx,
 		     const char *subtree_name)
@@ -4377,12 +4378,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (body->SessionSetupReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionSetupReq");
 		dissect_v2giso1_sessionsetupreq(
 			&body->SessionSetupReq, tvb, subtree,
 			ett_v2giso1_struct_iso1SessionSetupReqType,
 			"SessionSetupReq");
 	}
 	if (body->SessionSetupRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionSetupRes");
 		dissect_v2giso1_sessionsetupres(
 			&body->SessionSetupRes, tvb, subtree,
 			ett_v2giso1_struct_iso1SessionSetupResType,
@@ -4390,12 +4393,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->ServiceDiscoveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDiscoveryReq");
 		dissect_v2giso1_servicediscoveryreq(
 			&body->ServiceDiscoveryReq, tvb, subtree,
 			ett_v2giso1_struct_iso1ServiceDiscoveryReqType,
 			"ServiceDiscoveryReq");
 	}
 	if (body->ServiceDiscoveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDiscoveryRes");
 		dissect_v2giso1_servicediscoveryres(
 			&body->ServiceDiscoveryRes, tvb, subtree,
 			ett_v2giso1_struct_iso1ServiceDiscoveryResType,
@@ -4403,12 +4408,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->ServiceDetailReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDetailReq");
 		dissect_v2giso1_servicedetailreq(
 			&body->ServiceDetailReq, tvb, subtree,
 			ett_v2giso1_struct_iso1ServiceDetailReqType,
 			"ServiceDetailReq");
 	}
 	if (body->ServiceDetailRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ServiceDetailRes");
 		dissect_v2giso1_servicedetailres(
 			&body->ServiceDetailRes, tvb, subtree,
 			ett_v2giso1_struct_iso1ServiceDetailResType,
@@ -4416,12 +4423,16 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->PaymentServiceSelectionReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"PaymentServiceSelectionReq");
 		dissect_v2giso1_paymentserviceselectionreq(
 			&body->PaymentServiceSelectionReq, tvb, subtree,
 			ett_v2giso1_struct_iso1PaymentServiceSelectionReqType,
 			"PaymentServiceSelectionReq");
 	}
 	if (body->PaymentServiceSelectionRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"PaymentServiceSelectionRes");
 		dissect_v2giso1_paymentserviceselectionres(
 			&body->PaymentServiceSelectionRes, tvb, subtree,
 			ett_v2giso1_struct_iso1PaymentServiceSelectionResType,
@@ -4429,12 +4440,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->PaymentDetailsReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PaymentDetailsReq");
 		dissect_v2giso1_paymentdetailsreq(
 			&body->PaymentDetailsReq, tvb, subtree,
 			ett_v2giso1_struct_iso1PaymentDetailsReqType,
 			"PaymentDetailsReq");
 	}
 	if (body->PaymentDetailsRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PaymentDetailsRes");
 		dissect_v2giso1_paymentdetailsres(
 			&body->PaymentDetailsRes, tvb, subtree,
 			ett_v2giso1_struct_iso1PaymentDetailsResType,
@@ -4442,12 +4455,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->AuthorizationReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "AuthorizationReq");
 		dissect_v2giso1_authorizationreq(
 			&body->AuthorizationReq, tvb, subtree,
 			ett_v2giso1_struct_iso1AuthorizationReqType,
 			"AuthorizationReq");
 	}
 	if (body->AuthorizationRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "AuthorizationRes");
 		dissect_v2giso1_authorizationres(
 			&body->AuthorizationRes, tvb, subtree,
 			ett_v2giso1_struct_iso1AuthorizationResType,
@@ -4455,12 +4470,16 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->ChargeParameterDiscoveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ChargeParameterDiscoveryReq");
 		dissect_v2giso1_chargeparameterdiscoveryreq(
 			&body->ChargeParameterDiscoveryReq, tvb, subtree,
 			ett_v2giso1_struct_iso1ChargeParameterDiscoveryReqType,
 			"ChargeParameterDiscoveryReq");
 	}
 	if (body->ChargeParameterDiscoveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"ChargeParameterDiscoveryRes");
 		dissect_v2giso1_chargeparameterdiscoveryres(
 			&body->ChargeParameterDiscoveryRes, tvb, subtree,
 			ett_v2giso1_struct_iso1ChargeParameterDiscoveryResType,
@@ -4468,12 +4487,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->PowerDeliveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PowerDeliveryReq");
 		dissect_v2giso1_powerdeliveryreq(
 			&body->PowerDeliveryReq, tvb, subtree,
 			ett_v2giso1_struct_iso1PowerDeliveryReqType,
 			"PowerDeliveryReq");
 	}
 	if (body->PowerDeliveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PowerDeliveryRes");
 		dissect_v2giso1_powerdeliveryres(
 			&body->PowerDeliveryRes, tvb, subtree,
 			ett_v2giso1_struct_iso1PowerDeliveryResType,
@@ -4481,12 +4502,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->MeteringReceiptReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "MeteringReceiptReq");
 		dissect_v2giso1_meteringreceiptreq(
 			&body->MeteringReceiptReq, tvb, subtree,
 			ett_v2giso1_struct_iso1MeteringReceiptReqType,
 			"MeteringReceiptReq");
 	}
 	if (body->MeteringReceiptRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "MeteringReceiptRes");
 		dissect_v2giso1_meteringreceiptres(
 			&body->MeteringReceiptRes, tvb, subtree,
 			ett_v2giso1_struct_iso1MeteringReceiptResType,
@@ -4494,12 +4517,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->SessionStopReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionStopReq");
 		dissect_v2giso1_sessionstopreq(
 			&body->SessionStopReq, tvb, subtree,
 			ett_v2giso1_struct_iso1SessionStopReqType,
 			"SessionStopReq");
 	}
 	if (body->SessionStopRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "SessionStopRes");
 		dissect_v2giso1_sessionstopres(
 			&body->SessionStopRes, tvb, subtree,
 			ett_v2giso1_struct_iso1SessionStopResType,
@@ -4507,12 +4532,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->CertificateUpdateReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CertificateUpdateReq");
 		dissect_v2giso1_certificateupdatereq(
 			&body->CertificateUpdateReq, tvb, subtree,
 			ett_v2giso1_struct_iso1CertificateUpdateReqType,
 			"CertificateUpdateReq");
 	}
 	if (body->CertificateUpdateRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CertificateUpdateRes");
 		dissect_v2giso1_certificateupdateres(
 			&body->CertificateUpdateRes, tvb, subtree,
 			ett_v2giso1_struct_iso1CertificateUpdateResType,
@@ -4520,12 +4547,16 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->CertificateInstallationReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"CertificateInstallationReq");
 		dissect_v2giso1_certificateinstallationreq(
 			&body->CertificateInstallationReq, tvb, subtree,
 			ett_v2giso1_struct_iso1CertificateInstallationReqType,
 			"CertificateInstallationReq");
 	}
 	if (body->CertificateInstallationRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"CertificateInstallationRes");
 		dissect_v2giso1_certificateinstallationres(
 			&body->CertificateInstallationRes, tvb, subtree,
 			ett_v2giso1_struct_iso1CertificateInstallationResType,
@@ -4533,12 +4564,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->ChargingStatusReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ChargingStatusReq");
 		dissect_v2giso1_chargingstatusreq(
 			&body->ChargingStatusReq, tvb, subtree,
 			ett_v2giso1_struct_iso1ChargingStatusReqType,
 			"ChargingStatusReq");
 	}
 	if (body->ChargingStatusRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "ChargingStatusRes");
 		dissect_v2giso1_chargingstatusres(
 			&body->ChargingStatusRes, tvb, subtree,
 			ett_v2giso1_struct_iso1ChargingStatusResType,
@@ -4546,12 +4579,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->CableCheckReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CableCheckReq");
 		dissect_v2giso1_cablecheckreq(
 			&body->CableCheckReq, tvb, subtree,
 			ett_v2giso1_struct_iso1CableCheckReqType,
 			"CableCheckReq");
 	}
 	if (body->CableCheckRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CableCheckRes");
 		dissect_v2giso1_cablecheckres(
 			&body->CableCheckRes, tvb, subtree,
 			ett_v2giso1_struct_iso1CableCheckResType,
@@ -4559,12 +4594,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->PreChargeReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PreChargeReq");
 		dissect_v2giso1_prechargereq(
 			&body->PreChargeReq, tvb, subtree,
 			ett_v2giso1_struct_iso1PreChargeReqType,
 			"PreChargeReq");
 	}
 	if (body->PreChargeRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "PreChargeRes");
 		dissect_v2giso1_prechargeres(
 			&body->PreChargeRes, tvb, subtree,
 			ett_v2giso1_struct_iso1PreChargeResType,
@@ -4572,12 +4609,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->CurrentDemandReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CurrentDemandReq");
 		dissect_v2giso1_currentdemandreq(
 			&body->CurrentDemandReq, tvb, subtree,
 			ett_v2giso1_struct_iso1CurrentDemandReqType,
 			"CurrentDemandReq");
 	}
 	if (body->CurrentDemandRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "CurrentDemandRes");
 		dissect_v2giso1_currentdemandres(
 			&body->CurrentDemandRes, tvb, subtree,
 			ett_v2giso1_struct_iso1CurrentDemandResType,
@@ -4585,12 +4624,14 @@ dissect_v2giso1_body(const struct iso1BodyType *body,
 	}
 
 	if (body->WeldingDetectionReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "WeldingDetectionReq");
 		dissect_v2giso1_weldingdetectionreq(
 			&body->WeldingDetectionReq, tvb, subtree,
 			ett_v2giso1_struct_iso1WeldingDetectionReqType,
 			"WeldingDetectionReq");
 	}
 	if (body->WeldingDetectionRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO, "WeldingDetectionRes");
 		dissect_v2giso1_weldingdetectionres(
 			&body->WeldingDetectionRes, tvb, subtree,
 			ett_v2giso1_struct_iso1WeldingDetectionResType,
@@ -4638,7 +4679,7 @@ dissect_v2giso1(tvbuff_t *tvb,
 		dissect_v2giso1_header(&exiiso1.V2G_Message.Header,
 			tvb, v2giso1_tree, ett_v2giso1_header, "Header");
 		dissect_v2giso1_body(& exiiso1.V2G_Message.Body,
-			tvb, v2giso1_tree, ett_v2giso1_body, "Body");
+			tvb, pinfo, v2giso1_tree, ett_v2giso1_body, "Body");
 	}
 
 	return tvb_captured_length(tvb);
