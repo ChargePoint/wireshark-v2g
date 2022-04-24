@@ -261,6 +261,11 @@ static int hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved = -1;
 
 static int hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode = -1;
 
+/* Specifically track voltage and current for graphing */
+static int hf_v2gdin_target_voltage = -1;
+static int hf_v2gdin_target_current = -1;
+static int hf_v2gdin_present_voltage = -1;
+static int hf_v2gdin_present_current = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2gdin = -1;
@@ -1655,6 +1660,29 @@ dissect_v2gdin_servicetaglist(
 	}
 
 	return;
+}
+
+static inline double
+v2gdin_physicalvalue_to_double(
+	const struct dinPhysicalValueType *physicalvalue)
+{
+	double value;
+	int32_t multiplier;
+
+	value = (double)physicalvalue->Value;
+	multiplier = physicalvalue->Multiplier;
+	if (multiplier > 0) {
+		for (; multiplier != 0; multiplier--) {
+			value *= 10.0;
+		}
+	}
+	if (multiplier < 0) {
+		for (; multiplier != 0; multiplier++) {
+			value /= 10.0;
+		}
+	}
+
+	return value;
 }
 
 static void
@@ -3924,6 +3952,8 @@ dissect_v2gdin_prechargereq(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -3939,12 +3969,22 @@ dissect_v2gdin_prechargereq(
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVTargetVoltage");
+	value = v2gdin_physicalvalue_to_double(&req->EVTargetVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_target_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(
 		&req->EVTargetCurrent,
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVTargetCurrent");
+	value = v2gdin_physicalvalue_to_double(&req->EVTargetCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_target_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -3959,6 +3999,7 @@ dissect_v2gdin_prechargeres(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -3979,6 +4020,11 @@ dissect_v2gdin_prechargeres(
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVSEPresentVoltage");
+	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_present_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -3993,6 +4039,7 @@ dissect_v2gdin_currentdemandreq(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4008,12 +4055,22 @@ dissect_v2gdin_currentdemandreq(
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVTargetVoltage");
+	value = v2gdin_physicalvalue_to_double(&req->EVTargetVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_target_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(
 		&req->EVTargetCurrent,
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVTargetCurrent");
+	value = v2gdin_physicalvalue_to_double(&req->EVTargetCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_target_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
 		hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete,
@@ -4080,6 +4137,7 @@ dissect_v2gdin_currentdemandres(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4100,12 +4158,22 @@ dissect_v2gdin_currentdemandres(
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVSEPresentVoltage");
+	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_present_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(
 		&res->EVSEPresentCurrent,
 		tvb, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVSEPresentCurrent");
+	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_present_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
 		hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved,
@@ -4178,6 +4246,7 @@ dissect_v2gdin_weldingdetectionres(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4196,6 +4265,11 @@ dissect_v2gdin_weldingdetectionres(
 		&res->EVSEPresentVoltage,
 		tvb, subtree, ett_v2gdin_struct_dinPhysicalValueType,
 		"EVSEPresentVoltage");
+	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_present_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -5464,6 +5538,24 @@ proto_register_v2gdin(void)
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
+
+		/* Derived values for graphing */
+		{ &hf_v2gdin_target_voltage,
+		  { "Voltage", "v2gdin.target.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_target_current,
+		  { "Current", "v2gdin.target.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_present_voltage,
+		  { "Voltage", "v2gdin.present.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_present_current,
+		  { "Current", "v2gdin.present.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		}
 	};
 
 	static gint *ett[] = {
