@@ -19,7 +19,8 @@ DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
 	cmake \
 	tshark \
 	wireshark \
-	wireshark-dev
+	wireshark-dev \
+	scapy
 
 SCRIPT
 

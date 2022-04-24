@@ -2684,7 +2684,7 @@ dissect_v2giso1_sascheduletuple(
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
-	it = proto_tree_add_int(subtree,
+	it = proto_tree_add_uint(subtree,
 		hf_v2giso1_struct_iso1SAScheduleTupleType_SAScheduleTupleID,
 		tvb, 0, 0, sascheduletuple->SAScheduleTupleID);
 	proto_item_set_generated(it);
@@ -4301,7 +4301,7 @@ dissect_v2giso1_currentdemandres(
 	}
 
 	if (res->ReceiptRequired_isUsed) {
-		it = proto_tree_add_uint(subtree,
+		it = proto_tree_add_int(subtree,
 			hf_v2giso1_struct_iso1CurrentDemandResType_ReceiptRequired,
 			tvb, 0, 0, res->ReceiptRequired);
 		proto_item_set_generated(it);
@@ -5640,6 +5640,10 @@ proto_register_v2giso1(void)
 		  { "EVSEPowerLimitAchieved",
 		    "v2giso1.struct.currentdemandres.evsepowerlimitachieved",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso1_struct_iso1CurrentDemandResType_EVSEID,
+		  { "EVSEID", "v2giso1.struct.currentdemandres.evseid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2giso1_struct_iso1CurrentDemandResType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",

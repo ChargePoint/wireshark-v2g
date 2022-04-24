@@ -163,7 +163,7 @@ dissect_v2gexi_apphandappprotocoltype(
 	}
 
 	/* ISO1 */
-	const char ns1[] = "urn:iso:15118:2:2010:MsgDef";
+	const char ns1[] = "urn:iso:15118:2:2013:MsgDef";
 	if ((strlen(ns1) ==
 	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
 	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
