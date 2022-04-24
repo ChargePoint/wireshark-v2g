@@ -255,6 +255,12 @@ static int hf_v2giso1_struct_iso1CurrentDemandResType_ReceiptRequired = -1;
 
 static int hf_v2giso1_struct_iso1WeldingDetectionResType_ResponseCode = -1;
 
+/* Specifically track voltage and current for graphing */
+static int hf_v2giso1_target_voltage = -1;
+static int hf_v2giso1_target_current = -1;
+static int hf_v2giso1_present_voltage = -1;
+static int hf_v2giso1_present_current = -1;
+
 /* Initialize the subtree pointers */
 static gint ett_v2giso1 = -1;
 static gint ett_v2giso1_header = -1;
@@ -1735,6 +1741,29 @@ dissect_v2giso1_servicelist(
 	}
 
 	return;
+}
+
+static inline double
+v2giso1_physicalvalue_to_double(
+	const struct iso1PhysicalValueType *physicalvalue)
+{
+	double value;
+	int32_t multiplier;
+
+	value = (double)physicalvalue->Value;
+	multiplier = physicalvalue->Multiplier;
+	if (multiplier > 0) {
+		for (; multiplier != 0; multiplier--) {
+			value *= 10.0;
+		}
+	}
+	if (multiplier < 0) {
+		for (; multiplier != 0; multiplier++) {
+			value /= 10.0;
+		}
+	}
+
+	return value;
 }
 
 static void
@@ -4060,6 +4089,8 @@ dissect_v2giso1_prechargereq(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4075,12 +4106,22 @@ dissect_v2giso1_prechargereq(
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVTargetVoltage");
+	value = v2giso1_physicalvalue_to_double(&req->EVTargetVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_target_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2giso1_physicalvalue(
 		&req->EVTargetCurrent,
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVTargetCurrent");
+	value = v2giso1_physicalvalue_to_double(&req->EVTargetCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_target_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -4095,6 +4136,7 @@ dissect_v2giso1_prechargeres(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4115,6 +4157,11 @@ dissect_v2giso1_prechargeres(
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVSEPresentVoltage");
+	value = v2giso1_physicalvalue_to_double(&res->EVSEPresentVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_present_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -4129,6 +4176,7 @@ dissect_v2giso1_currentdemandreq(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4144,12 +4192,22 @@ dissect_v2giso1_currentdemandreq(
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVTargetVoltage");
+	value = v2giso1_physicalvalue_to_double(&req->EVTargetVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_target_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2giso1_physicalvalue(
 		&req->EVTargetCurrent,
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVTargetCurrent");
+	value = v2giso1_physicalvalue_to_double(&req->EVTargetCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_target_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
 		hf_v2giso1_struct_iso1CurrentDemandReqType_ChargingComplete,
@@ -4216,6 +4274,7 @@ dissect_v2giso1_currentdemandres(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4236,12 +4295,22 @@ dissect_v2giso1_currentdemandres(
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVSEPresentVoltage");
+	value = v2giso1_physicalvalue_to_double(&res->EVSEPresentVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_present_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2giso1_physicalvalue(
 		&res->EVSEPresentCurrent,
 		tvb, subtree,
 		ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVSEPresentCurrent");
+	value = v2giso1_physicalvalue_to_double(&res->EVSEPresentCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_present_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
 		hf_v2giso1_struct_iso1CurrentDemandResType_EVSECurrentLimitAchieved,
@@ -4341,6 +4410,7 @@ dissect_v2giso1_weldingdetectionres(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4359,6 +4429,11 @@ dissect_v2giso1_weldingdetectionres(
 		&res->EVSEPresentVoltage,
 		tvb, subtree, ett_v2giso1_struct_iso1PhysicalValueType,
 		"EVSEPresentVoltage");
+	value = v2giso1_physicalvalue_to_double(&res->EVSEPresentVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso1_present_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -5662,6 +5737,24 @@ proto_register_v2giso1(void)
 		    "v2giso1.struct.weldingdetectionres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2giso1_response_code_names),
 		    0x0, NULL, HFILL }
+		},
+
+		/* Derived values for graphing */
+		{ &hf_v2giso1_target_voltage,
+		  { "Voltage", "v2giso1.target.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso1_target_current,
+		  { "Current", "v2giso1.target.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso1_present_voltage,
+		  { "Voltage", "v2giso1.present.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso1_present_current,
+		  { "Current", "v2giso1.present.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		}
 	};
 
