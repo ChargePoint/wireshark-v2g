@@ -9,8 +9,9 @@
 Vehicle to Grid protocols are used in charging applications, this
 project provides a reference for protocol decode and analysis.
 
-Wireshark's LUA documentation:  https://wiki.wireshark.org/Lua
-Wireshark's Development documentation: https://wiki.wireshark.org/Development
+* Wireshark's LUA documentation:  https://wiki.wireshark.org/Lua
+* Wireshark's Development documentation: https://wiki.wireshark.org/Development
+* OpenV2G documentation: http://openv2g.sourceforge.net
 
 ## Quickstart
 
