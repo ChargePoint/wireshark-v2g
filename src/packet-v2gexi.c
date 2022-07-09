@@ -278,7 +278,7 @@ dissect_v2gexi_hs(v2gexi_conv_t *v2gexi_conv,
 	stream.size = tvb_reported_length(tvb);
 	stream.pos = &pos;
 	stream.data = tvb_memdup(wmem_packet_scope(),
-				 tvb, pos, stream.size);
+				 tvb, 0, stream.size);
 
 	errn = decode_appHandExiDocument(&stream, &ahexi);
 	if (errn != 0) {
@@ -419,27 +419,27 @@ proto_register_v2gexi(void)
 		{ &hf_v2gexi_struct_appHandAppProtocolType_ProtocolNamespace,
 		  { "ProtocolNamespace",
 		    "v2gexi.struct.apphandappprotocoltype.protocolnamespace",
-		    FT_STRING, BASE_NONE, NULL, 0x0, NULL }
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMajor,
 		  { "VersionNumberMajor",
 		    "v2gexi.struct.apphandappprotocoltype.versionnumbermajor",
-		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL }
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2gexi_struct_appHandAppProtocolType_VersionNumberMinor,
 		  { "VersionNumberMinor",
 		    "v2gexi.struct.apphandappprotocoltype.versionnumberminor",
-		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL }
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2gexi_struct_appHandAppProtocolType_SchemaID,
 		  { "SchemaID",
 		    "v2gexi.struct.apphandappprotocoltype.schemaid",
-		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL }
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2gexi_struct_appHandAppProtocolType_Priority,
 		  { "Priority",
 		    "v2gexi.struct.apphandappprotocoltype.priority",
-		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL }
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct appHandAnonType_supportedAppProtocolRes */

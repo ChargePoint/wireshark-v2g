@@ -92,7 +92,7 @@ dissect_v2giso2(tvbuff_t *tvb,
 	size_t pos;
 	bitstream_t stream;
 	int errn;
-	struct iso2EXIDocument exiiso2;
+	struct iso2EXIDocument *exiiso2;
 
 	col_set_str(pinfo->cinfo, COL_PROTOCOL, "ISO2");
 	/* Clear the info column */
@@ -102,9 +102,12 @@ dissect_v2giso2(tvbuff_t *tvb,
 	stream.size = tvb_reported_length(tvb);
 	stream.pos = &pos;
 	stream.data = tvb_memdup(wmem_packet_scope(),
-				 tvb, pos, stream.size);
-	errn = decode_iso2ExiDocument(&stream, &exiiso2);
+				 tvb, 0, stream.size);
+
+	exiiso2 = wmem_alloc(pinfo->pool, sizeof(*exiiso2));
+	errn = decode_iso2ExiDocument(&stream, exiiso2);
 	if (errn != 0) {
+		wmem_free(pinfo->pool, exiiso2);
 		/* decode failed */
 		return 0;
 	}
@@ -114,18 +117,19 @@ dissect_v2giso2(tvbuff_t *tvb,
 	 * - Header
 	 * - Body
 	 */
-	if (exiiso2.V2G_Message_isUsed) {
+	if (exiiso2->V2G_Message_isUsed) {
 		proto_tree *v2giso2_tree;
 
 		v2giso2_tree = proto_tree_add_subtree(tree,
 			tvb, 0, 0, ett_v2giso2, NULL, "V2G ISO2 Message");
 
-		dissect_v2giso2_header(&exiiso2.V2G_Message.Header,
+		dissect_v2giso2_header(&exiiso2->V2G_Message.Header,
 			tvb, v2giso2_tree, ett_v2giso2_header, "Header");
-		dissect_v2giso2_body(& exiiso2.V2G_Message.Body,
+		dissect_v2giso2_body(& exiiso2->V2G_Message.Body,
 			tvb, pinfo, v2giso2_tree, ett_v2giso2_body, "Body");
 	}
 
+	wmem_free(pinfo->pool, exiiso2);
 	return tvb_captured_length(tvb);
 }
 

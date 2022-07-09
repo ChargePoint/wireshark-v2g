@@ -2007,11 +2007,11 @@ dissect_v2gdin_listofrootcertificateids(
 
 static void
 dissect_v2gdin_evchargeparameter(
-	const struct dinEVChargeParameterType *evchargeparameter,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct dinEVChargeParameterType *evchargeparameter _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2167,11 +2167,11 @@ dissect_v2gdin_dc_evchargeparameter(
 }
 
 static void
-dissect_v2gdin_evsestatus(const struct dinEVSEStatusType *evsestatus,
-			  tvbuff_t *tvb,
-			  proto_tree *tree,
-			  gint idx,
-			  const char *subtree_name)
+dissect_v2gdin_evsestatus(const struct dinEVSEStatusType *evsestatus _U_,
+			  tvbuff_t *tvb _U_,
+			  proto_tree *tree _U_,
+			  gint idx _U_,
+			  const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2217,11 +2217,11 @@ dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
 
 static void
 dissect_v2gdin_evsechargeparameter(
-	const struct dinEVSEChargeParameterType *evsechargeparameter,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct dinEVSEChargeParameterType *evsechargeparameter _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2362,11 +2362,11 @@ dissect_v2gdin_dc_evsechargeparameter(
 }
 
 static void
-dissect_v2gdin_interval(const struct dinIntervalType *interval,
-			tvbuff_t *tvb,
-			proto_tree *tree,
-			gint idx,
-			const char *subtree_name)
+dissect_v2gdin_interval(const struct dinIntervalType *interval _U_,
+			tvbuff_t *tvb _U_,
+			proto_tree *tree _U_,
+			gint idx _U_,
+			const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2642,11 +2642,11 @@ dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
 }
 
 static void
-dissect_v2gdin_saschedules(const struct dinSASchedulesType *saschedules,
-			   tvbuff_t *tvb,
-			   proto_tree *tree,
-			   gint idx,
-			   const char *subtree_name)
+dissect_v2gdin_saschedules(const struct dinSASchedulesType *saschedules _U_,
+			   tvbuff_t *tvb _U_,
+			   proto_tree *tree _U_,
+			   gint idx _U_,
+			   const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2831,11 +2831,11 @@ dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
 
 static void
 dissect_v2gdin_evpowerdeliveryparameter(
-	const struct dinEVPowerDeliveryParameterType *evpowerdeliveryparameter,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct dinEVPowerDeliveryParameterType *evpowerdeliveryparameter _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -3488,11 +3488,11 @@ dissect_v2gdin_powerdeliveryres(
 
 static void
 dissect_v2gdin_chargingstatusreq(
-	const struct dinChargingStatusReqType *chargingstatusreq,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct dinChargingStatusReqType *chargingstatusreq _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -3643,11 +3643,11 @@ dissect_v2gdin_meteringreceiptres(
 
 static void
 dissect_v2gdin_sessionstop(
-	const struct dinSessionStopType *sessionstop,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct dinSessionStopType *sessionstop _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4561,7 +4561,7 @@ dissect_v2gdin(tvbuff_t *tvb,
 	size_t pos;
 	bitstream_t stream;
 	int errn;
-	struct dinEXIDocument exidin;
+	struct dinEXIDocument *exidin;
 
 	col_set_str(pinfo->cinfo, COL_PROTOCOL, "DIN");
 	/* Clear the info column */
@@ -4571,9 +4571,12 @@ dissect_v2gdin(tvbuff_t *tvb,
 	stream.size = tvb_reported_length(tvb);
 	stream.pos = &pos;
 	stream.data = tvb_memdup(wmem_packet_scope(),
-				 tvb, pos, stream.size);
-	errn = decode_dinExiDocument(&stream, &exidin);
+				 tvb, 0, stream.size);
+
+	exidin = wmem_alloc(pinfo->pool, sizeof(*exidin));
+	errn = decode_dinExiDocument(&stream, exidin);
 	if (errn != 0) {
+		wmem_free(pinfo->pool, exidin);
 		/* decode failed */
 		return 0;
 	}
@@ -4583,16 +4586,17 @@ dissect_v2gdin(tvbuff_t *tvb,
 	 * - Header
 	 * - Body
 	 */
-	if (exidin.V2G_Message_isUsed) {
+	if (exidin->V2G_Message_isUsed) {
 		v2gdin_tree = proto_tree_add_subtree(tree,
 			tvb, 0, 0, ett_v2gdin, NULL, "V2G DIN Message");
 
-		dissect_v2gdin_header(&exidin.V2G_Message.Header,
+		dissect_v2gdin_header(&exidin->V2G_Message.Header,
 			tvb, v2gdin_tree, ett_v2gdin_header, "Header");
-		dissect_v2gdin_body(&exidin.V2G_Message.Body,
+		dissect_v2gdin_body(&exidin->V2G_Message.Body,
 			tvb, pinfo, v2gdin_tree, ett_v2gdin_body, "Body");
 	}
 
+	wmem_free(pinfo->pool, exidin);
 	return tvb_captured_length(tvb);
 }
 
