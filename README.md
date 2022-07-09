@@ -84,7 +84,7 @@ make install
 
 To build and install the plugin as part of Wireshark (ie. permenant)
 
-1) Get the wireshark repo
+1) Get the wireshark repo and change directory for future steps
     ```
     git clone https://gitlab.com/wireshark/wireshark
     cd wireshark
@@ -111,12 +111,46 @@ To build and install the plugin as part of Wireshark (ie. permenant)
 
 ### Mac OS X
 
-The build process is similar to the linux build but based upon the
+The build process is similar to the linux build but based upon
 homebrew. This means that most of the setup requires a full build
 that encompasses getting the brew recipes.
 
 See the github workflows for macos to see the package installs and
 the build steps.
+
+1) Get the wireshark repo and change directory for future steps
+    ```
+    git clone https://gitlab.com/wireshark/wireshark
+    cd wireshark
+    git checkout release-3.6
+    ```
+
+2) Copy the V2G plugin to a new `plugins/epan/v2g` directory
+    ```
+    git clone https://github.com/ChargePoint/wireshark-v2g.git plugins/epan/v2g
+    ```
+
+3) Patch the cmake in wireshark to include the v2g plugin
+    ```
+    git apply plugins/epan/v2g/extern/wireshark-release-3.6.patch
+    ```
+
+4) Use the wireshark tools script to setup brew to build
+    ```
+    sh tools/macos-setup-brew.sh
+    ```
+
+5) Perform a new wireshark build with the v2g plugin
+    ```
+    mkdir -p build && cd build
+
+    # brew doesn't setup cmake correctly - so qt5 path might be different
+    env CMAKE_PREFIX_PATH=$(brew --prefix)/Cellar/qt@5/5.15.5_1 \
+        cmake ..
+
+    make VERBOSE=1
+    sudo make install
+    ```
 
 ### Windows
 
