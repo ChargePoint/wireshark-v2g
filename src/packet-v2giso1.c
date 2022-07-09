@@ -1133,7 +1133,7 @@ dissect_v2giso1_x509issuerserial(
 		hf_v2giso1_struct_iso1X509IssuerSerialType_X509SerialNumber_data,
 		tvb,
 		x509issuerserial->X509SerialNumber.data,
-		x509issuerserial->X509SerialNumber.len,
+		(unsigned int)x509issuerserial->X509SerialNumber.len,
 		sizeof(x509issuerserial->X509SerialNumber.data));
 
 	return;
@@ -2057,11 +2057,11 @@ dissect_v2giso1_certificatechain(
 
 static void
 dissect_v2giso1_evchargeparameter(
-	const struct iso1EVChargeParameterType *evchargeparameter,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct iso1EVChargeParameterType *evchargeparameter _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2310,11 +2310,11 @@ dissect_v2giso1_dc_evsestatus(
 
 static void
 dissect_v2giso1_evsechargeparameter(
-	const struct iso1EVSEChargeParameterType *evsechargeparameter,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct iso1EVSEChargeParameterType *evsechargeparameter _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2415,11 +2415,11 @@ dissect_v2giso1_dc_evsechargeparameter(
 
 static void
 dissect_v2giso1_interval(
-	const struct iso1IntervalType *interval,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct iso1IntervalType *interval _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2689,11 +2689,11 @@ dissect_v2giso1_salestariff(
 
 static void
 dissect_v2giso1_saschedules(
-	const struct iso1SASchedulesType *saschedules,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct iso1SASchedulesType *saschedules _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -2827,11 +2827,11 @@ dissect_v2giso1_chargingprofile(
 
 static void
 dissect_v2giso1_evpowerdeliveryparameter(
-	const struct iso1EVPowerDeliveryParameterType *evpowerdeliveryparameter,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct iso1EVPowerDeliveryParameterType *evpowerdeliveryparameter _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	/* no content */
 	return;
@@ -3946,11 +3946,11 @@ dissect_v2giso1_certificateinstallationres(
 
 static void
 dissect_v2giso1_chargingstatusreq(
-	const struct iso1ChargingStatusReqType *chargingstatusreq,
-	tvbuff_t *tvb,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	const struct iso1ChargingStatusReqType *chargingstatusreq _U_,
+	tvbuff_t *tvb _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -4723,7 +4723,7 @@ dissect_v2giso1(tvbuff_t *tvb,
 	size_t pos;
 	bitstream_t stream;
 	int errn;
-	struct iso1EXIDocument exiiso1;
+	struct iso1EXIDocument *exiiso1;
 
 	col_set_str(pinfo->cinfo, COL_PROTOCOL, "ISO1");
 	/* Clear the info column */
@@ -4733,9 +4733,12 @@ dissect_v2giso1(tvbuff_t *tvb,
 	stream.size = tvb_reported_length(tvb);
 	stream.pos = &pos;
 	stream.data = tvb_memdup(wmem_packet_scope(),
-				 tvb, pos, stream.size);
-	errn = decode_iso1ExiDocument(&stream, &exiiso1);
+				 tvb, 0, stream.size);
+
+	exiiso1 = wmem_alloc(pinfo->pool, sizeof(*exiiso1));
+	errn = decode_iso1ExiDocument(&stream, exiiso1);
 	if (errn != 0) {
+		wmem_free(pinfo->pool, exiiso1);
 		/* decode failed */
 		return 0;
 	}
@@ -4745,18 +4748,19 @@ dissect_v2giso1(tvbuff_t *tvb,
 	 * - Header
 	 * - Body
 	 */
-	if (exiiso1.V2G_Message_isUsed) {
+	if (exiiso1->V2G_Message_isUsed) {
 		proto_tree *v2giso1_tree;
 
 		v2giso1_tree = proto_tree_add_subtree(tree,
 			tvb, 0, 0, ett_v2giso1, NULL, "V2G ISO1 Message");
 
-		dissect_v2giso1_header(&exiiso1.V2G_Message.Header,
+		dissect_v2giso1_header(&exiiso1->V2G_Message.Header,
 			tvb, v2giso1_tree, ett_v2giso1_header, "Header");
-		dissect_v2giso1_body(& exiiso1.V2G_Message.Body,
+		dissect_v2giso1_body(& exiiso1->V2G_Message.Body,
 			tvb, pinfo, v2giso1_tree, ett_v2giso1_body, "Body");
 	}
 
+	wmem_free(pinfo->pool, exiiso1);
 	return tvb_captured_length(tvb);
 }
 
