@@ -151,7 +151,7 @@ dissect_v2gexi_apphandappprotocoltype(
 
 	/* DIN */
 	const char ns0[] = "urn:din:70121:2012:MsgDef";
-	if ((strlen(ns0) ==
+	if ((strlen(ns0) <=
 	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
 	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
 			     ns0, strlen(ns0)) == 0)) {
@@ -164,7 +164,7 @@ dissect_v2gexi_apphandappprotocoltype(
 
 	/* ISO1 */
 	const char ns1[] = "urn:iso:15118:2:2013:MsgDef";
-	if ((strlen(ns1) ==
+	if ((strlen(ns1) <=
 	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
 	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
 			     ns1, strlen(ns1)) == 0)) {
@@ -177,7 +177,7 @@ dissect_v2gexi_apphandappprotocoltype(
 
 	/* ISO2 */
 	const char ns2[] = "urn:iso:15118:2:2016:MsgDef";
-	if ((strlen(ns2) ==
+	if ((strlen(ns2) <=
 	     apphandappprotocol->ProtocolNamespace.charactersLen) &&
 	    (exi_strncasecmp(apphandappprotocol->ProtocolNamespace.characters,
 			     ns2, strlen(ns2)) == 0)) {
