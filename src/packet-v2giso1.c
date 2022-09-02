@@ -28,6 +28,7 @@ void proto_reg_handoff_v2giso1(void);
 
 
 static dissector_handle_t v2gexi_handle;
+static dissector_handle_t v2gber_handle;
 
 static int proto_v2giso1 = -1;
 
@@ -267,6 +268,7 @@ static gint ett_v2giso1_header = -1;
 static gint ett_v2giso1_body = -1;
 static gint ett_v2giso1_array = -1;
 static gint ett_v2giso1_array_i = -1;
+static gint ett_v2giso1_asn1 = -1;
 
 static gint ett_v2giso1_struct_iso1NotificationType = -1;
 static gint ett_v2giso1_struct_iso1SignatureType = -1;
@@ -2044,12 +2046,28 @@ dissect_v2giso1_subcertificates(
 		certificate_i_tree = proto_tree_add_subtree_format(
 			certificate_tree,
 			tvb, 0, 0, ett_v2giso1_array_i, NULL, "[%u]", i);
-		exi_add_bytes(certificate_i_tree,
-			hf_v2giso1_struct_iso1SubCertificatesType_Certificate,
-			tvb,
-			subcertificates->Certificate.array[i].bytes,
-			subcertificates->Certificate.array[i].bytesLen,
-			sizeof(subcertificates->Certificate.array[i].bytes));
+
+		if (v2gber_handle == NULL) {
+			exi_add_bytes(certificate_i_tree,
+				hf_v2giso1_struct_iso1SubCertificatesType_Certificate,
+				tvb,
+				subcertificates->Certificate.array[i].bytes,
+				subcertificates->Certificate.array[i].bytesLen,
+				sizeof(subcertificates->Certificate.array[i].bytes));
+		} else {
+			tvbuff_t *child;
+			proto_tree *asn1_tree;
+
+			child = tvb_new_child_real_data(tvb,
+				subcertificates->Certificate.array[i].bytes,
+				sizeof(subcertificates->Certificate.array[i].bytes),
+				subcertificates->Certificate.array[i].bytesLen);
+
+			asn1_tree = proto_tree_add_subtree(certificate_i_tree,
+				child, 0, tvb_reported_length(child),
+				ett_v2giso1_asn1, NULL, "Certificate ASN1");
+			call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+		}
 	}
 
 	return;
@@ -2078,12 +2096,27 @@ dissect_v2giso1_certificatechain(
 			sizeof(certificatechain->Id.characters));
 	}
 
-	exi_add_bytes(subtree,
-		hf_v2giso1_struct_iso1CertificateChainType_Certificate,
-		tvb,
-		certificatechain->Certificate.bytes,
-		certificatechain->Certificate.bytesLen,
-		sizeof(certificatechain->Certificate.bytes));
+	if (v2gber_handle == NULL) {
+		exi_add_bytes(subtree,
+			hf_v2giso1_struct_iso1CertificateChainType_Certificate,
+			tvb,
+			certificatechain->Certificate.bytes,
+			certificatechain->Certificate.bytesLen,
+			sizeof(certificatechain->Certificate.bytes));
+	} else {
+		tvbuff_t *child;
+		proto_tree *asn1_tree;
+
+		child = tvb_new_child_real_data(tvb,
+			certificatechain->Certificate.bytes,
+			sizeof(certificatechain->Certificate.bytes),
+			certificatechain->Certificate.bytesLen);
+
+		asn1_tree = proto_tree_add_subtree(subtree,
+			child, 0, tvb_reported_length(child),
+			ett_v2giso1_asn1, NULL, "Certificate ASN1");
+		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+	}
 
 	if (certificatechain->SubCertificates_isUsed) {
 		dissect_v2giso1_subcertificates(
@@ -5901,6 +5934,7 @@ proto_register_v2giso1(void)
 		&ett_v2giso1_body,
 		&ett_v2giso1_array,
 		&ett_v2giso1_array_i,
+		&ett_v2giso1_asn1,
 
 		&ett_v2giso1_struct_iso1NotificationType,
 		&ett_v2giso1_struct_iso1SignatureType,
@@ -6020,6 +6054,7 @@ proto_reg_handoff_v2giso1(void)
 
 	/* add a handle for the connection oriented V2G EXI */
 	v2gexi_handle = find_dissector_add_dependency("v2gexi", proto_v2giso1);
+	v2gber_handle = find_dissector("ber");
 }
 
 /*
