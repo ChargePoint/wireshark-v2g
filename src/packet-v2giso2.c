@@ -44,6 +44,7 @@ static gint ett_v2giso2_array_i = -1;
 static void
 dissect_v2giso2_header(const struct iso2MessageHeaderType *header,
 		       tvbuff_t *tvb,
+		       packet_info *pinfo,
 		       proto_tree *tree,
 		       gint idx,
 		       const char *subtree_name)
@@ -124,9 +125,11 @@ dissect_v2giso2(tvbuff_t *tvb,
 			tvb, 0, 0, ett_v2giso2, NULL, "V2G ISO2 Message");
 
 		dissect_v2giso2_header(&exiiso2->V2G_Message.Header,
-			tvb, v2giso2_tree, ett_v2giso2_header, "Header");
+			tvb, pinfo, v2giso2_tree,
+			ett_v2giso2_header, "Header");
 		dissect_v2giso2_body(& exiiso2->V2G_Message.Body,
-			tvb, pinfo, v2giso2_tree, ett_v2giso2_body, "Body");
+			tvb, pinfo, v2giso2_tree,
+			ett_v2giso2_body, "Body");
 	}
 
 	wmem_free(pinfo->pool, exiiso2);
