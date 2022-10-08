@@ -100,6 +100,9 @@ if(Wireshark_FOUND)
         RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
+    install(FILES dissector/v2g.lua
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
 
 else(Wireshark_FOUND)
 
@@ -124,6 +127,9 @@ else(Wireshark_FOUND)
     add_plugin_library(v2gexi epan)
     target_link_libraries(v2gexi epan openv2g)
     install_plugin(v2gexi epan)
+    install(FILES dissector/v2g.lua
+            DESTINATION ${PLUGIN_INSTALL_VERSION_LIBDIR}/epan NAMELINK_SKIP
+    )
 
     file(GLOB PLUGIN_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.h")
     CHECKAPI(
@@ -137,6 +143,3 @@ else(Wireshark_FOUND)
     )
 
 endif(Wireshark_FOUND)
-
-# Install dissectors written by hand (lua)
-add_subdirectory(dissector)
