@@ -44,7 +44,7 @@ static gint ett_v2giso2_array_i = -1;
 static void
 dissect_v2giso2_header(const struct iso2MessageHeaderType *header,
 		       tvbuff_t *tvb,
-		       packet_info *pinfo,
+		       packet_info *pinfo _U_,
 		       proto_tree *tree,
 		       gint idx,
 		       const char *subtree_name)
@@ -70,9 +70,9 @@ dissect_v2giso2_header(const struct iso2MessageHeaderType *header,
 }
 
 static void
-dissect_v2giso2_body(const struct iso2BodyType *body,
+dissect_v2giso2_body(const struct iso2BodyType *body _U_,
 		     tvbuff_t *tvb,
-		     packet_info *pinfo,
+		     packet_info *pinfo _U_,
 		     proto_tree *tree,
 		     gint idx,
 		     const char *subtree_name)

@@ -553,7 +553,7 @@ static const value_string v2gdin_cost_kind_names[] = {
 static void
 dissect_v2gdin_notification(const struct dinNotificationType *notification,
 			    tvbuff_t *tvb,
-			    packet_info *pinfo,
+			    packet_info *pinfo _U_,
 			    proto_tree *tree,
 			    gint idx,
 			    const char *subtree_name)
@@ -584,7 +584,7 @@ dissect_v2gdin_notification(const struct dinNotificationType *notification,
 static void
 dissect_v2gdin_object(const struct dinObjectType *object,
 		      tvbuff_t *tvb,
-		      packet_info *pinfo,
+		      packet_info *pinfo _U_,
 		      proto_tree *tree,
 		      gint idx,
 		      const char *subtree_name)
@@ -633,7 +633,7 @@ dissect_v2gdin_object(const struct dinObjectType *object,
 static void
 dissect_v2gdin_transform(const struct dinTransformType *transform,
 			 tvbuff_t *tvb,
-			 packet_info *pinfo,
+			 packet_info *pinfo _U_,
 			 proto_tree *tree,
 			 gint idx,
 			 const char *subtree_name)
@@ -710,7 +710,7 @@ dissect_v2gdin_transforms(const struct dinTransformsType *transforms,
 static void
 dissect_v2gdin_digestmethod(const struct dinDigestMethodType *digestmethod,
 			    tvbuff_t *tvb,
-			    packet_info *pinfo,
+			    packet_info *pinfo _U_,
 			    proto_tree *tree,
 			    gint idx,
 			    const char *subtree_name)
@@ -802,7 +802,7 @@ static void
 dissect_v2gdin_canonicalizationmethod(
 	const struct dinCanonicalizationMethodType *canonicalizationmethod,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -835,7 +835,7 @@ static void
 dissect_v2gdin_signaturemethod(
 	const struct dinSignatureMethodType *signaturemethod,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -876,7 +876,7 @@ static void
 dissect_v2gdin_signaturevalue(
 	const struct dinSignatureValueType *signaturevalue,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -957,7 +957,7 @@ dissect_v2gdin_signedinfo(const struct dinSignedInfoType *signedinfo,
 static void
 dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 			   tvbuff_t *tvb,
-			   packet_info *pinfo,
+			   packet_info *pinfo _U_,
 			   proto_tree *tree,
 			   gint idx,
 			   const char *subtree_name)
@@ -1028,7 +1028,7 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 static void
 dissect_v2gdin_rsakeyvalue(const struct dinRSAKeyValueType *rsakeyvalue,
 			   tvbuff_t *tvb,
-			   packet_info *pinfo,
+			   packet_info *pinfo _U_,
 			   proto_tree *tree,
 			   gint idx,
 			   const char *subtree_name)
@@ -1135,7 +1135,7 @@ static void
 dissect_v2gdin_x509issuerserial(
 	const struct dinX509IssuerSerialType *x509issuerserial,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -1265,7 +1265,7 @@ dissect_v2gdin_x509data(const struct dinX509DataType *x509data,
 static void
 dissect_v2gdin_pgpdata(const struct dinPGPDataType *pgpdata,
 		       tvbuff_t *tvb,
-		       packet_info *pinfo,
+		       packet_info *pinfo _U_,
 		       proto_tree *tree,
 		       gint idx,
 		       const char *subtree_name)
@@ -1308,7 +1308,7 @@ dissect_v2gdin_pgpdata(const struct dinPGPDataType *pgpdata,
 static void
 dissect_v2gdin_spkidata(const struct dinSPKIDataType *spkidata,
 			tvbuff_t *tvb,
-			packet_info *pinfo,
+			packet_info *pinfo _U_,
 			proto_tree *tree,
 			gint idx,
 			const char *subtree_name)
@@ -1532,7 +1532,7 @@ static void
 dissect_v2gdin_paymentoptions(
 	const struct dinPaymentOptionsType *paymentoptions,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -1569,7 +1569,7 @@ dissect_v2gdin_paymentoptions(
 static void
 dissect_v2gdin_servicetag(const struct dinServiceTagType *servicetag,
 			  tvbuff_t *tvb,
-			  packet_info *pinfo,
+			  packet_info *pinfo _U_,
 			  proto_tree *tree,
 			  gint idx,
 			  const char *subtree_name)
@@ -1726,7 +1726,7 @@ v2gdin_physicalvalue_to_double(
 static void
 dissect_v2gdin_physicalvalue(const struct dinPhysicalValueType *physicalvalue,
 			     tvbuff_t *tvb,
-			     packet_info *pinfo,
+			     packet_info *pinfo _U_,
 			     proto_tree *tree,
 			     gint idx,
 			     const char *subtree_name)
@@ -1896,7 +1896,7 @@ static void
 dissect_v2gdin_selectedservice(
 	const struct dinSelectedServiceType *selectedservice,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -1957,7 +1957,7 @@ static void
 dissect_v2gdin_subcertificates(
 	const struct dinSubCertificatesType *subcertificates,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -2023,7 +2023,7 @@ static void
 dissect_v2gdin_listofrootcertificateids(
 	const struct dinListOfRootCertificateIDsType *listofrootcertificateids,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -2108,7 +2108,7 @@ dissect_v2gdin_ac_evchargeparameter(
 static void
 dissect_v2gdin_dc_evstatus(const struct dinDC_EVStatusType *dc_evstatus,
 			   tvbuff_t *tvb,
-			   packet_info *pinfo,
+			   packet_info *pinfo _U_,
 			   proto_tree *tree,
 			   gint idx,
 			   const char *subtree_name)
@@ -2239,7 +2239,7 @@ dissect_v2gdin_evsestatus(const struct dinEVSEStatusType *evsestatus _U_,
 static void
 dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
 			     tvbuff_t *tvb,
-			     packet_info *pinfo,
+			     packet_info *pinfo _U_,
 			     proto_tree *tree,
 			     gint idx,
 			     const char *subtree_name)
@@ -2291,7 +2291,7 @@ dissect_v2gdin_evsechargeparameter(
 static void
 dissect_v2gdin_ac_evsestatus(const struct dinAC_EVSEStatusType *ac_evsestatus,
 			     tvbuff_t *tvb,
-			     packet_info *pinfo,
+			     packet_info *pinfo _U_,
 			     proto_tree *tree,
 			     gint idx,
 			     const char *subtree_name)
@@ -2449,7 +2449,7 @@ static void
 dissect_v2gdin_relativetimeinterval(
 	const struct dinRelativeTimeIntervalType *relativetimeinterval,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -2552,7 +2552,7 @@ dissect_v2gdin_pmaxschedule(const struct dinPMaxScheduleType *pmaxschedule,
 static void
 dissect_v2gdin_cost(const struct dinCostType *cost,
 		    tvbuff_t *tvb,
-		    packet_info *pinfo,
+		    packet_info *pinfo _U_,
 		    proto_tree *tree,
 		    gint idx,
 		    const char *subtree_name)
@@ -2806,7 +2806,7 @@ static void
 dissect_v2gdin_profileentry(
 	const struct dinProfileEntryType *profileentry,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3011,7 +3011,7 @@ static void
 dissect_v2gdin_sessionsetupreq(
 	const struct dinSessionSetupReqType *sessionsetupreq,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3035,7 +3035,7 @@ static void
 dissect_v2gdin_sessionsetupres(
 	const struct dinSessionSetupResType *sessionsetupres,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3072,7 +3072,7 @@ static void
 dissect_v2gdin_servicediscoveryreq(
 	const struct dinServiceDiscoveryReqType *servicediscoveryreq,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3149,7 +3149,7 @@ static void
 dissect_v2gdin_servicedetailreq(
 	const struct dinServiceDetailReqType *servicedetailreq,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3239,7 +3239,7 @@ dissect_v2gdin_servicepaymentselectionres(
 	const struct dinServicePaymentSelectionResType
 		*servicepaymentselectionres,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3293,7 +3293,7 @@ static void
 dissect_v2gdin_paymentdetailsres(
 	const struct dinPaymentDetailsResType *paymentdetailsres,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3331,7 +3331,7 @@ dissect_v2gdin_contractauthenticationreq(
 	const struct dinContractAuthenticationReqType
 		*contractauthenticationreq,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3366,7 +3366,7 @@ dissect_v2gdin_contractauthenticationres(
 	const struct dinContractAuthenticationResType
 		*contractauthenticationres,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
@@ -3777,7 +3777,7 @@ static void
 dissect_v2gdin_sessionstopres(
 	const struct dinSessionStopResType *sessionstopres,
 	tvbuff_t *tvb,
-	packet_info *pinfo,
+	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)

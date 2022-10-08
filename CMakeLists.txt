@@ -72,7 +72,7 @@ if(Wireshark_FOUND)
     include_directories(${Wireshark_INCLUDE_DIR})
     link_directories(${Wireshark_LIB_DIR})
     if(APPLE)
-        link_directories(/usr/local/lib /usr/local/opt/glib/lib)
+        link_directories(/usr/local/lib)
     endif(APPLE)
 
     # Keep in sync with in-tree build
@@ -93,7 +93,7 @@ if(Wireshark_FOUND)
             FOLDER "Plugins"
     )
 
-    target_link_libraries(v2gexi wireshark openv2g)
+    target_link_libraries(v2gexi wireshark openv2g ${GLIB2_LIBRARY})
 
     install(TARGETS v2gexi
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} NAMELINK_SKIP
