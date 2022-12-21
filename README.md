@@ -144,11 +144,14 @@ the build steps.
     ```
     mkdir -p build && cd build
 
-    # brew qt is not in a directly findable place, so tell cmake about it
-    env CMAKE_PREFIX_PATH=$(brew list qt5 | grep Qt5CoreConfig.cmake | \
-                            sed -e 's@/lib/cmake.*$@@') cmake ..
+    # brew doesn't put qt in a directly findable place, so tell cmake about it
+    CMAKE_PREFIX_PATH=$(brew info qt5 | grep -o '^/[^ ]*') cmake ..
 
-    make -j$(sysctl -n hw.ncpu) plugins app_bundle
+    make -j$(sysctl -n hw.ncpu)
+
+    # For some reason the lua half of the plugin doesn't get installed into
+    # the app bundle. Do it manually:
+    cp ../plugins/epan/v2g/dissector/v2g.lua run/Wireshark.app/Contents/PlugIns/wireshark/
 
     # Recommended installation directory
     cp -r run/Wireshark.app /Applications/
