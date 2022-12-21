@@ -88,28 +88,31 @@ function dissect_v2gtp(buffer, pinfo, tree)
     local payload_type_name = get_sdp_payload_type(buffer(2,4):uint())
     local sdp_pay_len = buffer(4,4):uint()
 
-    tree:add(SDP["version"], buffer(0,1)):append_text(
+    local subtree = tree:add(v2gtp_protocol, buffer(), "V2G Transfer Protocol")
+    subtree:add(SDP["version"], buffer(0,1)):append_text(
         append_paren_text(
             get_sdp_version(buffer(0,1):uint())
         )
     )
-    tree:add(SDP["version_inverted"], buffer(1,1)):append_text(
+    subtree:add(SDP["version_inverted"], buffer(1,1)):append_text(
         append_paren_text(
             get_sdp_version(buffer(0,1):uint())
         )
     )
-    tree:add(SDP["payload_type"], buffer(2,2)):append_text(
+    subtree:add(SDP["payload_type"], buffer(2,2)):append_text(
         append_paren_text(
             payload_type_name
         )
     )
-    tree:add(SDP["payload_length"], sdp_pay_len)
+    subtree:add(SDP["payload_length"], sdp_pay_len)
 
     if payload_type_name == "SDP REQUEST" then
+        pinfo.cols['info'] = 'SECC Discovery Protocol Request'
         local subtree = tree:add(v2gtp_protocol, buffer(), "SECC Discovery Protocol Request")
         subtree:add(SDP["request_security"], buffer(8,1)):append_text("  (" .. get_sdp_security(buffer(8,1):uint()) .. ")")
         subtree:add(SDP["request_transport_proto"], buffer(9,1)):append_text("  (" .. get_sdp_transport_name(buffer(9,1):uint()) .. ")")
     elseif payload_type_name == "SDP RESPONSE" then
+        pinfo.cols['info'] = 'SECC Discovery Protocol Response'
         local subtree = tree:add(v2gtp_protocol, buffer(), "SECC Discovery Protocol Response")
         local port = buffer(24,2):uint()
         local security = buffer(26,1):uint()
