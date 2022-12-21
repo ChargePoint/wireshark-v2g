@@ -131,6 +131,16 @@ else(Wireshark_FOUND)
             DESTINATION ${PLUGIN_INSTALL_VERSION_LIBDIR}/epan NAMELINK_SKIP
     )
 
+    if(APPLE)
+        add_custom_target(v2glua
+            COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/dissector/v2g.lua
+                ${CMAKE_BINARY_DIR}/run/Wireshark.app/Contents/PlugIns/wireshark
+            DEPENDS v2gexi
+        )
+        add_dependencies(plugins v2glua)
+    endif()
+
     file(GLOB PLUGIN_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.h")
     CHECKAPI(
         NAME

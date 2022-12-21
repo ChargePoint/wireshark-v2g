@@ -144,12 +144,14 @@ the build steps.
     ```
     mkdir -p build && cd build
 
-    # brew doesn't setup cmake correctly - so qt5 path might be different
-    env CMAKE_PREFIX_PATH=$(brew --prefix)/Cellar/qt@5/5.15.5_1 \
-        cmake ..
+    # brew qt is not in a directly findable place, so tell cmake about it
+    env CMAKE_PREFIX_PATH=$(brew list qt5 | grep Qt5CoreConfig.cmake | \
+                            sed -e 's@/lib/cmake.*$@@') cmake ..
 
-    make VERBOSE=1
-    sudo make install
+    make -j$(sysctl -n hw.ncpu) plugins app_bundle
+
+    # Recommended installation directory
+    cp -r run/Wireshark.app /Applications/
     ```
 
 ### Windows
