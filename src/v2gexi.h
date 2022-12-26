@@ -94,6 +94,7 @@ exi_add_bytes(proto_tree *tree,
 {
 	unsigned int i;
 	char *str;
+	size_t strsz;
 	proto_item *it;
 
 	if (byteslen > bytesmaxsize) {
@@ -102,13 +103,14 @@ exi_add_bytes(proto_tree *tree,
 		return;
 	}
 
-	str = alloca(2*byteslen + 1);
+	strsz = (2*byteslen) + 1;
+	str = alloca(strsz);
 	if (str == NULL) {
 		return;
 	}
 
 	for (i = 0; i < byteslen; i++) {
-		snprintf(&str[2*i], bytesmaxsize - 2*i, "%02X", bytes[i]);
+		snprintf(&str[2*i], strsz - 2*i, "%02X", bytes[i]);
 	}
 	str[2*i] = '\0';
 
