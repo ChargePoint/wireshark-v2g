@@ -1691,6 +1691,7 @@ dissect_v2gdin_servicetaglist(
 	for (i = 0; i < servicetaglist->Service.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2gdin_service(
 			&servicetaglist->Service.array[i],
 			tvb, pinfo, service_tree,
@@ -1853,6 +1854,7 @@ dissect_v2gdin_parameterset(
 	for (i = 0; i < parameterset->Parameter.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2gdin_parameter(
 			&parameterset->Parameter.array[i],
 			tvb, pinfo, parameter_tree,
@@ -1883,6 +1885,7 @@ dissect_v2gdin_serviceparameterlist(
 	for (i = 0; i < serviceparameterlist->ParameterSet.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2gdin_parameterset(
 			&serviceparameterlist->ParameterSet.array[i],
 			tvb, pinfo, parameterset_tree,
