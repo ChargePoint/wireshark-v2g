@@ -1924,6 +1924,7 @@ dissect_v2giso1_parameterset(
 	for (i = 0; i < parameterset->Parameter.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2giso1_parameter(
 			&parameterset->Parameter.array[i],
 			tvb, pinfo, parameter_tree,
@@ -1954,6 +1955,7 @@ dissect_v2giso1_serviceparameterlist(
 	for (i = 0; i < serviceparameterlist->ParameterSet.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2giso1_parameterset(
 			&serviceparameterlist->ParameterSet.array[i],
 			tvb, pinfo, parameterset_tree,
@@ -2014,6 +2016,7 @@ dissect_v2giso1_selectedservicelist(
 	for (i = 0; i < selectedservicelist->SelectedService.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
+		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_v2giso1_selectedservice(
 			&selectedservicelist->SelectedService.array[i],
 			tvb, pinfo, selectedservice_tree,
