@@ -17,6 +17,7 @@ FetchContent_Declare(openv2g
     URL_HASH SHA1=c9486c0393346717dafc4df7f2b97c5426f22c43
     PATCH_COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch
           COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-fix-windows-build.patch
+          COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-increase-decode-limits.patch
 )
 
 FetchContent_MakeAvailable(openv2g)
