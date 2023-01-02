@@ -1231,12 +1231,28 @@ dissect_v2giso1_x509data(const struct iso1X509DataType *x509data,
 		x509certificate_i_tree = proto_tree_add_subtree_format(
 			x509certificate_tree,
 			tvb, 0, 0, ett_v2giso1_array_i, NULL, "[%u]", i);
-		exi_add_bytes(x509certificate_i_tree,
-			hf_v2giso1_struct_iso1X509DataType_X509Certificate,
-			tvb,
-			x509data->X509Certificate.array[i].bytes,
-			x509data->X509Certificate.array[i].bytesLen,
-			sizeof(x509data->X509Certificate.array[i].bytes));
+
+		if (v2gber_handle == NULL) {
+			exi_add_bytes(x509certificate_i_tree,
+				hf_v2giso1_struct_iso1X509DataType_X509Certificate,
+				tvb,
+				x509data->X509Certificate.array[i].bytes,
+				x509data->X509Certificate.array[i].bytesLen,
+				sizeof(x509data->X509Certificate.array[i].bytes));
+		} else {
+			tvbuff_t *child;
+			proto_tree *asn1_tree;
+
+			child = tvb_new_child_real_data(tvb,
+				x509data->X509Certificate.array[i].bytes,
+				sizeof(x509data->X509Certificate.array[i].bytes),
+				x509data->X509Certificate.array[i].bytesLen);
+
+			asn1_tree = proto_tree_add_subtree(x509certificate_i_tree,
+				child, 0, tvb_reported_length(child),
+				ett_v2giso1_asn1, NULL, "X509Certificate ASN1");
+			call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+		}
 	}
 
 	x509crl_tree = proto_tree_add_subtree(subtree,
@@ -4032,12 +4048,27 @@ dissect_v2giso1_certificateinstallationreq(
 		req->Id.charactersLen,
 		sizeof(req->Id.characters));
 
-	exi_add_bytes(subtree,
-		hf_v2giso1_struct_iso1CertificateInstallationReqType_OEMProvisioningCert,
-		tvb,
-		req->OEMProvisioningCert.bytes,
-		req->OEMProvisioningCert.bytesLen,
-		sizeof(req->OEMProvisioningCert.bytes));
+	if (v2gber_handle == NULL) {
+		exi_add_bytes(subtree,
+			hf_v2giso1_struct_iso1CertificateInstallationReqType_OEMProvisioningCert,
+			tvb,
+			req->OEMProvisioningCert.bytes,
+			req->OEMProvisioningCert.bytesLen,
+			sizeof(req->OEMProvisioningCert.bytes));
+	} else {
+		tvbuff_t *child;
+		proto_tree *asn1_tree;
+
+		child = tvb_new_child_real_data(tvb,
+			req->OEMProvisioningCert.bytes,
+			sizeof(req->OEMProvisioningCert.bytes),
+			req->OEMProvisioningCert.bytesLen);
+
+		asn1_tree = proto_tree_add_subtree(subtree,
+			child, 0, tvb_reported_length(child),
+			ett_v2giso1_asn1, NULL, "OEMProvisioningCert ASN1");
+		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+	}
 
 	dissect_v2giso1_listofrootcertificateids(
 		&req->ListOfRootCertificateIDs,

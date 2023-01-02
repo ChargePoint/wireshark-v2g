@@ -1,0 +1,103 @@
+diff -Naur openv2g.orig/src/iso1/iso1EXIDatatypes.h openv2g/src/iso1/iso1EXIDatatypes.h
+--- openv2g.orig/src/iso1/iso1EXIDatatypes.h	2019-07-08 15:21:10.000000000 +0000
++++ openv2g/src/iso1/iso1EXIDatatypes.h	2023-01-02 22:36:11.506822924 +0000
+@@ -71,8 +71,8 @@
+ /* Limit occurrence of element "urn:iso:15118:2:2013:MsgDataTypes":RootCertificateID from unbounded to 5 (see #define iso1ListOfRootCertificateIDsType_RootCertificateID_ARRAY_SIZE) */
+ /* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Transform from unbounded to 1 (see #define iso1TransformsType_Transform_ARRAY_SIZE) */
+ /* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":SignatureProperty from unbounded to 1 (see #define iso1SignaturePropertiesType_SignatureProperty_ARRAY_SIZE) */
+-/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 1 (see #define iso1SignedInfoType_Reference_ARRAY_SIZE) */
+-/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 1 (see #define iso1ManifestType_Reference_ARRAY_SIZE) */
++/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 5 (see #define iso1SignedInfoType_Reference_ARRAY_SIZE) */
++/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 5 (see #define iso1ManifestType_Reference_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2013:MsgDataTypes":PMaxScheduleEntry from unbounded to 5 (see #define iso1PMaxScheduleType_PMaxScheduleEntry_ARRAY_SIZE) */
+ /* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":KeyName from unbounded to 1 (see #define iso1KeyInfoType_KeyName_ARRAY_SIZE) */
+ /* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":KeyValue from unbounded to 1 (see #define iso1KeyInfoType_KeyValue_ARRAY_SIZE) */
+@@ -463,7 +463,7 @@
+ };
+ 
+ /* Complex type name='http://www.w3.org/2000/09/xmldsig#,X509IssuerSerialType',  base type name='anyType',  content type='ELEMENT',  isAbstract='false',  hasTypeId='false',  final='0',  block='0',  particle='("http://www.w3.org/2000/09/xmldsig#":X509IssuerName,"http://www.w3.org/2000/09/xmldsig#":X509SerialNumber)',  derivedBy='RESTRICTION'.  */
+-#define iso1X509IssuerSerialType_X509IssuerName_CHARACTERS_SIZE 50 + EXTRA_CHAR 
++#define iso1X509IssuerSerialType_X509IssuerName_CHARACTERS_SIZE 120 + EXTRA_CHAR 
+ #define iso1X509IssuerSerialType_X509SerialNumber_BYTES_SIZE 20
+ struct iso1X509IssuerSerialType {
+ 	/* element: "http://www.w3.org/2000/09/xmldsig#":X509IssuerName, http://www.w3.org/2001/XMLSchema,string */
+@@ -1546,7 +1546,7 @@
+ 
+ /* Complex type name='http://www.w3.org/2000/09/xmldsig#,SignedInfoType',  base type name='anyType',  content type='ELEMENT',  isAbstract='false',  hasTypeId='false',  final='0',  block='0',  particle='("http://www.w3.org/2000/09/xmldsig#":CanonicalizationMethod,"http://www.w3.org/2000/09/xmldsig#":SignatureMethod,"http://www.w3.org/2000/09/xmldsig#":Reference{1-UNBOUNDED})',  derivedBy='RESTRICTION'.  */
+ #define iso1SignedInfoType_Id_CHARACTERS_SIZE 50 + EXTRA_CHAR 
+-#define iso1SignedInfoType_Reference_ARRAY_SIZE 1
++#define iso1SignedInfoType_Reference_ARRAY_SIZE 5
+ struct iso1SignedInfoType {
+ 	/* attribute: Id {http://www.w3.org/2001/XMLSchema,ID} */
+ 	struct {
+@@ -1578,7 +1578,7 @@
+ 
+ /* Complex type name='http://www.w3.org/2000/09/xmldsig#,ManifestType',  base type name='anyType',  content type='ELEMENT',  isAbstract='false',  hasTypeId='false',  final='0',  block='0',  particle='("http://www.w3.org/2000/09/xmldsig#":Reference{1-UNBOUNDED})',  derivedBy='RESTRICTION'.  */
+ #define iso1ManifestType_Id_CHARACTERS_SIZE 50 + EXTRA_CHAR 
+-#define iso1ManifestType_Reference_ARRAY_SIZE 1
++#define iso1ManifestType_Reference_ARRAY_SIZE 5
+ struct iso1ManifestType {
+ 	/* attribute: Id {http://www.w3.org/2001/XMLSchema,ID} */
+ 	struct {
+@@ -2090,7 +2090,7 @@
+ #define iso1EXIFragment_GenChallenge_BYTES_SIZE 16 /* XML schema facet length for urn:iso:15118:2:2013:MsgDataTypes,genChallengeType is 16 */
+ #define iso1EXIFragment_X509SKI_BYTES_SIZE 350
+ #define iso1EXIFragment_Certificate_BYTES_SIZE 800 /* XML schema facet maxLength for urn:iso:15118:2:2013:MsgDataTypes,certificateType is 800 */
+-#define iso1EXIFragment_X509IssuerName_CHARACTERS_SIZE 50 + EXTRA_CHAR
++#define iso1EXIFragment_X509IssuerName_CHARACTERS_SIZE 120 + EXTRA_CHAR
+ #define iso1EXIFragment_Modulus_BYTES_SIZE 350
+ #define iso1exiElementFrag_Id_CHARACTERS_SIZE 50 + EXTRA_CHAR
+ #define iso1exiElementFrag_CHARACTERS_GENERIC_CHARACTERS_SIZE 50 + EXTRA_CHAR
+diff -Naur openv2g.orig/src/iso2/iso2EXIDatatypes.h openv2g/src/iso2/iso2EXIDatatypes.h
+--- openv2g.orig/src/iso2/iso2EXIDatatypes.h	2019-07-08 15:46:12.000000000 +0000
++++ openv2g/src/iso2/iso2EXIDatatypes.h	2023-01-02 22:36:58.258824888 +0000
+@@ -74,11 +74,11 @@
+ /* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":SignatureProperty from unbounded to 1 (see #define iso2SignaturePropertiesType_SignatureProperty_ARRAY_SIZE) */
+ /* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Transform from unbounded to 1 (see #define iso2TransformsType_Transform_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":Sensor from 255 to 5 (see #define iso2SensorListType_Sensor_ARRAY_SIZE) */
+-/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 1 (see #define iso2ManifestType_Reference_ARRAY_SIZE) */
++/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 5 (see #define iso2ManifestType_Reference_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":SensorMeasurements from 255 to 5 (see #define iso2SensorPackageType_SensorMeasurements_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":ProfileEntry from unbounded to 24 (see #define iso2ChargingProfileType_ProfileEntry_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":SalesTariffEntry from unbounded to 5 (see #define iso2SalesTariffType_SalesTariffEntry_ARRAY_SIZE) */
+-/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 1 (see #define iso2SignedInfoType_Reference_ARRAY_SIZE) */
++/* Limit occurrence of element "http://www.w3.org/2000/09/xmldsig#":Reference from unbounded to 5 (see #define iso2SignedInfoType_Reference_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":MagneticVector from 255 to 5 (see #define iso2MagneticVectorListType_MagneticVector_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":ParameterSet from 255 to 5 (see #define iso2ServiceParameterListType_ParameterSet_ARRAY_SIZE) */
+ /* Limit occurrence of element "urn:iso:15118:2:2016:MsgDataTypes":PMaxScheduleEntry from unbounded to 5 (see #define iso2PMaxScheduleType_PMaxScheduleEntry_ARRAY_SIZE) */
+@@ -767,7 +767,7 @@
+ } iso2responseCodeType;
+ 
+ /* Complex type name='http://www.w3.org/2000/09/xmldsig#,X509IssuerSerialType',  base type name='anyType',  content type='ELEMENT',  isAbstract='false',  hasTypeId='false',  final='0',  block='0',  particle='("http://www.w3.org/2000/09/xmldsig#":X509IssuerName,"http://www.w3.org/2000/09/xmldsig#":X509SerialNumber)',  derivedBy='RESTRICTION'.  */
+-#define iso2X509IssuerSerialType_X509IssuerName_CHARACTERS_SIZE 50 + EXTRA_CHAR 
++#define iso2X509IssuerSerialType_X509IssuerName_CHARACTERS_SIZE 120 + EXTRA_CHAR 
+ struct iso2X509IssuerSerialType {
+ 	/* element: "http://www.w3.org/2000/09/xmldsig#":X509IssuerName, http://www.w3.org/2001/XMLSchema,string */
+ 	struct {
+@@ -1869,7 +1869,7 @@
+ 
+ /* Complex type name='http://www.w3.org/2000/09/xmldsig#,ManifestType',  base type name='anyType',  content type='ELEMENT',  isAbstract='false',  hasTypeId='false',  final='0',  block='0',  particle='("http://www.w3.org/2000/09/xmldsig#":Reference{1-UNBOUNDED})',  derivedBy='RESTRICTION'.  */
+ #define iso2ManifestType_Id_CHARACTERS_SIZE 50 + EXTRA_CHAR 
+-#define iso2ManifestType_Reference_ARRAY_SIZE 1
++#define iso2ManifestType_Reference_ARRAY_SIZE 5
+ struct iso2ManifestType {
+ 	/* attribute: Id {http://www.w3.org/2001/XMLSchema,ID} */
+ 	struct {
+@@ -2102,7 +2102,7 @@
+ 
+ /* Complex type name='http://www.w3.org/2000/09/xmldsig#,SignedInfoType',  base type name='anyType',  content type='ELEMENT',  isAbstract='false',  hasTypeId='false',  final='0',  block='0',  particle='("http://www.w3.org/2000/09/xmldsig#":CanonicalizationMethod,"http://www.w3.org/2000/09/xmldsig#":SignatureMethod,"http://www.w3.org/2000/09/xmldsig#":Reference{1-UNBOUNDED})',  derivedBy='RESTRICTION'.  */
+ #define iso2SignedInfoType_Id_CHARACTERS_SIZE 50 + EXTRA_CHAR 
+-#define iso2SignedInfoType_Reference_ARRAY_SIZE 1
++#define iso2SignedInfoType_Reference_ARRAY_SIZE 5
+ struct iso2SignedInfoType {
+ 	/* attribute: Id {http://www.w3.org/2001/XMLSchema,ID} */
+ 	struct {
+@@ -2997,7 +2997,7 @@
+ #define iso2EXIFragment_EVSEID_CHARACTERS_SIZE 37 + EXTRA_CHAR /* XML schema facet maxLength for urn:iso:15118:2:2016:MsgDataTypes,evseIDType is 37 */
+ #define iso2EXIFragment_GenChallenge_BYTES_SIZE 16 /* XML schema facet length for urn:iso:15118:2:2016:MsgDataTypes,genChallengeType is 16 */
+ #define iso2EXIFragment_GAID_CHARACTERS_SIZE 50 + EXTRA_CHAR
+-#define iso2EXIFragment_X509IssuerName_CHARACTERS_SIZE 50 + EXTRA_CHAR
++#define iso2EXIFragment_X509IssuerName_CHARACTERS_SIZE 120 + EXTRA_CHAR
+ 
+ 
+ /* Global elements of EXI Document */
