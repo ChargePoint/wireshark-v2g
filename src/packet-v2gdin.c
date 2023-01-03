@@ -3010,6 +3010,7 @@ dissect_v2gdin_header(const struct dinMessageHeaderType *header,
 	return;
 }
 
+
 static void
 dissect_v2gdin_sessionsetupreq(
 	const struct dinSessionSetupReqType *sessionsetupreq,
@@ -4409,6 +4410,7 @@ dissect_v2gdin_weldingdetectionres(
 	return;
 }
 
+
 static void
 dissect_v2gdin_body(const struct dinBodyType *body,
 		    tvbuff_t *tvb,
@@ -4722,6 +4724,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 	return;
 }
 
+
 static int
 dissect_v2gdin(tvbuff_t *tvb,
 	       packet_info *pinfo, proto_tree *tree _U_, void *data _U_)
@@ -4768,6 +4771,7 @@ dissect_v2gdin(tvbuff_t *tvb,
 	wmem_free(pinfo->pool, exidin);
 	return tvb_captured_length(tvb);
 }
+
 
 void
 proto_register_v2gdin(void)
@@ -5843,6 +5847,7 @@ proto_register_v2gdin(void)
 
 	register_dissector("v2gdin", dissect_v2gdin, proto_v2gdin);
 }
+
 
 void
 proto_reg_handoff_v2gdin(void)
