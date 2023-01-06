@@ -21,7 +21,7 @@ env:
 jobs:
    intree:
       name: Build and test in-tree plugin
-      runs-on: macos-latest
+      runs-on: macos-11.0
       steps:
          - name: Checkout Wireshark
            run: |
@@ -29,7 +29,7 @@ jobs:
               git remote add -t "${{ env.WIRESHARK_BRANCH }}" -f origin https://gitlab.com/wireshark/wireshark.git
               git checkout ${{ env.WIRESHARK_BRANCH }}
          - name: Checkout plug-in
-           uses: actions/checkout@v2
+           uses: actions/checkout@v3
            with:
               path: plugins/epan/v2g
          - name: Apply patch
@@ -37,11 +37,13 @@ jobs:
               git apply plugins/epan/v2g/extern/wireshark-${{ env.WIRESHARK_BRANCH }}.patch
 
          - name: Set up Python 3.8
-           uses: actions/setup-python@v2
+           uses: actions/setup-python@v4
            with:
               python-version: 3.8
+         - name: Install dmgbuild
+           run: pip3 install dmgbuild
          - name: Set up Ruby 2.6
-           uses: actions/setup-ruby@v1.1.2
+           uses: actions/setup-ruby@v1
            with:
               ruby-version: '2.6'
          - name: Update brew packages
