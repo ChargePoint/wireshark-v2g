@@ -180,6 +180,46 @@ static int hf_v2giso2_struct_iso2EMAIDType_CONTENT = -1;
 static int hf_v2giso2_struct_iso2RelativeTimeIntervalType_start = -1;
 static int hf_v2giso2_struct_iso2RelativeTimeIntervalType_duration = -1;
 
+static int hf_v2giso2_struct_iso2EVEnergyTransferParameterType_DepartureTime = -1;
+
+static int hf_v2giso2_struct_iso2AC_EVEnergyTransferParameterType_DepartureTime = -1;
+
+static int hf_v2giso2_struct_iso2AC_EVBidirectionalParameterType_DepartureTime = -1;
+
+static int hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_DepartureTime = -1;
+static int hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_CurrentSOC = -1;
+static int hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_TargetSOC = -1;
+static int hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_BulkSOC = -1;
+
+static int hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_DepartureTime = -1;
+static int hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_CurrentSOC = -1;
+static int hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_TargetSOC = -1;
+static int hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_BulkSOC = -1;
+static int hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_MinimumSOC = -1;
+
+static int hf_v2giso2_struct_iso2WPT_EVEnergyTransferParameterType_DepartureTime = -1;
+
+static int hf_v2giso2_struct_iso2CostType_costKind = -1;
+
+static int hf_v2giso2_struct_iso2SalesTariffEntryType_EPriceLevel = -1;
+
+static int hf_v2giso2_struct_iso2SalesTariffType_Id = -1;
+static int hf_v2giso2_struct_iso2SalesTariffType_SalesTariffID = -1;
+static int hf_v2giso2_struct_iso2SalesTariffType_SalesTariffDescription = -1;
+static int hf_v2giso2_struct_iso2SalesTariffType_NumEPriceLevels = -1;
+
+static int hf_v2giso2_struct_iso2SAScheduleTupleType_SAScheduleTupleID = -1;
+
+static int hf_v2giso2_struct_iso2SelectedServiceType_ServiceID = -1;
+static int hf_v2giso2_struct_iso2SelectedServiceType_ParameterSetID = -1;
+
+static int hf_v2giso2_struct_iso2ServiceIDListType_ServiceID = -1;
+
+static int hf_v2giso2_struct_iso2ServiceType_ServiceID = -1;
+static int hf_v2giso2_struct_iso2ServiceType_FreeService = -1;
+
+static int hf_v2giso2_struct_iso2PaymentOptionListType_PaymentOption = -1;
+
 static int hf_v2giso2_struct_iso2DisconnectChargingDeviceReqType_EVElectricalChargingDeviceStatus = -1;
 static int hf_v2giso2_struct_iso2DisconnectChargingDeviceReqType_EVMechanicalChargingDeviceStatus = -1;
 static int hf_v2giso2_struct_iso2DisconnectChargingDeviceResType_ResponseCode = -1;
@@ -391,7 +431,13 @@ static gint ett_v2giso2_struct_iso2AC_EVBidirectionalParameterType = -1;
 static gint ett_v2giso2_struct_iso2DC_EVChargeParameterType = -1;
 static gint ett_v2giso2_struct_iso2DC_EVBidirectionalParameterType = -1;
 static gint ett_v2giso2_struct_iso2WPT_EVChargeParameterType = -1;
+static gint ett_v2giso2_struct_iso2CostType = -1;
+static gint ett_v2giso2_struct_iso2ConsumptionCostType = -1;
+static gint ett_v2giso2_struct_iso2PMaxScheduleType = -1;
 static gint ett_v2giso2_struct_iso2MinimumPMaxRequestType = -1;
+static gint ett_v2giso2_struct_iso2SalesTariffEntryType = -1;
+static gint ett_v2giso2_struct_iso2SalesTariffType = -1;
+static gint ett_v2giso2_struct_iso2SAScheduleTupleType = -1;
 static gint ett_v2giso2_struct_iso2SAScheduleListType = -1;
 static gint ett_v2giso2_struct_iso2EVSEEnergyTransferParameterType = -1;
 static gint ett_v2giso2_struct_iso2AC_EVSEChargeParameterType = -1;
@@ -403,6 +449,7 @@ static gint ett_v2giso2_struct_iso2SelectedServiceType = -1;
 static gint ett_v2giso2_struct_iso2SelectedServiceListType = -1;
 static gint ett_v2giso2_struct_iso2ServiceParameterListType = -1;
 static gint ett_v2giso2_struct_iso2ServiceIDListType = -1;
+static gint ett_v2giso2_struct_iso2ServiceType = -1;
 static gint ett_v2giso2_struct_iso2ServiceListType = -1;
 static gint ett_v2giso2_struct_iso2PaymentOptionListType = -1;
 
@@ -600,6 +647,14 @@ static const value_string v2giso2_enum_iso2chargeProgressType_names[] = {
 static const value_string v2giso2_enum_iso2paymentOptionType_names[] = {
 	{ iso2paymentOptionType_Contract, "Contract" },
 	{ iso2paymentOptionType_ExternalPayment, "ExternalPayment" }
+};
+
+static const value_string v2giso2_enum_iso2costKindType_names[] = {
+	{ iso2costKindType_relativePricePercentage,
+	  "relativePricePercentage" },
+	{ iso2costKindType_RenewableGenerationPercentage,
+	  "RenewableGenerationPercentage" },
+	{ iso2costKindType_CarbonDioxideEmission, "CarbonDioxideEmission" }
 };
 
 
@@ -2546,7 +2601,7 @@ dissect_v2giso2_mv_evsefinepositioningparameters(
 static void
 dissect_v2giso2_evfinepositioningsetupparameters(
 	const struct iso2EVFinePositioningSetupParametersType
-		*evfinepositioningsetupparameters,
+		*evfinepositioningsetupparameters _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -3068,10 +3123,15 @@ dissect_v2giso2_evenergytransferparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2EVEnergyTransferParameterType_DepartureTime,
+		tvb, 0, 0, evenergytransferparameter->DepartureTime);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -3086,10 +3146,63 @@ dissect_v2giso2_ac_evchargeparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2AC_EVEnergyTransferParameterType_DepartureTime,
+		tvb, 0, 0, ac_evchargeparameter->DepartureTime);
+	proto_item_set_generated(it);
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evchargeparameter->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumChargePower");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evchargeparameter->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evchargeparameter->EVMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumChargeCurrent");
+
+	if (ac_evchargeparameter->EVTargetEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&ac_evchargeparameter->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVTargetEnergyRequest");
+	}
+
+	if (ac_evchargeparameter->EVMaximumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&ac_evchargeparameter->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumEnergyRequest");
+	}
+
+	if (ac_evchargeparameter->EVMinimumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&ac_evchargeparameter->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumEnergyRequest");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evchargeparameter->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumVoltage");
 
 	return;
 }
@@ -3105,10 +3218,81 @@ dissect_v2giso2_ac_evbidirectionalparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2AC_EVBidirectionalParameterType_DepartureTime,
+		tvb, 0, 0, ac_evbidirectionalparameter->DepartureTime);
+	proto_item_set_generated(it);
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumChargePower");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumChargeCurrent");
+
+	if (ac_evbidirectionalparameter->EVTargetEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&ac_evbidirectionalparameter->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVTargetEnergyRequest");
+	}
+
+	if (ac_evbidirectionalparameter->EVMaximumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&ac_evbidirectionalparameter->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumEnergyRequest");
+	}
+
+	if (ac_evbidirectionalparameter->EVMinimumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&ac_evbidirectionalparameter->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumEnergyRequest");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumVoltage");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumDischargePower");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumDischargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evbidirectionalparameter->EVMinimumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumDischargeCurrent");
 
 	return;
 }
@@ -3123,10 +3307,94 @@ dissect_v2giso2_dc_evchargeparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_DepartureTime,
+		tvb, 0, 0, dc_evchargeparameter->DepartureTime);
+	proto_item_set_generated(it);
+
+	if (dc_evchargeparameter->EVMaximumChargePower_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evchargeparameter->EVMaximumChargePower,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumChargePower");
+	}
+
+	if (dc_evchargeparameter->EVMinimumChargePower_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evchargeparameter->EVMinimumChargePower,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumChargePower");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evchargeparameter->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evchargeparameter->EVMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evchargeparameter->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumVoltage");
+
+	if (dc_evchargeparameter->EVTargetEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evchargeparameter->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVTargetEnergyRequest");
+	}
+
+	if (dc_evchargeparameter->EVMaximumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evchargeparameter->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumEnergyRequest");
+	}
+
+	if (dc_evchargeparameter->EVMinimumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evchargeparameter->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumEnergyRequest");
+	}
+
+	if (dc_evchargeparameter->CurrentSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_CurrentSOC,
+			tvb, 0, 0, dc_evchargeparameter->CurrentSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dc_evchargeparameter->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_TargetSOC,
+			tvb, 0, 0, dc_evchargeparameter->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dc_evchargeparameter->BulkSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_BulkSOC,
+			tvb, 0, 0, dc_evchargeparameter->BulkSOC);
+		proto_item_set_generated(it);
+	}
 
 	return;
 }
@@ -3142,10 +3410,135 @@ dissect_v2giso2_dc_evbidirectionalparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_DepartureTime,
+		tvb, 0, 0, dc_evbidirectionalparameter->DepartureTime);
+	proto_item_set_generated(it);
+
+	if (dc_evbidirectionalparameter->EVMaximumChargePower_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVMaximumChargePower,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumChargePower");
+	}
+
+	if (dc_evbidirectionalparameter->EVMinimumChargePower_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVMinimumChargePower,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumChargePower");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evbidirectionalparameter->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evbidirectionalparameter->EVMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evbidirectionalparameter->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumVoltage");
+
+	if (dc_evbidirectionalparameter->EVTargetEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVTargetEnergyRequest");
+	}
+
+	if (dc_evbidirectionalparameter->EVMaximumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumEnergyRequest");
+	}
+
+	if (dc_evbidirectionalparameter->EVMinimumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumEnergyRequest");
+	}
+
+	if (dc_evbidirectionalparameter->CurrentSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_CurrentSOC,
+			tvb, 0, 0, dc_evbidirectionalparameter->CurrentSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dc_evbidirectionalparameter->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_TargetSOC,
+			tvb, 0, 0, dc_evbidirectionalparameter->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dc_evbidirectionalparameter->BulkSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_BulkSOC,
+			tvb, 0, 0, dc_evbidirectionalparameter->BulkSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dc_evbidirectionalparameter->EVMaximumDischargePower_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVMaximumDischargePower,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumDischargePower");
+	}
+
+	if (dc_evbidirectionalparameter->EVMinimumDischargePower_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evbidirectionalparameter->EVMinimumDischargePower,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumDischargePower");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evbidirectionalparameter->EVMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumDischargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evbidirectionalparameter->EVMinimumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumDischargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evbidirectionalparameter->EVMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumVoltage");
+
+	if (dc_evbidirectionalparameter->MinimumSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_MinimumSOC,
+			tvb, 0, 0, dc_evbidirectionalparameter->MinimumSOC);
+		proto_item_set_generated(it);
+	}
 
 	return;
 }
@@ -3160,10 +3553,83 @@ dissect_v2giso2_wpt_evchargeparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2WPT_EVEnergyTransferParameterType_DepartureTime,
+		tvb, 0, 0, wpt_evchargeparameter->DepartureTime);
+	proto_item_set_generated(it);
+
+	dissect_v2giso2_physicalvalue(
+		&wpt_evchargeparameter->EVMaximumPower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMaximumPower");
+
+	dissect_v2giso2_physicalvalue(
+		&wpt_evchargeparameter->EVMinimumPower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVMinimumPower");
+
+	if (wpt_evchargeparameter->EVTargetEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&wpt_evchargeparameter->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVTargetEnergyRequest");
+	}
+
+	if (wpt_evchargeparameter->EVMaximumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&wpt_evchargeparameter->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMaximumEnergyRequest");
+	}
+
+	if (wpt_evchargeparameter->EVMinimumEnergyRequest_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&wpt_evchargeparameter->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVMinimumEnergyRequest");
+	}
+
+	return;
+}
+
+static void
+dissect_v2giso2_pmaxschedule(
+	const struct iso2PMaxScheduleType *pmaxschedule,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *pmaxscheduleentry_tree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	pmaxscheduleentry_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "PMaxScheduleEntry");
+	for (i = 0; i < pmaxschedule->PMaxScheduleEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_pmaxscheduleentry(
+			&pmaxschedule->PMaxScheduleEntry.array[i],
+			tvb, pinfo, pmaxscheduleentry_tree,
+			ett_v2giso2_struct_iso2PMaxScheduleEntryType,
+			index);
+	}
 
 	return;
 }
@@ -3177,11 +3643,253 @@ dissect_v2giso2_minimumpmaxrequest(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *minimumpmaxscheduleentry_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	minimumpmaxscheduleentry_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL,
+		"MinimumPMaxScheduleEntry");
+	for (i = 0; i < minimumpmaxrequest->MinimumPMaxScheduleEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_pmaxscheduleentry(
+			&minimumpmaxrequest->MinimumPMaxScheduleEntry.array[i],
+			tvb, pinfo, minimumpmaxscheduleentry_tree,
+			ett_v2giso2_struct_iso2PMaxScheduleEntryType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2giso2_cost(
+	const struct iso2CostType *cost,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2CostType_costKind,
+		tvb, 0, 0, cost->costKind);
+	proto_item_set_generated(it);
+
+	dissect_v2giso2_physicalvalue(
+		&cost->amount,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"amount");
+
+	return;
+}
+
+static void
+dissect_v2giso2_consumptioncost(
+	const struct iso2ConsumptionCostType *consumptioncost,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *cost_tree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_v2giso2_physicalvalue(
+		&consumptioncost->startValue,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"startValue");
+
+	cost_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "Cost");
+	for (i = 0; i < consumptioncost->Cost.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_cost(
+			&consumptioncost->Cost.array[i],
+			tvb, pinfo, cost_tree,
+			ett_v2giso2_struct_iso2CostType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2giso2_salestariffentry(
+	const struct iso2SalesTariffEntryType *salestariffentry,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *consumptioncost_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_v2giso2_relativetimeinterval(
+		&salestariffentry->RelativeTimeInterval,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2RelativeTimeIntervalType,
+		"RelativeTimeInterval");
+
+	if (salestariffentry->EPriceLevel_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_v2giso2_struct_iso2SalesTariffEntryType_EPriceLevel,
+			tvb, 0, 0, salestariffentry->EPriceLevel);
+		proto_item_set_generated(it);
+	}
+
+	consumptioncost_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "ConsumptionCost");
+	for (i = 0; i < salestariffentry->ConsumptionCost.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_consumptioncost(
+			&salestariffentry->ConsumptionCost.array[i],
+			tvb, pinfo, consumptioncost_tree,
+			ett_v2giso2_struct_iso2ConsumptionCostType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2giso2_salestariff(
+	const struct iso2SalesTariffType *salestariff,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_tree *salestariffentry_tree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_v2giso2_struct_iso2SalesTariffType_Id,
+		tvb,
+		salestariff->Id.characters,
+		salestariff->Id.charactersLen,
+		sizeof(salestariff->Id.characters));
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2SalesTariffType_SalesTariffID,
+		tvb, 0, 0, salestariff->SalesTariffID);
+	proto_item_set_generated(it);
+
+	if (salestariff->SalesTariffDescription_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2giso2_struct_iso2SalesTariffType_SalesTariffDescription,
+			tvb,
+			salestariff->SalesTariffDescription.characters,
+			salestariff->SalesTariffDescription.charactersLen,
+			sizeof(salestariff->SalesTariffDescription.characters));
+	}
+
+	if (salestariff->NumEPriceLevels_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_v2giso2_struct_iso2SalesTariffType_NumEPriceLevels,
+			tvb, 0, 0, salestariff->NumEPriceLevels);
+		proto_item_set_generated(it);
+	}
+
+	salestariffentry_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "SalesTariffEntry");
+	for (i = 0; i < salestariff->SalesTariffEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_salestariffentry(
+			&salestariff->SalesTariffEntry.array[i],
+			tvb, pinfo, salestariffentry_tree,
+			ett_v2giso2_struct_iso2SalesTariffEntryType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_v2giso2_sascheduletuple(
+	const struct iso2SAScheduleTupleType *sascheduletuple,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2SAScheduleTupleType_SAScheduleTupleID,
+		tvb, 0, 0, sascheduletuple->SAScheduleTupleID);
+	proto_item_set_generated(it);
+
+	dissect_v2giso2_pmaxschedule(
+		&sascheduletuple->PMaxSchedule,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PMaxScheduleType,
+		"PMaxSchedule");
+
+	if (sascheduletuple->PMaxDischargeSchedule_isUsed) {
+		dissect_v2giso2_pmaxschedule(
+			&sascheduletuple->PMaxDischargeSchedule,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PMaxScheduleType,
+			"PMaxDischargeSchedule");
+	}
+
+	if (sascheduletuple->SalesTariff_isUsed) {
+		dissect_v2giso2_salestariff(
+			&sascheduletuple->SalesTariff,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2SalesTariffType,
+			"SalesTariff");
+	}
+
+	if (sascheduletuple->BuyBackTariff_isUsed) {
+		dissect_v2giso2_salestariff(
+			&sascheduletuple->BuyBackTariff,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2SalesTariffType,
+			"BuyBackTariff");
+	}
 
 	return;
 }
@@ -3195,11 +3903,25 @@ dissect_v2giso2_saschedulelist(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *sascheduletuple_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	sascheduletuple_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "SAScheduleTuple");
+	for (i = 0; i < saschedulelist->SAScheduleTuple.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_sascheduletuple(
+			&saschedulelist->SAScheduleTuple.array[i],
+			tvb, pinfo, sascheduletuple_tree,
+			ett_v2giso2_struct_iso2SAScheduleTupleType,
+			index);
+	}
 
 	return;
 }
@@ -3207,19 +3929,14 @@ dissect_v2giso2_saschedulelist(
 static void
 dissect_v2giso2_evseenergytransferparameter(
 	const struct iso2EVSEEnergyTransferParameterType
-		*evseenergytransferparameter,
-	tvbuff_t *tvb,
+		*evseenergytransferparameter _U_,
+	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
-	proto_tree *tree,
-	gint idx,
-	const char *subtree_name)
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-	proto_tree *subtree;
-
-	subtree = proto_tree_add_subtree(tree,
-		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
-
+	/* no content */
 	return;
 }
 
@@ -3236,7 +3953,24 @@ dissect_v2giso2_ac_evsechargeparameter(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsechargeparameter->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsechargeparameter->EVSENominalVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSENominalVoltage");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsechargeparameter->EVSENominalFrequency,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSENominalFrequency");
 
 	return;
 }
@@ -3255,7 +3989,30 @@ dissect_v2giso2_ac_evsebidirectionalparameter(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsebidirectionalparameter->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsebidirectionalparameter->EVSENominalVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSENominalVoltage");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsebidirectionalparameter->EVSENominalFrequency,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSENominalFrequency");
+
+	dissect_v2giso2_physicalvalue(
+		&ac_evsebidirectionalparameter->EVSEMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumDischargeCurrent");
 
 	return;
 }
@@ -3273,7 +4030,58 @@ dissect_v2giso2_dc_evsechargeparameter(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsechargeparameter->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumChargePower");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsechargeparameter->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsechargeparameter->EVSEMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMinimumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsechargeparameter->EVSEMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumVoltage");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsechargeparameter->EVSEMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMinimumVoltage");
+
+	if (dc_evsechargeparameter->EVSECurrentRegulationTolerance_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evsechargeparameter->EVSECurrentRegulationTolerance,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVSECurrentRegulationTolerance");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsechargeparameter->EVSEPeakCurrentRipple,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEPeakCurrentRipple");
+
+	if (dc_evsechargeparameter->EVSEEnergyToBeDelivered_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evsechargeparameter->EVSEEnergyToBeDelivered,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVSEEnergyToBeDelivered");
+	}
 
 	return;
 }
@@ -3292,7 +4100,76 @@ dissect_v2giso2_dc_evsebidirectionalparameter(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumChargePower");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMinimumChargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumVoltage");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMinimumVoltage");
+
+	if (dc_evsebidirectionalparameter->EVSECurrentRegulationTolerance_isUsed) {
+		dissect_v2giso2_physicalvalue(
+			&dc_evsebidirectionalparameter->EVSECurrentRegulationTolerance,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVSECurrentRegulationTolerance");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEPeakCurrentRipple,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEPeakCurrentRipple");
+
+	if (dc_evsebidirectionalparameter->EVSEEnergyToBeDelivered_isUsed) {
+		 dissect_v2giso2_physicalvalue(
+			&dc_evsebidirectionalparameter->EVSEEnergyToBeDelivered,
+			tvb, pinfo, subtree,
+			ett_v2giso2_struct_iso2PhysicalValueType,
+			"EVSEEnergyToBeDelivered");
+	}
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumDischargePower");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumDischargeCurrent");
+
+	dissect_v2giso2_physicalvalue(
+		&dc_evsebidirectionalparameter->EVSEMinimumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMinimumDischargeCurrent");
 
 	return;
 }
@@ -3310,7 +4187,18 @@ dissect_v2giso2_wpt_evsechargeparameter(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	dissect_v2giso2_physicalvalue(
+		&wpt_evsechargeparameter->EVSEMaximumPower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMaximumPower");
+
+	dissect_v2giso2_physicalvalue(
+		&wpt_evsechargeparameter->EVSEMinimumPower,
+		tvb, pinfo, subtree,
+		ett_v2giso2_struct_iso2PhysicalValueType,
+		"EVSEMinimumPower");
 
 	return;
 }
@@ -3325,10 +4213,20 @@ dissect_v2giso2_selectedservice(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2SelectedServiceType_ServiceID,
+		tvb, 0, 0, selectedservice->ServiceID);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2SelectedServiceType_ParameterSetID,
+		tvb, 0, 0, selectedservice->ParameterSetID);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -3342,11 +4240,25 @@ dissect_v2giso2_selectedservicelist(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *selectedservice_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	selectedservice_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "SelectedService");
+	for (i = 0; i < selectedservicelist->SelectedService.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_selectedservice(
+			&selectedservicelist->SelectedService.array[i],
+			tvb, pinfo, selectedservice_tree,
+			ett_v2giso2_struct_iso2SelectedServiceType,
+			index);
+	}
 
 	return;
 }
@@ -3360,11 +4272,25 @@ dissect_v2giso2_serviceparameterlist(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *parameterset_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	parameterset_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "Service");
+	for (i = 0; i < serviceparameterlist->ParameterSet.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_parameterset(
+			&serviceparameterlist->ParameterSet.array[i],
+			tvb, pinfo, parameterset_tree,
+			ett_v2giso2_struct_iso2ParameterSetType,
+			index);
+	}
 
 	return;
 }
@@ -3378,11 +4304,59 @@ dissect_v2giso2_serviceidlist(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *serviceidlist_tree;
+	proto_tree *serviceidlist_i_tree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	serviceidlist_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "ServiceID");
+	for (i = 0; i < serviceidlist->ServiceID.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		serviceidlist_i_tree = proto_tree_add_subtree(
+			serviceidlist_tree, tvb, 0, 0,
+			ett_v2giso2_array_i, NULL, index);
+
+		it = proto_tree_add_uint(serviceidlist_i_tree,
+			hf_v2giso2_struct_iso2ServiceIDListType_ServiceID,
+			tvb, 0, 0,
+			serviceidlist->ServiceID.array[i]);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_v2giso2_service(
+	const struct iso2ServiceType *service,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_v2giso2_struct_iso2ServiceType_ServiceID,
+		tvb, 0, 0, service->ServiceID);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_v2giso2_struct_iso2ServiceType_FreeService,
+		tvb, 0, 0, service->FreeService);
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -3396,11 +4370,25 @@ dissect_v2giso2_servicelist(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *service_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	service_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "Service");
+	for (i = 0; i < servicelist->Service.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_v2giso2_service(
+			&servicelist->Service.array[i],
+			tvb, pinfo, service_tree,
+			ett_v2giso2_struct_iso2ServiceType,
+			index);
+	}
 
 	return;
 }
@@ -3414,11 +4402,31 @@ dissect_v2giso2_paymentoptionlist(
 	gint idx,
 	const char *subtree_name)
 {
+	unsigned int i;
 	proto_tree *subtree;
+	proto_tree *paymentoption_tree;
+	proto_tree *paymentoption_i_tree;
+	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	proto_tree_add_debug_text(subtree, "TODO");
+
+	paymentoption_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso2_array, NULL, "PaymentOption");
+	for (i = 0; i < paymentoptionlist->PaymentOption.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		paymentoption_i_tree = proto_tree_add_subtree(
+			paymentoption_tree, tvb, 0, 0,
+			ett_v2giso2_array_i, NULL, index);
+
+		it = proto_tree_add_uint(paymentoption_i_tree,
+			hf_v2giso2_struct_iso2PaymentOptionListType_PaymentOption,
+			tvb, 0, 0,
+			paymentoptionlist->PaymentOption.array[i]);
+		proto_item_set_generated(it);
+	}
 
 	return;
 }
@@ -7533,6 +8541,164 @@ proto_register_v2giso2(void)
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
+		/* struct iso2EVEnergyTransferParameterType */
+		{ &hf_v2giso2_struct_iso2EVEnergyTransferParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso2.struct.evenergytransferparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2AC_EVEnergyTransferParameterType */
+		{ &hf_v2giso2_struct_iso2AC_EVEnergyTransferParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso2.struct.ac_evenergytransferparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2AC_EVBidirectionalParameterType */
+		{ &hf_v2giso2_struct_iso2AC_EVBidirectionalParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso2.struct.ac_evbidirectionalparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2DC_EVEnergyTransferParameterType */
+		{ &hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso2.struct.dc_evenergytransferparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_CurrentSOC,
+		  { "CurrentSOC",
+		    "v2giso2.struct.dc_evenergytransferparameter.currentsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso2.struct.dc_evenergytransferparameter.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVEnergyTransferParameterType_BulkSOC,
+		  { "BulkSOC",
+		    "v2giso2.struct.dc_evenergytransferparameter.bulksoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2DC_EVBidirectionalParameterType */
+		{ &hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso2.struct.dc_evbidirectionalparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_CurrentSOC,
+		  { "CurrentSOC",
+		    "v2giso2.struct.dc_evbidirectionalparameter.currentsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso2.struct.dc_evbidirectionalparameter.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_BulkSOC,
+		  { "BulkSOC",
+		    "v2giso2.struct.dc_evbidirectionalparameter.bulksoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2DC_EVBidirectionalParameterType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso2.struct.dc_evbidirectionalparameter.minimumsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2WPT_EVEnergyTransferParameterType */
+		{ &hf_v2giso2_struct_iso2WPT_EVEnergyTransferParameterType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso2.struct.wpt_evenergytransferparameter.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2CostType */
+		{ &hf_v2giso2_struct_iso2CostType_costKind,
+		  { "costKind", "v2giso2.struct.cost.costkind",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso2_enum_iso2costKindType_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* struct iso2SalesTariffEntryType */
+		{ &hf_v2giso2_struct_iso2SalesTariffEntryType_EPriceLevel,
+		  { "EPriceLevel",
+		    "v2giso2.struct.salestariffentry.epricelevel",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2SalesTariffType */
+		{ &hf_v2giso2_struct_iso2SalesTariffType_Id,
+		  { "Id",
+		    "v2giso2.struct.salestariff.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2SalesTariffType_SalesTariffID,
+		  { "SalesTariffId",
+		    "v2giso2.struct.salestariff.salestariffid",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2SalesTariffType_SalesTariffDescription,
+		  { "SalesTariffDescription",
+		    "v2giso2.struct.salestariff.salestariffdescription",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2SalesTariffType_NumEPriceLevels,
+		  { "NumEPriceLevels",
+		    "v2giso2.struct.salestariff.numepricelevels",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2SAScheduleTupleType */
+		{ &hf_v2giso2_struct_iso2SAScheduleTupleType_SAScheduleTupleID,
+		  { "SAScheduleTupleID",
+		    "v2giso2.struct.sascheduletuple.sascheduletupleid",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2SelectedServiceType */
+		{ &hf_v2giso2_struct_iso2SelectedServiceType_ServiceID,
+		  { "ServiceID", "vgiso2.struct.selectedservice.serviceid",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2SelectedServiceType_ParameterSetID,
+		  { "ParameterSetID",
+		    "vgiso2.struct.selectedservice.parametersetid",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2ServiceIDListType */
+		{ &hf_v2giso2_struct_iso2ServiceIDListType_ServiceID,
+		  { "ServiceID", "vgiso2.struct.serviceidlist.serviceid",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2ServiceType */
+		{ &hf_v2giso2_struct_iso2ServiceType_ServiceID,
+		  { "ServiceID", "vgiso2.struct.service.serviceid",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_struct_iso2ServiceType_FreeService,
+		  { "FreeService", "vgiso2.struct.service.freeservice",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso2PaymentOptionListType */
+		{ &hf_v2giso2_struct_iso2PaymentOptionListType_PaymentOption,
+		  { "PaymentOption",
+		    "vgiso2.struct.paymentoptionlist.paymentoption",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso2_enum_iso2paymentOptionType_names),
+		    0x0, NULL, HFILL }
+		},
+
+
 		/* struct iso2DisconnectChargingDeviceReqType */
 		{ &hf_v2giso2_struct_iso2DisconnectChargingDeviceReqType_EVElectricalChargingDeviceStatus,
 		  { "EVElectricalChargingDeviceStatus",
@@ -8338,14 +9504,20 @@ proto_register_v2giso2(void)
 		&ett_v2giso2_struct_iso2EMAIDType,
 		&ett_v2giso2_struct_iso2ChargingProfileType,
 		&ett_v2giso2_struct_iso2RelativeTimeIntervalType,
-		&ett_v2giso2_struct_iso2PMaxScheduleEntryType,
 		&ett_v2giso2_struct_iso2EVEnergyTransferParameterType,
 		&ett_v2giso2_struct_iso2AC_EVChargeParameterType,
 		&ett_v2giso2_struct_iso2AC_EVBidirectionalParameterType,
 		&ett_v2giso2_struct_iso2DC_EVChargeParameterType,
 		&ett_v2giso2_struct_iso2DC_EVBidirectionalParameterType,
 		&ett_v2giso2_struct_iso2WPT_EVChargeParameterType,
+		&ett_v2giso2_struct_iso2CostType,
+		&ett_v2giso2_struct_iso2ConsumptionCostType,
+		&ett_v2giso2_struct_iso2PMaxScheduleType,
+		&ett_v2giso2_struct_iso2PMaxScheduleEntryType,
 		&ett_v2giso2_struct_iso2MinimumPMaxRequestType,
+		&ett_v2giso2_struct_iso2SalesTariffEntryType,
+		&ett_v2giso2_struct_iso2SalesTariffType,
+		&ett_v2giso2_struct_iso2SAScheduleTupleType,
 		&ett_v2giso2_struct_iso2SAScheduleListType,
 		&ett_v2giso2_struct_iso2EVSEEnergyTransferParameterType,
 		&ett_v2giso2_struct_iso2AC_EVSEChargeParameterType,
@@ -8357,6 +9529,7 @@ proto_register_v2giso2(void)
 		&ett_v2giso2_struct_iso2SelectedServiceListType,
 		&ett_v2giso2_struct_iso2ServiceParameterListType,
 		&ett_v2giso2_struct_iso2ServiceIDListType,
+		&ett_v2giso2_struct_iso2ServiceType,
 		&ett_v2giso2_struct_iso2ServiceListType,
 		&ett_v2giso2_struct_iso2PaymentOptionListType,
 
