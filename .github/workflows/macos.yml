@@ -2,17 +2,16 @@
 #
 # Adapted from Wireshark's repository https://gitlab.com/wireshark/wireshark/-/tree/master/.github/workflows
 
-name: Build and test MacOS plug-in
+name: Build MacOS plug-in
 
 on:
    push:
       branches:
          - main
-      tags:
-         - '**'
    pull_request:
       branches:
          - main
+   workflow_call:
 
 env:
    WIRESHARK_BRANCH: release-3.6
@@ -20,7 +19,7 @@ env:
 
 jobs:
    intree:
-      name: Build and test in-tree plugin
+      name: Build in-tree plugin
       runs-on: macos-11.0
       steps:
          - name: Checkout Wireshark
@@ -42,38 +41,14 @@ jobs:
               python-version: 3.8
          - name: Install dmgbuild
            run: pip3 install dmgbuild
+         - name: Install biplist
+           run: pip3 install biplist
          - name: Set up Ruby 2.6
            uses: actions/setup-ruby@v1
            with:
               ruby-version: '2.6'
-         - name: Update brew packages
-           run: brew update
-         - name: Install dependencies for a in-tree build
-           run: |
-              brew install \
-                  c-ares \
-                  glib \
-                  libgcrypt \
-                  gnutls \
-                  lua@5.1 \
-                  cmake \
-                  ninja \
-                  nghttp2 \
-                  snappy \
-                  lz4 \
-                  libxml2 \
-                  libmaxminddb \
-                  libsmi \
-                  spandsp \
-                  brotli \
-                  minizip \
-                  zstd \
-                  libssh \
-                  libilbc \
-                  speexdsp \
-                  gettext \
-                  qt5 || true
-
+         - name: Install brew deps
+           run: ./tools/macos-setup-brew.sh
          - name: Install asciidoctor
            run: gem install asciidoctor
 
@@ -81,54 +56,12 @@ jobs:
            run: |
               mkdir build
               cd build
-              cmake ..
-              make v2gexi tshark
+              cmake -GNinja ..
+              ninja
+              ninja dmg_package
 
-         - name: Copy plugin artifacts
-           run: |
-              mkdir v2g-artifact
-              cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
-              cp build/run/Wireshark.app/Contents/PlugIns/wireshark/3-6/epan/v2gexi.so v2g-artifact/v2gexi.so
-              install_name_tool \
-                  -change /usr/local/opt/glib/lib/libgmodule-2.0.0.dylib \
-                  @rpath/libgmodule-2.0.0.dylib v2g-artifact/v2gexi.so
-              install_name_tool \
-                  -change /usr/local/opt/glib/lib/libglib-2.0.0.dylib \
-                  @rpath/libglib-2.0.0.dylib v2g-artifact/v2gexi.so
          - name: Upload MacOS artifacts
-           uses: actions/upload-artifact@v2
+           uses: actions/upload-artifact@v3
            with:
-              name: packages
-              path: v2g-artifact
-
-   release:
-      name: Release
-      runs-on: macos-latest
-      needs: intree
-      env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
-      steps:
-         - name: Download MacOS artifacts
-           uses: actions/download-artifact@v2
-           with:
-              name: packages
-              path: v2g-artifact
-         - name: Tar artifact
-           run: |
-              tar -cf v2g-artifact.tar -C v2g-artifact .
-         - name: Create a release
-           id: create_release
-           uses: actions/create-release@v1
-           with:
-              tag_name: ${{ github.ref }}
-              release_name: MacOS V2G Wireshark Plug-in ${{ github.ref }}
-              draft: true
-              prerelease: false
-         - name: Upload release asset
-           uses: actions/upload-release-asset@v1
-           with:
-              upload_url: ${{ steps.create_release.outputs.upload_url }} 
-              asset_path: ./v2g-artifact.tar
-              asset_name: v2g-${{ github.ref_name }}-macos-x86-64.tar
-              asset_content_type: application/x-tar
+              name: macos-packages
+              path: build/run/*dmg

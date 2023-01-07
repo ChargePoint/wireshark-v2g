@@ -1,0 +1,88 @@
+#
+# Single workflow to get the artifacts of all the cross platform
+# build output and create the release and assets.
+#
+name: Wireshark-V2G Release
+
+on:
+   push:
+      branches:
+         - main
+      tags:
+         - '**'
+
+jobs:
+   call-workflow-build-ubuntu:
+      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+      uses: ./.github/workflows/ubuntu.yml
+   call-workflow-build-windows:
+      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+      uses: ./.github/workflows/windows.yml
+   call-workflow-build-macos:
+      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+      uses: ./.github/workflows/macos.yml
+
+   release:
+      name: Release
+      runs-on: ubuntu-latest
+      needs:
+         - call-workflow-build-ubuntu
+         - call-workflow-build-windows
+         - call-workflow-build-macos
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+      steps:
+         - name: Create a release
+           id: create_release
+           uses: actions/create-release@v1
+           with:
+              tag_name: ${{ github.ref }}
+              release_name: V2G Wireshark Plug-in ${{ github.ref }}
+              draft: true
+              prerelease: false
+         - name: Download Linux artifacts
+           uses: actions/download-artifact@v2
+           with:
+              name: ubuntu-packages
+              path: ubuntu-v2g-artifact
+         - name: Tar Linux artifact
+           run: |
+              tar -cf ubuntu-v2g-artifact.tar -C ubuntu-v2g-artifact .
+         - name: Upload Linux release asset
+           uses: actions/upload-release-asset@v1
+           with:
+              upload_url: ${{ steps.create_release.outputs.upload_url }}
+              asset_path: ubuntu-v2g-artifact.tar
+              asset_name: v2g-${{ github.ref_name }}-linux-x86-64.tar
+              asset_content_type: application/x-tar
+         - name: Download Windows artifacts
+           uses: actions/download-artifact@v2
+           with:
+              name: windows-packages
+              path: windows-v2g-artifact
+         - name: Tar Windows artifact
+           run: |
+              tar -cf windows-v2g-artifact.tar -C windows-v2g-artifact .
+         - name: Upload Windows release asset
+           uses: actions/upload-release-asset@v1
+           with:
+              upload_url: ${{ steps.create_release.outputs.upload_url }}
+              asset_path: ./windows-v2g-artifact.tar
+              asset_name: v2g-${{ github.ref_name }}-win64.tar
+              asset_content_type: application/x-tar
+         - name: Download MacOS artifacts
+           uses: actions/download-artifact@v2
+           with:
+              name: macos-packages
+              path: macos-v2g-artifact
+         - name: Tar MacOS artifact
+           run: |
+              tar -cf macos-v2g-artifact.tar -C macos-v2g-artifact .
+         - name: Upload MacOS release asset
+           uses: actions/upload-release-asset@v1
+           with:
+              upload_url: ${{ steps.create_release.outputs.upload_url }}
+              asset_path: ./macos-v2g-artifact.tar
+              asset_name: v2g-${{ github.ref_name }}-macos-x86-64.tar
+              asset_content_type: application/x-tar
