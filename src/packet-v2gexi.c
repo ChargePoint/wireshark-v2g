@@ -287,6 +287,9 @@ dissect_v2gexi_hs(v2gexi_conv_t *v2gexi_conv,
 
 	if (ahexi.supportedAppProtocolReq_isUsed) {
 		proto_item *it;
+		col_clear(pinfo->cinfo, COL_INFO);
+		col_append_str(pinfo->cinfo, COL_INFO,
+				"supportedAppProtocolReq");
 
 		if (!PINFO_FD_VISITED(pinfo)) {
 			v2gexi_conv->handshake_request = pinfo->num;
@@ -302,6 +305,9 @@ dissect_v2gexi_hs(v2gexi_conv_t *v2gexi_conv,
 			"supportedAppProtocolReq");
 	} else if (ahexi.supportedAppProtocolRes_isUsed) {
 		proto_item *it;
+		col_clear(pinfo->cinfo, COL_INFO);
+		col_append_str(pinfo->cinfo, COL_INFO,
+				"supportedAppProtocolRes");
 
 		if (!PINFO_FD_VISITED(pinfo)) {
 			v2gexi_conv->handshake_response = pinfo->num;
