@@ -13,6 +13,7 @@
 #include <epan/packet.h>
 #include <epan/prefs.h>
 #include <epan/expert.h>
+#include <epan/follow.h>
 
 /* openv2g */
 #include <codec/EXITypes.h>
@@ -6083,6 +6084,13 @@ proto_register_v2giso1(void)
 	proto_register_subtree_array(ett, array_length(ett));
 
 	register_dissector("v2giso1", dissect_v2giso1, proto_v2giso1);
+
+	register_follow_stream(proto_v2giso1, "v2giso1_follow",
+		tcp_follow_conv_filter,
+		tcp_follow_index_filter,
+		tcp_follow_address_filter,
+		tcp_port_to_display, follow_tvb_tap_listener,
+		get_tcp_stream_count, NULL);
 }
 
 
