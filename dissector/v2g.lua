@@ -29,6 +29,26 @@ local SDP = {
     response_transport_proto = ProtoField.uint8("sdp.ResponseTransportProtocol", "SDP Response Transport Protocol", base.HEX),
 }
 
+local V2GTP_EXIDISSECTOR_DEFAULT = 0
+local V2GTP_EXIDISSECTOR_DIN = 1
+local V2GTP_EXIDISSECTOR_ISO1 = 2
+local V2GTP_EXIDISSECTOR_ISO2 = 3
+
+local v2gtp_exidissector_tab =  {
+    { 1, "Default", V2GTP_EXIDISSECTOR_DEFAULT },
+    { 2, "DIN", V2GTP_EXIDISSECTOR_DIN },
+    { 3, "ISO1", V2GTP_EXIDISSECTOR_ISO1 },
+    { 4, "ISO2", V2GTP_EXIDISSECTOR_ISO2 },
+}
+
+v2gtp_protocol.prefs.exidissector = Pref.enum(
+    "EXI Dissector", -- label
+    V2GTP_EXIDISSECTOR_DEFAULT, -- default value
+    "Dissector to use for EXI", -- description
+    v2gtp_exidissector_tab, -- enum table
+    false -- show as combo box
+)
+
 v2gtp_protocol.fields = SDP
 
 function set_contains(set, key)
@@ -136,7 +156,15 @@ function dissect_v2gtp(buffer, pinfo, tree)
             end
         end
     elseif payload_type_name == "EXI ENCODED" then
-        Dissector.get("v2gexi"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
+        if v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_DIN then
+            Dissector.get("v2gdin"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
+        elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO1 then
+            Dissector.get("v2giso1"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
+        elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO2 then
+            Dissector.get("v2giso2"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
+        else
+            Dissector.get("v2gexi"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
+        end
     end
 end
 
