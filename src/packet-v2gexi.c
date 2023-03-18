@@ -12,11 +12,10 @@
  * namespace to use for the subsequent stream.
  */
 
-#include "config.h"
-
 #include <inttypes.h>
 #include <stdlib.h>
 
+#include <wireshark.h>
 #include <epan/packet.h>
 #include <epan/conversation.h>
 #include <epan/prefs.h>

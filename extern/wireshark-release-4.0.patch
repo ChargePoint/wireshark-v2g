@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 271fee968f..27638791fe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1640,6 +1640,7 @@ if(ENABLE_PLUGINS)
+ 		plugins/epan/stats_tree
+ 		plugins/epan/transum
+ 		plugins/epan/unistim
++		plugins/epan/v2g
+ 		plugins/epan/wimax
+ 		plugins/epan/wimaxasncp
+ 		plugins/epan/wimaxmacphy
+diff --git a/packaging/nsis/wireshark.nsi b/packaging/nsis/wireshark.nsi
+index 6c081286b3..1311a10fba 100644
+--- a/packaging/nsis/wireshark.nsi
++++ b/packaging/nsis/wireshark.nsi
+@@ -1015,6 +1015,8 @@ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\irda.dll"
+ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\opcua.dll"
+ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\profinet.dll"
+ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\unistim.dll"
++File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\v2gexi.dll"
++File "${TOP_SRC_DIR}\plugins\epan\v2g\dissector\v2g.lua"
+ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\wimax.dll"
+ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\wimaxasncp.dll"
+ File "${STAGING_DIR}\plugins\${MAJOR_VERSION}.${MINOR_VERSION}\epan\wimaxmacphy.dll"

@@ -2,7 +2,9 @@
 # WireShark Dissectors to Support Debug/Development of the V2G
 # protocols (ISO 15118) standards.
 #
-cmake_minimum_required (VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
+cmake_policy(SET CMP0048 NEW)
+
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     message(FATAL_ERROR "Please remove CMakeCache.txt and the CMakeFiles/ "
                         "directory then build out-of-source.")
@@ -57,13 +59,19 @@ if(Wireshark_FOUND)
 
     message(STATUS "Wireshark found in ${Wireshark_LIB_DIR}")
 
-    if(NOT CMAKE_INSTALL_LIBDIR)
-        set(CMAKE_INSTALL_LIBDIR ~/.local/lib/wireshark/plugins/${Wireshark_VERSION_MAJOR}.${Wireshark_VERSION_MINOR}/epan)
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX "${Wireshark_INSTALL_PREFIX}"
+            CACHE PATH "Installation prefix" FORCE)
     endif()
 
-    include(UseMakePluginReg)
+    # External plugins must define HAVE_SSIZE_T for the plugin toolchain.
+    include(CheckTypeSize)
+    check_type_size("ssize_t" SSIZE_T)
 
-    add_definitions(-DPLUGIN_VERSION=\"${CMAKE_PROJECT_VERSION}\")
+    add_compile_definitions(
+        VERSION=\"${CMAKE_PROJECT_VERSION}\"
+        $<$<BOOL:${HAVE_SSIZE_T}>:HAVE_SSIZE_T>
+    )
     add_compile_options(-Wall -Werror)
 
     find_package(GLIB2 2.4.0)
@@ -75,33 +83,25 @@ if(Wireshark_FOUND)
         link_directories(/usr/local/lib)
     endif(APPLE)
 
-    # Keep in sync with in-tree build
-    register_plugin_files(plugin.c
-        plugin
-        ${DISSECTOR_SRC}
-    )
-
     add_library(v2gexi MODULE
-        ${PLUGIN_FILES}
-        ${PLUGIN_RC_FILE}
+        ${DISSECTOR_SRC}
     )
 
     set_target_properties(v2gexi
         PROPERTIES
             PREFIX ""
+            DEFINE_SYMBOL ""
             LINK_FLAGS "${WS_LINK_FLAGS}"
             FOLDER "Plugins"
     )
 
-    target_link_libraries(v2gexi wireshark openv2g ${GLIB2_LIBRARY})
+    target_link_libraries(v2gexi epan openv2g ${GLIB2_LIBRARY})
 
     install(TARGETS v2gexi
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} NAMELINK_SKIP
-        RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION "${Wireshark_PLUGIN_LIBDIR}/epan" NAMELINK_SKIP
     )
     install(FILES dissector/v2g.lua
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        DESTINATION "${Wireshark_PLUGIN_LIBDIR}/.." NAMELINK_SKIP
     )
 
 else(Wireshark_FOUND)
@@ -124,7 +124,7 @@ else(Wireshark_FOUND)
         ${DISSECTOR_SRC}
     )
 
-    add_plugin_library(v2gexi epan)
+    add_wireshark_plugin_library(v2gexi epan)
     target_link_libraries(v2gexi epan openv2g)
     install_plugin(v2gexi epan)
     install(FILES dissector/v2g.lua

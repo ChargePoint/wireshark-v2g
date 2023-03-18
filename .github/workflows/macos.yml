@@ -14,8 +14,8 @@ on:
    workflow_call:
 
 env:
-   WIRESHARK_BRANCH: release-3.6
-   WIRESHARK_QT_VERSION: 5.15.2
+   WIRESHARK_BRANCH: release-4.0
+   WIRESHARK_QT_VERSION: 5.15.3
 
 jobs:
    intree:
@@ -58,7 +58,7 @@ jobs:
               cd build
               cmake -GNinja ..
               ninja
-              ninja dmg_package
+              ninja wireshark_dmg
 
          - name: Upload MacOS artifacts
            uses: actions/upload-artifact@v3
