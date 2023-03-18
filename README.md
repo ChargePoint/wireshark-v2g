@@ -229,23 +229,26 @@ CLIENT_RANDOM 6112d032475e758bbf8eaf2b0a540f3f2c7a6f6d1a9b48935d16c468086822f5 8
 
 ## Decoding an entire EXI stream
 
-### Helper programs
+### Helper Programs
 
-`yq` (a cousin of `jq`) comes with the command `xq` which is for XML -> JSON conversion.
-`tidy` is also recommended (ships with OSX) to prettify the XML data returned
+* `yq` (a cousin of `jq`) comes with `xq` which is for XML -> JSON conversion
+* `tidy` is also recommended (ships with OSX) to prettify the XML data
 
-After the packet capture has been decoded, you can export the data for decoding using:
+After the packet capture has been decoded, you can export the data for
+decoding using:
 
 ### Build and run the docker container
 
 ```
+cd tools/docker/decoder
 docker build -t decoder:test .
 docker run --name=decoder --rm -p 9000:9000/tcp -d decoder:test
 ```
 
 ### Dump all of the EXI-specific payloads in the packet capture stream
 
-The following command will dump all of the packet capture EXI data and decode it directly to stdout
+The following command will dump all of the packet capture EXI data and
+decode it directly to stdout
 
 ```
 tshark -X lua_script:v2g.lua -r ~/Downloads/Analyzer_M043_decrypted.pcap -Y "exi" -T json | jq '.[]._source.layers.v2gtp.exi.data."data.data"' | sed s/\://g | sed s/\"//g | while read line; do curl -s -X POST -H "Expect:" -H "Format: EXI" -d ${line} http://localhost:9000 |tidy -xml -iq;done
@@ -256,4 +259,3 @@ tshark -X lua_script:v2g.lua -r ~/Downloads/Analyzer_M043_decrypted.pcap -Y "exi
 ```
 docker kill decoder
 ```
-
