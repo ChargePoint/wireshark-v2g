@@ -14,12 +14,12 @@ on:
    workflow_call:
 
 env:
-   WIRESHARK_BRANCH: release-3.6
+   WIRESHARK_BRANCH: release-4.0
 
 jobs:
    standalone:
       name: Build standalone plugin
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-22.04
       steps:
          - name: Checkout plug-in
            uses: actions/checkout@v3
@@ -38,11 +38,11 @@ jobs:
               cd build
               cmake ..
               make
-              make install
+              sudo make install
 
    intree:
       name: Build in-tree plugin
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-22.04
       steps:
          - name: Checkout Wireshark
            run: |
@@ -58,19 +58,12 @@ jobs:
               git apply plugins/epan/v2g/extern/wireshark-${{ env.WIRESHARK_BRANCH }}.patch
          - name: Install dependencies for a in-tree build
            run: |
-              sudo gem install asciidoctor
               sudo apt-get update -qq
-              sudo apt-get install -yqq \
-                       cmake make bison flex \
-                       python3 python3-pip perl \
-                       libglib2.0-dev \
-                       qttools5-dev qttools5-dev-tools \
-                       libqt5svg5-dev \
-                       qtmultimedia5-dev \
-                       qt5-default \
-                       libc-ares-dev \
-                       libpcap-dev \
-                       libgcrypt-dev
+              sudo tools/debian-setup.sh \
+                  --install-optional \
+                  --install-test-deps \
+                  --install-deb-deps \
+                  python3-pip -y
          - name: Build in-tree
            run: |
               mkdir build
@@ -82,7 +75,7 @@ jobs:
            run: |
               mkdir v2g-artifact
               cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
-              cp build/run/plugins/3.6/epan/v2gexi.so v2g-artifact/v2gexi.so
+              cp build/run/plugins/4.0/epan/v2gexi.so v2g-artifact/v2gexi.so
          - name: Upload Ubuntu artifacts
            uses: actions/upload-artifact@v3
            with:

@@ -5,11 +5,10 @@
  * See LICENSE file
  */
 
-#include "config.h"
-
 #include <inttypes.h>
 #include <stdlib.h>
 
+#include <wireshark.h>
 #include <epan/packet.h>
 #include <epan/prefs.h>
 #include <epan/expert.h>

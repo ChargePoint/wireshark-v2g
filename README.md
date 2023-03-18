@@ -36,11 +36,11 @@ placed in this directory.
 
 For Linux
 - copy v2g.lua to `~/.local/lib/wireshark/plugins`
-- copy v2gexi.so to `~/.local/lib/wireshark/plugins/3.6/epan`
+- copy v2gexi.so to `~/.local/lib/wireshark/plugins/4.0/epan`
 
 For Mac
 - copy v2g.lua to `~/.local/lib/wireshark/plugins`
-- copy v2gexi.so to `~/.local/lib/wireshark/plugins/3-6/epan`
+- copy v2gexi.so to `~/.local/lib/wireshark/plugins/4-0/epan`
 
 ### Windows
 
@@ -49,7 +49,7 @@ and this can have a bit of a different layout to ensure the dll will
 load on windows.
 
 - copy the v2g.lua to `%APPDATA%/Wireshark/plugins`
-- copy the v2gexi.dll to `%APPDATA%/Wireshark/plugins/3.6/epan`
+- copy the v2gexi.dll to `%APPDATA%/Wireshark/plugins/4.0/epan`
 
 __NOTE__: The global plugin folder can also be used in the "Wireshark"
 directory under `Program Files` where Wireshark.exe is located. The
@@ -88,7 +88,7 @@ To build and install the plugin as part of Wireshark (ie. permenant)
     ```
     git clone https://gitlab.com/wireshark/wireshark
     cd wireshark
-    git checkout release-3.6
+    git checkout release-4.0
     ```
 
 2) Copy the V2G plugin to a new `plugins/epan/v2g` directory
@@ -98,7 +98,7 @@ To build and install the plugin as part of Wireshark (ie. permenant)
 
 3) Patch the cmake in wireshark to include the v2g plugin
     ```
-    git apply plugins/epan/v2g/extern/wireshark-release-3.6.patch
+    git apply plugins/epan/v2g/extern/wireshark-release-4.0.patch
     ```
 
 4) Perform a new wireshark build with the v2g plugin
@@ -122,7 +122,7 @@ the build steps.
     ```
     git clone https://gitlab.com/wireshark/wireshark
     cd wireshark
-    git checkout release-3.6
+    git checkout release-4.0
     ```
 
 2) Copy the V2G plugin to a new `plugins/epan/v2g` directory
@@ -132,7 +132,7 @@ the build steps.
 
 3) Patch the cmake in wireshark to include the v2g plugin
     ```
-    git apply plugins/epan/v2g/extern/wireshark-release-3.6.patch
+    git apply plugins/epan/v2g/extern/wireshark-release-4.0.patch
     ```
 
 4) Use the wireshark tools script to setup brew to build
@@ -169,7 +169,7 @@ setup.
 
 3) Patch the wireshark build system to include the plugin
     ```
-    git apply plugins/epan/v2g/extern/wireshark-release-3.6.patch
+    git apply plugins/epan/v2g/extern/wireshark-release-4.0.patch
     ```
 
 4) Perform the full build including the plugin
