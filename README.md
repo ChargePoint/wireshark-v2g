@@ -77,7 +77,7 @@ git clone https://github.com/ChargePoint/wireshark-v2g.git
 mkdir wireshark-v2g/build && cd wireshark-v2g/build
 cmake ..
 make
-make install
+sudo make install
 ```
 
 #### source plugin
@@ -106,7 +106,7 @@ To build and install the plugin as part of Wireshark (ie. permenant)
     mkdir -p build && cd build
     cmake ..
     make
-    make install
+    sudo make install
     ```
 
 ### Mac OS X
@@ -144,17 +144,15 @@ the build steps.
     ```
     mkdir -p build && cd build
 
-    # brew doesn't put qt in a directly findable place, so tell cmake about it
-    CMAKE_PREFIX_PATH=$(brew --prefix qt5) cmake ..
+    cmake -GNinja ..
+    # if brew doesn't put qt in a findable place, then tell cmake about it
+    CMAKE_PREFIX_PATH=$(brew --prefix qt5) cmake -GNinja ..
 
-    make -j$(sysctl -n hw.ncpu)
-
-    # For some reason the lua half of the plugin doesn't get installed into
-    # the app bundle. Do it manually:
-    cp ../plugins/epan/v2g/dissector/v2g.lua run/Wireshark.app/Contents/PlugIns/wireshark/
+    ninja
+    ninja plugins
 
     # Recommended installation directory
-    cp -r run/Wireshark.app /Applications/
+    cp -a run/Wireshark.app /Applications/
     ```
 
 ### Windows
