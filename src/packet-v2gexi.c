@@ -98,7 +98,8 @@ static const value_string v2gexi_response_code_names[] = {
 	{ appHandresponseCodeType_OK_SuccessfulNegotiation, "Success" },
 	{ appHandresponseCodeType_OK_SuccessfulNegotiationWithMinorDeviation,
 	  "SuccessWithMinorDeviation" },
-	{ appHandresponseCodeType_Failed_NoNegotiation, "Failed" }
+	{ appHandresponseCodeType_Failed_NoNegotiation, "Failed" },
+	{ 0, NULL }
 };
 
 

@@ -373,7 +373,8 @@ static const value_string v2gdin_fault_code_names[] = {
 	{ dinfaultCodeType_ParsingError, "ParsingError" },
 	{ dinfaultCodeType_NoTLSRootCertificatAvailable,
 	  "NoTLSRootCertificatAvailable" },
-	{ dinfaultCodeType_UnknownError, "UnknownError" }
+	{ dinfaultCodeType_UnknownError, "UnknownError" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_response_code_names[] = {
@@ -420,19 +421,22 @@ static const value_string v2gdin_response_code_names[] = {
 	{ dinresponseCodeType_FAILED_MeteringSignatureNotValid,
 	  "FAILED (MeteringSignatureNotValid)" },
 	{ dinresponseCodeType_FAILED_WrongEnergyTransferType,
-	  "FAILED (WrongEnergyTransferType)" }
+	  "FAILED (WrongEnergyTransferType)" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_service_category_names[] = {
 	{ dinserviceCategoryType_EVCharging, "EVCharging" },
 	{ dinserviceCategoryType_Internet, "Internet" },
 	{ dinserviceCategoryType_ContractCertificate, "ContractCertificate" },
-	{ dinserviceCategoryType_OtherCustom, "OtherCustom" }
+	{ dinserviceCategoryType_OtherCustom, "OtherCustom" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_payment_option_names[] = {
 	{ dinpaymentOptionType_Contract, "Contract" },
-	{ dinpaymentOptionType_ExternalPayment, "ExternalPayment" }
+	{ dinpaymentOptionType_ExternalPayment, "ExternalPayment" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_ev_requested_energy_transfer[] = {
@@ -443,7 +447,8 @@ static const value_string v2gdin_ev_requested_energy_transfer[] = {
 	{ dinEVRequestedEnergyTransferType_DC_core, "DC_core" },
 	{ dinEVRequestedEnergyTransferType_DC_extended, "DC_extended" },
 	{ dinEVRequestedEnergyTransferType_DC_combo_core, "DC_combo_core" },
-	{ dinEVRequestedEnergyTransferType_DC_unique, "DC_unique" }
+	{ dinEVRequestedEnergyTransferType_DC_unique, "DC_unique" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_evse_supported_energy_transfer_names[] = {
@@ -466,19 +471,22 @@ static const value_string v2gdin_evse_supported_energy_transfer_names[] = {
 	{ dinEVSESupportedEnergyTransferType_AC_single_phase_three_phase_core_DC_extended,
 	  "AC_single_phase_three_phase_core_DC_extended" },
 	{ dinEVSESupportedEnergyTransferType_AC_core3p_DC_extended,
-	  "AC_core3p_DC_extended" }
+	  "AC_core3p_DC_extended" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_isolation_level_names[] = {
 	{ dinisolationLevelType_Invalid, "Invalid" },
 	{ dinisolationLevelType_Valid, "Valid" },
 	{ dinisolationLevelType_Warning, "Warning" },
-	{ dinisolationLevelType_Fault, "Fault" }
+	{ dinisolationLevelType_Fault, "Fault" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_evse_processing_names[] = {
 	{ dinEVSEProcessingType_Finished, "Finished" },
-	{ dinEVSEProcessingType_Ongoing, "Ongoing" }
+	{ dinEVSEProcessingType_Ongoing, "Ongoing" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_dc_everrorcode_names[] = {
@@ -500,7 +508,8 @@ static const value_string v2gdin_dc_everrorcode_names[] = {
 	{ dinDC_EVErrorCodeType_Reserved_C, "Reserved C" },
 	{ dinDC_EVErrorCodeType_FAILED_ChargingSystemIncompatibility,
 	  "FAILED (ChargingSystemIncompatibility)" },
-	{ dinDC_EVErrorCodeType_NoData, "NoData" }
+	{ dinDC_EVErrorCodeType_NoData, "NoData" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_dc_evsestatuscode_names[] = {
@@ -519,13 +528,15 @@ static const value_string v2gdin_dc_evsestatuscode_names[] = {
 	{ dinDC_EVSEStatusCodeType_Reserved_9, "Reserved 9" },
 	{ dinDC_EVSEStatusCodeType_Reserved_A, "Reserved A" },
 	{ dinDC_EVSEStatusCodeType_Reserved_B, "Reserved B" },
-	{ dinDC_EVSEStatusCodeType_Reserved_C, "Reserved C" }
+	{ dinDC_EVSEStatusCodeType_Reserved_C, "Reserved C" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_evsenotification_names[] = {
 	{ dinEVSENotificationType_None, "None" },
 	{ dinEVSENotificationType_StopCharging, "StopCharging" },
-	{ dinEVSENotificationType_ReNegotiation, "ReNegotiation" }
+	{ dinEVSENotificationType_ReNegotiation, "ReNegotiation" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_unitsymbol_names[] = {
@@ -538,14 +549,16 @@ static const value_string v2gdin_unitsymbol_names[] = {
 	{ dinunitSymbolType_VA, "VA" },
 	{ dinunitSymbolType_W, "W" },
 	{ dinunitSymbolType_W_s, "W_s" },
-	{ dinunitSymbolType_Wh, "Wh" }
+	{ dinunitSymbolType_Wh, "Wh" },
+	{ 0, NULL }
 };
 
 static const value_string v2gdin_cost_kind_names[] = {
 	{ dincostKindType_relativePricePercentage, "relativePricePercentage" },
 	{ dincostKindType_RenewableGenerationPercentage,
 	  "RenewableGenerationPercentage" },
-	{ dincostKindType_CarbonDioxideEmission, "CarbonDioxideEmission" }
+	{ dincostKindType_CarbonDioxideEmission, "CarbonDioxideEmission" },
+	{ 0, NULL }
 };
 
 

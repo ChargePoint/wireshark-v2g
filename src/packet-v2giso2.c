@@ -515,17 +515,20 @@ static gint ett_v2giso2_struct_iso2SessionSetupResType = -1;
 static const value_string v2giso2_enum_iso2mechanicalChargingDeviceStatusType_names[] = {
 	{ iso2mechanicalChargingDeviceStatusType_Home, "Home" },
 	{ iso2mechanicalChargingDeviceStatusType_Moving, "Moving" },
-	{ iso2mechanicalChargingDeviceStatusType_EndPosition, "EndPosition" }
+	{ iso2mechanicalChargingDeviceStatusType_EndPosition, "EndPosition" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2electricalChargingDeviceStatusType_names[] = {
 	{ iso2electricalChargingDeviceStatusType_Connected, "Connected" },
-	{ iso2electricalChargingDeviceStatusType_Disconnected, "Disconnected" }
+	{ iso2electricalChargingDeviceStatusType_Disconnected, "Disconnected" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2EVSENotificationType_names[] = {
 	{ iso2EVSENotificationType_StopCharging, "StopCharging" },
-	{ iso2EVSENotificationType_ReNegotiation, "ReNegotiation" }
+	{ iso2EVSENotificationType_ReNegotiation, "ReNegotiation" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2responseCodeType_names[] = {
@@ -583,69 +586,81 @@ static const value_string v2giso2_enum_iso2responseCodeType_names[] = {
 	{ iso2responseCodeType_FAILED_CertificateRevoked,
 	  "FAILED (CertificateRevoked)" },
 	{ iso2responseCodeType_FAILED_CertificateNotYetValid,
-	  "FAILED (CertificateNotYetValid)" }
+	  "FAILED (CertificateNotYetValid)" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2EVSEProcessingType_names[] = {
 	{ iso2EVSEProcessingType_Finished, "Finished" },
 	{ iso2EVSEProcessingType_Ongoing, "Ongoing" },
 	{ iso2EVSEProcessingType_Ongoing_WaitingForCustomerInteraction,
-	  "Ongoing (WaitingForCustomerInteraction)" }
+	  "Ongoing (WaitingForCustomerInteraction)" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2operationModeType_names[] = {
 	{ iso2operationModeType_Ready, "Ready" },
-	{ iso2operationModeType_NotReady, "NotReady" }
+	{ iso2operationModeType_NotReady, "NotReady" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2EVOperationType_names[] = {
 	{ iso2EVOperationType_Charge, "Charge" },
-	{ iso2EVOperationType_BPT, "BPT" }
+	{ iso2EVOperationType_BPT, "BPT" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2EVCheckOutStatusType_names[] = {
 	{ iso2EVCheckOutStatusType_CheckOut, "CheckOut" },
 	{ iso2EVCheckOutStatusType_Processing, "Processing" },
-	{ iso2EVCheckOutStatusType_Completed, "Completed" }
+	{ iso2EVCheckOutStatusType_Completed, "Completed" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2EVSECheckOutStatusType_names[] = {
 	{ iso2EVSECheckOutStatusType_Scheduled, "Scheduled" },
-	{ iso2EVSECheckOutStatusType_Completed, "Completed" }
+	{ iso2EVSECheckOutStatusType_Completed, "Completed" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2EVCheckInStatusType_names[] = {
 	{ iso2EVCheckInStatusType_CheckIn, "CheckIn" },
 	{ iso2EVCheckInStatusType_Processing, "Processing" },
-	{ iso2EVCheckInStatusType_Completed, "Completed" }
+	{ iso2EVCheckInStatusType_Completed, "Completed" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2parkingMethodType_names[] = {
 	{ iso2parkingMethodType_AutoParking, "AutoParking" },
 	{ iso2parkingMethodType_MVGuideManual, "MVGuideManual" },
-	{ iso2parkingMethodType_Manual, "Manual" }
+	{ iso2parkingMethodType_Manual, "Manual" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2FODStatusType_names[] = {
 	{ iso2FODStatusType_ObjectOnPad, "ObjectOnPad" },
 	{ iso2FODStatusType_PadClear, "PadClear" },
-	{ iso2FODStatusType_UnknownError, "UnknownError" }
+	{ iso2FODStatusType_UnknownError, "UnknownError" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2chargingSessionType_names[] = {
 	{ iso2chargingSessionType_Terminate, "Terminate" },
-	{ iso2chargingSessionType_Pause, "Pause" }
+	{ iso2chargingSessionType_Pause, "Pause" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2chargeProgressType_names[] = {
 	{ iso2chargeProgressType_Start, "Start" },
 	{ iso2chargeProgressType_Stop, "Stop" },
-	{ iso2chargeProgressType_Renegotiate, "Renegotiate" }
+	{ iso2chargeProgressType_Renegotiate, "Renegotiate" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2paymentOptionType_names[] = {
 	{ iso2paymentOptionType_Contract, "Contract" },
-	{ iso2paymentOptionType_ExternalPayment, "ExternalPayment" }
+	{ iso2paymentOptionType_ExternalPayment, "ExternalPayment" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso2_enum_iso2costKindType_names[] = {
@@ -653,7 +668,8 @@ static const value_string v2giso2_enum_iso2costKindType_names[] = {
 	  "relativePricePercentage" },
 	{ iso2costKindType_RenewableGenerationPercentage,
 	  "RenewableGenerationPercentage" },
-	{ iso2costKindType_CarbonDioxideEmission, "CarbonDioxideEmission" }
+	{ iso2costKindType_CarbonDioxideEmission, "CarbonDioxideEmission" },
+	{ 0, NULL }
 };
 
 
