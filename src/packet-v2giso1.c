@@ -373,19 +373,22 @@ static const value_string v2giso1_fault_code_names[] = {
 	{ iso1faultCodeType_ParsingError, "ParsingError" },
 	{ iso1faultCodeType_NoTLSRootCertificatAvailable,
 	  "NoTLSRootCertificatAvailable" },
-	{ iso1faultCodeType_UnknownError, "UnknownError" }
+	{ iso1faultCodeType_UnknownError, "UnknownError" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_service_category_names[] = {
 	{ iso1serviceCategoryType_EVCharging, "EVCharging" },
 	{ iso1serviceCategoryType_Internet, "Internet" },
 	{ iso1serviceCategoryType_ContractCertificate, "ContractCertificate" },
-	{ iso1serviceCategoryType_OtherCustom, "OtherCustom" }
+	{ iso1serviceCategoryType_OtherCustom, "OtherCustom" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_payment_option_names[] = {
 	{ iso1paymentOptionType_Contract, "Contract" },
-	{ iso1paymentOptionType_ExternalPayment, "ExternalPayment" }
+	{ iso1paymentOptionType_ExternalPayment, "ExternalPayment" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_energy_transfer_mode_names[] = {
@@ -397,6 +400,7 @@ static const value_string v2giso1_energy_transfer_mode_names[] = {
 	{ iso1EnergyTransferModeType_DC_extended, "DC_extended" },
 	{ iso1EnergyTransferModeType_DC_combo_core, "DC_combo_core" },
 	{ iso1EnergyTransferModeType_DC_unique, "DC_unique" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_unit_symbol_names[] = {
@@ -406,7 +410,8 @@ static const value_string v2giso1_unit_symbol_names[] = {
 	{ iso1unitSymbolType_A, "A" },
 	{ iso1unitSymbolType_V, "V" },
 	{ iso1unitSymbolType_W, "W" },
-	{ iso1unitSymbolType_Wh, "Wh" }
+	{ iso1unitSymbolType_Wh, "Wh" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_dc_everrorcode_names[] = {
@@ -428,13 +433,15 @@ static const value_string v2giso1_dc_everrorcode_names[] = {
 	{ iso1DC_EVErrorCodeType_Reserved_C, "Reserved C" },
 	{ iso1DC_EVErrorCodeType_FAILED_ChargingSystemIncompatibility,
 	  "FAILED (ChargingSystemIncompatibility)" },
-	{ iso1DC_EVErrorCodeType_NoData, "NoData" }
+	{ iso1DC_EVErrorCodeType_NoData, "NoData" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_evsenotification_names[] = {
 	{ iso1EVSENotificationType_None, "None" },
 	{ iso1EVSENotificationType_StopCharging, "StopCharging" },
-	{ iso1EVSENotificationType_ReNegotiation, "ReNegotiation" }
+	{ iso1EVSENotificationType_ReNegotiation, "ReNegotiation" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_evseisolation_level_names[] = {
@@ -442,7 +449,8 @@ static const value_string v2giso1_evseisolation_level_names[] = {
 	{ iso1isolationLevelType_Valid, "Valid" },
 	{ iso1isolationLevelType_Warning, "Warning" },
 	{ iso1isolationLevelType_Fault, "Fault" },
-	{ iso1isolationLevelType_No_IMD, "No IMD" }
+	{ iso1isolationLevelType_No_IMD, "No IMD" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_dc_evsestatuscode_names[] = {
@@ -460,7 +468,8 @@ static const value_string v2giso1_dc_evsestatuscode_names[] = {
 	{ iso1DC_EVSEStatusCodeType_Reserved_9, "Reserved_9" },
 	{ iso1DC_EVSEStatusCodeType_Reserved_A, "Reserved_A" },
 	{ iso1DC_EVSEStatusCodeType_Reserved_B, "Reserved_B" },
-	{ iso1DC_EVSEStatusCodeType_Reserved_C, "Reserved_C" }
+	{ iso1DC_EVSEStatusCodeType_Reserved_C, "Reserved_C" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_cost_kind_names[] = {
@@ -469,7 +478,8 @@ static const value_string v2giso1_cost_kind_names[] = {
 	{ iso1costKindType_RenewableGenerationPercentage,
 	  "RenewableGenerationPercentage" },
 	{ iso1costKindType_CarbonDioxideEmission,
-	  "CarbonDioxideEmission" }
+	  "CarbonDioxideEmission" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_response_code_names[] = {
@@ -522,25 +532,29 @@ static const value_string v2giso1_response_code_names[] = {
 	{ iso1responseCodeType_FAILED_CertificateNotAllowedAtThisEVSE,
 	  "FAILED (CertificateNotAllowedAtThisEVSE)" },
 	{ iso1responseCodeType_FAILED_CertificateRevoked,
-	  "FAILED (CertificateRevoked)" }
+	  "FAILED (CertificateRevoked)" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_evse_processing_names[] = {
 	{ iso1EVSEProcessingType_Finished, "Finished" },
 	{ iso1EVSEProcessingType_Ongoing, "Ongoing" },
 	{ iso1EVSEProcessingType_Ongoing_WaitingForCustomerInteraction,
-	  "Ongoing (WaitingForCustomerInteraction)" }
+	  "Ongoing (WaitingForCustomerInteraction)" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_charge_progress_names[] = {
 	{ iso1chargeProgressType_Start, "Start" },
 	{ iso1chargeProgressType_Stop, "Stop" },
-	{ iso1chargeProgressType_Renegotiate, "Renegotiate" }
+	{ iso1chargeProgressType_Renegotiate, "Renegotiate" },
+	{ 0, NULL }
 };
 
 static const value_string v2giso1_charging_session_names[] = {
 	{ iso1chargingSessionType_Terminate, "Terminate" },
-	{ iso1chargingSessionType_Pause, "Pause" }
+	{ iso1chargingSessionType_Pause, "Pause" },
+	{ 0, NULL }
 };
 
 
