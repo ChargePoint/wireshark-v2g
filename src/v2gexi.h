@@ -49,9 +49,10 @@ exi_add_characters(proto_tree *tree,
 		   unsigned int characterslen,
 		   size_t charactersmaxsize)
 {
-	unsigned int i;
+	unsigned int i, j;
 	char *str;
 	proto_item *it;
+	int width;
 
 	if (characterslen > charactersmaxsize) {
 		proto_tree_add_debug_text(tree,
@@ -60,22 +61,52 @@ exi_add_characters(proto_tree *tree,
 		return;
 	}
 
-	str = alloca(characterslen + 1);
+	/* worst-case string length, assume every character is "\u{0x1fffff}" */
+	str = malloc(characterslen * 12 + 1);
 	if (str == NULL) {
 		return;
 	}
 
-	for (i = 0; i < characterslen; i++) {
-		str[i] = characters[i];
+	for (i = 0, j = 0; i < characterslen; i++) {
+		unsigned long int c = characters[i];
+
+		if (isascii(c) && isprint(c)) {
+			str[j++] = (char)c;
+		} else {
+			switch (c) {
+			case 0:    strcpy(str + j, "\\0"); break;
+			case '\a': strcpy(str + j, "\\a"); break;
+			case '\b': strcpy(str + j, "\\b"); break;
+			case '\f': strcpy(str + j, "\\f"); break;
+			case '\n': strcpy(str + j, "\\n"); break;
+			case '\r': strcpy(str + j, "\\r"); break;
+			case '\t': strcpy(str + j, "\\t"); break;
+			case '\v': strcpy(str + j, "\\v"); break;
+			case '\'': strcpy(str + j, "\\'"); break;
+			case '\\': strcpy(str + j, "\\\\"); break;
+			default:
+				if (c <= UINT8_MAX)
+					width = 2;
+				else if (c <= UINT16_MAX)
+					width = 4;
+				else
+					width = 6;
+				sprintf(str + j, "\\u{%0*lx}", width, c);
+				break;
+			}
+			j += (unsigned int)strlen(str + j);
+		}
 	}
-	str[i] = '\0';
+	str[j] = '\0';
 
 	/*
 	 * internally the proto string is a g_strdup - so, it's ok
-	 * to use the alloca stack reference from above
+	 * to use the malloc'd buffer from above
 	 */
 	it = proto_tree_add_string(tree, hfindex, tvb, 0, 0, str);
 	proto_item_set_generated(it);
+
+	free(str);
 
 	return;
 }
