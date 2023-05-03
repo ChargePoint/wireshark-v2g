@@ -61,8 +61,8 @@ exi_add_characters(proto_tree *tree,
 		return;
 	}
 
-	/* worst-case string length, assume every character is "\u{0x1fffff}" */
-	str = malloc(characterslen * 12 + 1);
+	/* worst-case string length, assume every character is "\u{1fffff}" */
+	str = malloc(characterslen * 10 + 1);
 	if (str == NULL) {
 		return;
 	}
