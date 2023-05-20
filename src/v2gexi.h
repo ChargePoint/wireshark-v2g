@@ -62,7 +62,7 @@ exi_add_characters(proto_tree *tree,
 	}
 
 	/* worst-case string length, assume every character is "\u{1fffff}" */
-	str = malloc(characterslen * 10 + 1);
+	str = g_malloc(characterslen * 10 + 1);
 	if (str == NULL) {
 		return;
 	}
@@ -106,7 +106,7 @@ exi_add_characters(proto_tree *tree,
 	it = proto_tree_add_string(tree, hfindex, tvb, 0, 0, str);
 	proto_item_set_generated(it);
 
-	free(str);
+	g_free(str);
 
 	return;
 }
