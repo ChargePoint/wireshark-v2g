@@ -42,12 +42,7 @@ set(DISSECTOR_SRC
     src/packet-v2giso2.c
 )
 
-set(PLUGIN_FILES
-    plugin.c
-    ${DISSECTOR_SRC}
-)
-
-set_source_files_properties(${PLUGIN_FILES}
+set_source_files_properties(${DISSECTOR_SRC}
     PROPERTIES
         COMPILE_FLAGS "${WERROR_COMMON_FLAGS}"
 )
@@ -58,6 +53,10 @@ find_package(Wireshark)
 if(Wireshark_FOUND)
 
     message(STATUS "Wireshark found in ${Wireshark_LIB_DIR}")
+
+    if(NOT Wireshark_PLUGINS_ENABLED)
+        message(WARNING "Wireshark was compiled without support for plugins")
+    endif()
 
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         set(CMAKE_INSTALL_PREFIX "${Wireshark_INSTALL_PREFIX}"
@@ -84,6 +83,7 @@ if(Wireshark_FOUND)
     endif(APPLE)
 
     add_library(v2gexi MODULE
+        src/v2gplugin.c
         ${DISSECTOR_SRC}
     )
 
@@ -116,6 +116,11 @@ else(Wireshark_FOUND)
         ${PROJECT_VERSION_MINOR}
         ${PROJECT_VERSION_PATCH}
         ${PROJECT_VERSION_TWEAK}
+    )
+
+    set(PLUGIN_FILES
+        plugin.c
+        ${DISSECTOR_SRC}
     )
 
     # Keep in sync with standalone build
