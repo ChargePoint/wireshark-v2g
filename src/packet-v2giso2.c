@@ -351,10 +351,16 @@ static int hf_v2giso2_struct_iso2SessionSetupResType_EVSEID = -1;
 static int hf_v2giso2_struct_iso2SessionSetupResType_EVSETimeStamp = -1;
 
 /* Specifically track voltage and current for graphing */
-static int hf_v2giso2_target_voltage = -1;
-static int hf_v2giso2_target_current = -1;
-static int hf_v2giso2_present_voltage = -1;
-static int hf_v2giso2_present_current = -1;
+static int hf_v2giso2_ev_target_voltage = -1;
+static int hf_v2giso2_ev_target_current = -1;
+static int hf_v2giso2_ev_maximum_voltage = -1;
+static int hf_v2giso2_ev_maximum_current = -1;
+static int hf_v2giso2_ev_maximum_power = -1;
+static int hf_v2giso2_evse_present_voltage = -1;
+static int hf_v2giso2_evse_present_current = -1;
+static int hf_v2giso2_evse_maximum_voltage = -1;
+static int hf_v2giso2_evse_maximum_current = -1;
+static int hf_v2giso2_evse_maximum_power = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2giso2 = -1;
@@ -4722,7 +4728,7 @@ dissect_v2giso2_dc_bidirectionalcontrolreq(
 	value = v2giso2_physicalvalue_to_double(
 		&dc_bidirectionalcontrolreq->EVTargetCurrent);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_target_current,
+		hf_v2giso2_ev_target_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4734,7 +4740,7 @@ dissect_v2giso2_dc_bidirectionalcontrolreq(
 	value = v2giso2_physicalvalue_to_double(
 		&dc_bidirectionalcontrolreq->EVTargetVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_target_voltage,
+		hf_v2giso2_ev_target_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4743,6 +4749,12 @@ dissect_v2giso2_dc_bidirectionalcontrolreq(
 		tvb, pinfo, subtree,
 		ett_v2giso2_struct_iso2PhysicalValueType,
 		"EVMaximumVoltage");
+	value = v2giso2_physicalvalue_to_double(
+		&dc_bidirectionalcontrolreq->EVMaximumVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso2_ev_maximum_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2giso2_physicalvalue(
 		&dc_bidirectionalcontrolreq->EVMinimumVoltage,
@@ -4821,7 +4833,7 @@ dissect_v2giso2_dc_bidirectionalcontrolres(
 	value = v2giso2_physicalvalue_to_double(
 		&dc_bidirectionalcontrolres->EVSEPresentCurrent);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_present_current,
+		hf_v2giso2_evse_present_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4833,7 +4845,7 @@ dissect_v2giso2_dc_bidirectionalcontrolres(
 	value = v2giso2_physicalvalue_to_double(
 		&dc_bidirectionalcontrolres->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_present_voltage,
+		hf_v2giso2_evse_present_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -5791,7 +5803,7 @@ dissect_v2giso2_weldingdetectionres(
 	value = v2giso2_physicalvalue_to_double(
 		&weldingdetectionres->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_present_voltage,
+		hf_v2giso2_evse_present_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -5808,6 +5820,8 @@ dissect_v2giso2_currentdemandreq(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
@@ -5847,12 +5861,24 @@ dissect_v2giso2_currentdemandreq(
 		tvb, pinfo, subtree,
 		ett_v2giso2_struct_iso2PhysicalValueType,
 		"EVTargetCurrent");
+	value = v2giso2_physicalvalue_to_double(
+		&currentdemandreq->EVTargetCurrent);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso2_ev_target_current,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2giso2_physicalvalue(
 		&currentdemandreq->EVTargetVoltage,
 		tvb, pinfo, subtree,
 		ett_v2giso2_struct_iso2PhysicalValueType,
 		"EVTargetVoltage");
+	value = v2giso2_physicalvalue_to_double(
+		&currentdemandreq->EVTargetVoltage);
+	it = proto_tree_add_double(subtree,
+		hf_v2giso2_ev_target_voltage,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	if (currentdemandreq->EVMaximumCurrent_isUsed) {
 		dissect_v2giso2_physicalvalue(
@@ -5860,6 +5886,12 @@ dissect_v2giso2_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2giso2_struct_iso2PhysicalValueType,
 			"EVMaximumCurrent");
+		value = v2giso2_physicalvalue_to_double(
+			&currentdemandreq->EVMaximumCurrent);
+		it = proto_tree_add_double(subtree,
+			hf_v2giso2_ev_maximum_current,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (currentdemandreq->EVMaximumPower_isUsed) {
@@ -5868,6 +5900,12 @@ dissect_v2giso2_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2giso2_struct_iso2PhysicalValueType,
 			"EVMaximumPower");
+		value = v2giso2_physicalvalue_to_double(
+			&currentdemandreq->EVMaximumPower);
+		it = proto_tree_add_double(subtree,
+			hf_v2giso2_ev_maximum_power,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (currentdemandreq->EVMaximumVoltage_isUsed) {
@@ -5876,6 +5914,12 @@ dissect_v2giso2_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2giso2_struct_iso2PhysicalValueType,
 			"EVMaximumVoltage");
+		value = v2giso2_physicalvalue_to_double(
+			&currentdemandreq->EVMaximumVoltage);
+		it = proto_tree_add_double(subtree,
+			hf_v2giso2_ev_maximum_voltage,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	return;
@@ -5918,7 +5962,7 @@ dissect_v2giso2_currentdemandres(
 	value = v2giso2_physicalvalue_to_double(
 		&currentdemandres->EVSEPresentCurrent);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_present_current,
+		hf_v2giso2_evse_present_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -5930,7 +5974,7 @@ dissect_v2giso2_currentdemandres(
 	value = v2giso2_physicalvalue_to_double(
 		&currentdemandres->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_present_current,
+		hf_v2giso2_evse_present_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -5955,6 +5999,12 @@ dissect_v2giso2_currentdemandres(
 			tvb, pinfo, subtree,
 			ett_v2giso2_struct_iso2PhysicalValueType,
 			"EVSEMaximumPower");
+		value = v2giso2_physicalvalue_to_double(
+			&currentdemandres->EVSEMaximumPower);
+		it = proto_tree_add_double(subtree,
+			hf_v2giso2_evse_maximum_power,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (currentdemandres->EVSEMaximumCurrent_isUsed) {
@@ -5963,6 +6013,12 @@ dissect_v2giso2_currentdemandres(
 			tvb, pinfo, subtree,
 			ett_v2giso2_struct_iso2PhysicalValueType,
 			"EVSEMaximumCurrent");
+		value = v2giso2_physicalvalue_to_double(
+			&currentdemandres->EVSEMaximumCurrent);
+		it = proto_tree_add_double(subtree,
+			hf_v2giso2_evse_maximum_current,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (currentdemandres->EVSEMaximumVoltage_isUsed) {
@@ -5971,6 +6027,12 @@ dissect_v2giso2_currentdemandres(
 			tvb, pinfo, subtree,
 			ett_v2giso2_struct_iso2PhysicalValueType,
 			"EVSEMaximumVoltage");
+		value = v2giso2_physicalvalue_to_double(
+			&currentdemandres->EVSEMaximumVoltage);
+		it = proto_tree_add_double(subtree,
+			hf_v2giso2_evse_maximum_voltage,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	exi_add_characters(subtree,
@@ -6071,7 +6133,7 @@ dissect_v2giso2_prechargeres(
 	value = v2giso2_physicalvalue_to_double(
 		&prechargeres->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2giso2_present_current,
+		hf_v2giso2_evse_present_current,
 		tvb, 0, 0, value);
 
 	return;
@@ -9434,22 +9496,54 @@ proto_register_v2giso2(void)
 		},
 
 		/* Derived values for graphing */
-		{ &hf_v2giso2_target_voltage,
-		  { "Voltage", "v2giso2.target.voltage",
+		{ &hf_v2giso2_ev_target_voltage,
+		  { "EV Target Voltage (derived)", "v2giso2.ev.target.voltage",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2giso2_target_current,
-		  { "Current", "v2giso2.target.current",
+		{ &hf_v2giso2_ev_target_current,
+		  { "EV Target Current (derived)", "v2giso2.ev.target.current",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2giso2_present_voltage,
-		  { "Voltage", "v2giso2.present.voltage",
+		{ &hf_v2giso2_ev_maximum_voltage,
+		  { "EV Maximum Voltage (derived)",
+		    "v2giso2.ev.maximum.voltage",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2giso2_present_current,
-		  { "Current", "v2giso2.present.current",
+		{ &hf_v2giso2_ev_maximum_current,
+		  { "EV Maximum Current (derived)",
+		    "v2giso2.ev.maximum.current",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
+		{ &hf_v2giso2_ev_maximum_power,
+		  { "EV Maximum Power (derived)",
+		    "v2giso2.ev.maximum.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_evse_present_voltage,
+		  { "EVSE Present Voltage (derived)",
+		    "v2giso2.evse.present.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_evse_present_current,
+		  { "EVSE Present Current (derived)",
+		    "v2giso2.evse.present.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_evse_maximum_voltage,
+		  { "EVSE Maximum Voltage (derived)",
+		    "v2giso2.evse.maximum.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_evse_maximum_current,
+		  { "EVSE Maximum Current (derived)",
+		    "v2giso2.evse.maximum.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2giso2_evse_maximum_power,
+		  { "EVSE Maximum Power (derived)",
+		    "v2giso2.evse.maximum.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		}
 	};
 
 	static gint *ett[] = {
