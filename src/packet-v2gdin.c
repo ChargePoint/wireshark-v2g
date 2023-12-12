@@ -261,10 +261,18 @@ static int hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved = -1;
 static int hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode = -1;
 
 /* Specifically track voltage and current for graphing */
-static int hf_v2gdin_target_voltage = -1;
-static int hf_v2gdin_target_current = -1;
-static int hf_v2gdin_present_voltage = -1;
-static int hf_v2gdin_present_current = -1;
+static int hf_v2gdin_ev_target_voltage = -1;
+static int hf_v2gdin_ev_target_current = -1;
+static int hf_v2gdin_ev_maximum_voltage_limit = -1;
+static int hf_v2gdin_ev_maximum_current_limit = -1;
+static int hf_v2gdin_ev_maximum_power_limit = -1;
+static int hf_v2gdin_remaining_time_to_full_soc = -1;
+static int hf_v2gdin_remaining_time_to_bulk_soc = -1;
+static int hf_v2gdin_evse_present_voltage = -1;
+static int hf_v2gdin_evse_present_current = -1;
+static int hf_v2gdin_evse_maximum_voltage_limit = -1;
+static int hf_v2gdin_evse_maximum_current_limit = -1;
+static int hf_v2gdin_evse_maximum_power_limit = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2gdin = -1;
@@ -2177,6 +2185,7 @@ dissect_v2gdin_dc_evchargeparameter(
 {
 	proto_tree *subtree;
 	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
@@ -2191,12 +2200,24 @@ dissect_v2gdin_dc_evchargeparameter(
 		tvb, pinfo, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVMaximumVoltageLimit");
+	value = v2gdin_physicalvalue_to_double(
+		&dc_evchargeparameter->EVMaximumVoltageLimit);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_ev_maximum_voltage_limit,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evchargeparameter->EVMaximumCurrentLimit,
 		tvb, pinfo, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVMaximumCurrentLimit");
+	value = v2gdin_physicalvalue_to_double(
+		&dc_evchargeparameter->EVMaximumCurrentLimit);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_ev_maximum_current_limit,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	if (dc_evchargeparameter->EVMaximumPowerLimit_isUsed) {
 		dissect_v2gdin_physicalvalue(
@@ -2204,6 +2225,12 @@ dissect_v2gdin_dc_evchargeparameter(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVMaximumPowertLimit");
+		value = v2gdin_physicalvalue_to_double(
+			&dc_evchargeparameter->EVMaximumPowerLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_ev_maximum_power_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (dc_evchargeparameter->EVEnergyCapacity_isUsed) {
@@ -2383,6 +2410,8 @@ dissect_v2gdin_dc_evsechargeparameter(
 	const char *subtree_name)
 {
 	proto_tree *subtree;
+	proto_item *it;
+	double value;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
@@ -2396,6 +2425,12 @@ dissect_v2gdin_dc_evsechargeparameter(
 		tvb, pinfo, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVSEMaximumVoltageLimit");
+	value = v2gdin_physicalvalue_to_double(
+		&dc_evsechargeparameter->EVSEMaximumVoltageLimit);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_evse_maximum_voltage_limit,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEMinimumVoltageLimit,
@@ -2408,6 +2443,12 @@ dissect_v2gdin_dc_evsechargeparameter(
 		tvb, pinfo, subtree,
 		ett_v2gdin_struct_dinPhysicalValueType,
 		"EVSEMaximumCurrentLimit");
+	value = v2gdin_physicalvalue_to_double(
+		&dc_evsechargeparameter->EVSEMaximumCurrentLimit);
+	it = proto_tree_add_double(subtree,
+		hf_v2gdin_evse_maximum_current_limit,
+		tvb, 0, 0, value);
+	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEMinimumCurrentLimit,
@@ -2421,6 +2462,12 @@ dissect_v2gdin_dc_evsechargeparameter(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVSEMaximumPowerLimit");
+		value = v2gdin_physicalvalue_to_double(
+			&dc_evsechargeparameter->EVSEMaximumPowerLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_evse_maximum_power_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (dc_evsechargeparameter->EVSECurrentRegulationTolerance_isUsed) {
@@ -4112,7 +4159,7 @@ dissect_v2gdin_prechargereq(
 		"EVTargetVoltage");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_target_voltage,
+		hf_v2gdin_ev_target_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4123,7 +4170,7 @@ dissect_v2gdin_prechargereq(
 		"EVTargetCurrent");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetCurrent);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_target_current,
+		hf_v2gdin_ev_target_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4164,7 +4211,7 @@ dissect_v2gdin_prechargeres(
 		"EVSEPresentVoltage");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_present_voltage,
+		hf_v2gdin_evse_present_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4200,7 +4247,7 @@ dissect_v2gdin_currentdemandreq(
 		"EVTargetVoltage");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_target_voltage,
+		hf_v2gdin_ev_target_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4211,7 +4258,7 @@ dissect_v2gdin_currentdemandreq(
 		"EVTargetCurrent");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetCurrent);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_target_current,
+		hf_v2gdin_ev_target_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4233,6 +4280,11 @@ dissect_v2gdin_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVMaximumVoltageLimit");
+		value = v2gdin_physicalvalue_to_double(&req->EVMaximumVoltageLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_ev_maximum_voltage_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (req->EVMaximumCurrentLimit_isUsed) {
@@ -4241,6 +4293,11 @@ dissect_v2gdin_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVMaximumCurrentLimit");
+		value = v2gdin_physicalvalue_to_double(&req->EVMaximumCurrentLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_ev_maximum_current_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (req->EVMaximumPowerLimit_isUsed) {
@@ -4249,6 +4306,11 @@ dissect_v2gdin_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVMaximumPowerLimit");
+		value = v2gdin_physicalvalue_to_double(&req->EVMaximumPowerLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_ev_maximum_power_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (req->RemainingTimeToFullSoC_isUsed) {
@@ -4257,6 +4319,11 @@ dissect_v2gdin_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"RemainingTimeToFullSoC");
+		value = v2gdin_physicalvalue_to_double(&req->RemainingTimeToFullSoC);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_remaining_time_to_full_soc,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	if (req->RemainingTimeToBulkSoC_isUsed) {
@@ -4265,6 +4332,11 @@ dissect_v2gdin_currentdemandreq(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"RemainingTimeToBulkSoC");
+		value = v2gdin_physicalvalue_to_double(&req->RemainingTimeToBulkSoC);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_remaining_time_to_bulk_soc,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	return;
@@ -4304,7 +4376,7 @@ dissect_v2gdin_currentdemandres(
 		"EVSEPresentVoltage");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_present_voltage,
+		hf_v2gdin_evse_present_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4315,7 +4387,7 @@ dissect_v2gdin_currentdemandres(
 		"EVSEPresentCurrent");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentCurrent);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_present_current,
+		hf_v2gdin_evse_present_current,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -4340,6 +4412,11 @@ dissect_v2gdin_currentdemandres(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVSEMaximumVoltageLimit");
+		value = v2gdin_physicalvalue_to_double(&res->EVSEMaximumVoltageLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_evse_maximum_voltage_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 	if (res->EVSEMaximumCurrentLimit_isUsed) {
 		dissect_v2gdin_physicalvalue(
@@ -4347,6 +4424,11 @@ dissect_v2gdin_currentdemandres(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVSEMaximumCurrentLimit");
+		value = v2gdin_physicalvalue_to_double(&res->EVSEMaximumCurrentLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_evse_maximum_current_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 	if (res->EVSEMaximumPowerLimit_isUsed) {
 		dissect_v2gdin_physicalvalue(
@@ -4354,6 +4436,11 @@ dissect_v2gdin_currentdemandres(
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
 			"EVSEMaximumPowerLimit");
+		value = v2gdin_physicalvalue_to_double(&res->EVSEMaximumPowerLimit);
+		it = proto_tree_add_double(subtree,
+			hf_v2gdin_evse_maximum_power_limit,
+			tvb, 0, 0, value);
+		proto_item_set_generated(it);
 	}
 
 	return;
@@ -4415,7 +4502,7 @@ dissect_v2gdin_weldingdetectionres(
 		"EVSEPresentVoltage");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
-		hf_v2gdin_present_voltage,
+		hf_v2gdin_evse_present_voltage,
 		tvb, 0, 0, value);
 	proto_item_set_generated(it);
 
@@ -5729,20 +5816,62 @@ proto_register_v2gdin(void)
 		},
 
 		/* Derived values for graphing */
-		{ &hf_v2gdin_target_voltage,
-		  { "Voltage", "v2gdin.target.voltage",
+		{ &hf_v2gdin_ev_target_voltage,
+		  { "EV Target Voltage (derived)", "v2gdin.ev.target.voltage",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_target_current,
-		  { "Current", "v2gdin.target.current",
+		{ &hf_v2gdin_ev_target_current,
+		  { "EV Target Current (derived)", "v2gdin.ev.target.current",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_present_voltage,
-		  { "Voltage", "v2gdin.present.voltage",
+		{ &hf_v2gdin_ev_maximum_voltage_limit,
+		  { "EV Maximum Voltage Limit (derived)",
+		    "v2gdin.ev.maximum.voltage.limit",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_present_current,
-		  { "Current", "v2gdin.present.current",
+		{ &hf_v2gdin_ev_maximum_current_limit,
+		  { "EV Maximum Current Limit (derived)",
+		    "v2gdin.ev.maximum.current.limit",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_ev_maximum_power_limit,
+		  { "EV Maximum Power Limit (derived)",
+		    "v2gdin.ev.maximum.power.limit",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_remaining_time_to_full_soc,
+		  { "Remaining Time to Full SOC (derived)",
+		    "v2gdin.remaining.time.to.full.soc",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_remaining_time_to_bulk_soc,
+		  { "Remaining Time to Bulk SOC (derived)",
+		    "v2gdin.remaining.time.to.bulk.soc",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_evse_present_voltage,
+		  { "EVSE Present Voltage (derived)",
+		    "v2gdin.evse.present.voltage",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_evse_present_current,
+		  { "EVSE Present Current (derived)",
+		    "v2gdin.evse.present.current",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_evse_maximum_voltage_limit,
+		  { "EVSE Maximum Voltage Limit (derived)",
+		    "v2gdin.evse.maximum.voltage.limit",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_evse_maximum_current_limit,
+		  { "EVSE Maximum Current Limit (derived)",
+		    "v2gdin.evse.maximum.current.limit",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_v2gdin_evse_maximum_power_limit,
+		  { "EVSE Maximum Power Limit (derived)",
+		    "v2gdin.evse.maximum.power.limit",
 		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		}
 	};
