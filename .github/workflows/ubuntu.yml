@@ -14,7 +14,7 @@ on:
    workflow_call:
 
 env:
-   WIRESHARK_BRANCH: release-4.0
+   WIRESHARK_BRANCH: release-4.2
 
 jobs:
    standalone:
@@ -50,7 +50,7 @@ jobs:
               git remote add -t "${{ env.WIRESHARK_BRANCH }}" -f origin https://gitlab.com/wireshark/wireshark.git
               git checkout ${{ env.WIRESHARK_BRANCH }}
          - name: Checkout plug-in
-           uses: actions/checkout@v2
+           uses: actions/checkout@v3
            with:
               path: plugins/epan/v2g
          - name: Apply patch
@@ -59,23 +59,18 @@ jobs:
          - name: Install dependencies for a in-tree build
            run: |
               sudo apt-get update -qq
-              sudo tools/debian-setup.sh \
-                  --install-optional \
-                  --install-test-deps \
-                  --install-deb-deps \
-                  python3-pip -y
+              sudo tools/debian-setup.sh --install-all python3-pip -y
          - name: Build in-tree
            run: |
               mkdir build
               cd build
               cmake ..
-              make v2gexi tshark
-
+              make -j$(nproc) v2gexi tshark
          - name: Copy plugin artifact
            run: |
               mkdir v2g-artifact
               cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
-              cp build/run/plugins/4.0/epan/v2gexi.so v2g-artifact/v2gexi.so
+              cp build/run/plugins/4.2/epan/v2gexi.so v2g-artifact/v2gexi.so
          - name: Upload Ubuntu artifacts
            uses: actions/upload-artifact@v3
            with:

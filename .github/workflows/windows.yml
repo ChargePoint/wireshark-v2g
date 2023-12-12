@@ -15,7 +15,7 @@ on:
 
 env:
    PLATFORM: x64
-   WIRESHARK_BRANCH: release-4.0
+   WIRESHARK_BRANCH: release-4.2
    WIRESHARK_BASE_DIR: C:\Development
    CMAKE_PREFIX_PATH: D:\a\wireshark\Qt\6.2.3\msvc2019_64
    WIRESHARK_VERSION_EXTRA: -GithubActionBuild
@@ -38,7 +38,7 @@ jobs:
            run: |
               git apply plugins/epan/v2g/extern/wireshark-${{ env.WIRESHARK_BRANCH }}.patch
          - name: Choco install
-           run: cinst -y --force --no-progress asciidoctorj xsltproc docbook-bundle nsis winflexbison3 cmake
+           run: choco install -y --force --no-progress asciidoctorj xsltproc docbook-bundle nsis winflexbison3 cmake
          - name: Install strawberryperl
            uses: shogo82148/actions-setup-perl@v1
            with:
@@ -80,7 +80,7 @@ jobs:
               mv build/packaging/nsis/*exe v2g-artifact/
          - name: Move plugin dll
            run: |
-              mv build/run/RelWithDebInfo/plugins/4.0/epan/v2gexi.dll v2g-artifact/v2gexi.dll
+              mv build/run/RelWithDebInfo/plugins/4.2/epan/v2gexi.dll v2g-artifact/v2gexi.dll
          - name: Copy dissector lua
            run: |
               cp plugins/epan/v2g/dissector/v2g.lua v2g-artifact/v2g.lua
