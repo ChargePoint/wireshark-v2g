@@ -11,7 +11,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 endif()
 
 # NOTE: The wireshark plugin build assumes major.minor.patch.tweak
-project(wireshark-v2g VERSION 0.6.1.0)
+project(wireshark-v2g VERSION 0.7.0.0)
 
 # Set the default C/C++ standards
 set(CMAKE_C_STANDARD 11)
