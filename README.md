@@ -144,9 +144,7 @@ the build steps.
     ```
     mkdir -p build && cd build
 
-    cmake -GNinja ..
-    # if brew doesn't put qt in a findable place, then tell cmake about it
-    CMAKE_PREFIX_PATH=$(brew --prefix qt5) cmake -GNinja ..
+    cmake -DFETCH_lua=ON -GNinja ..
 
     ninja
     ninja plugins
