@@ -2311,7 +2311,7 @@ dissect_v2giso1_dc_evchargeparameter(
 			&dc_evchargeparameter->EVMaximumPowerLimit,
 			tvb, pinfo, subtree,
 			ett_v2giso1_struct_iso1PhysicalValueType,
-			"EVMaximumPowertLimit");
+			"EVMaximumPowerLimit");
 		value = v2giso1_physicalvalue_to_double(
 			&dc_evchargeparameter->EVMaximumPowerLimit);
 		it = proto_tree_add_double(subtree,
