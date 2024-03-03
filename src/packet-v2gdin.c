@@ -2224,7 +2224,7 @@ dissect_v2gdin_dc_evchargeparameter(
 			&dc_evchargeparameter->EVMaximumPowerLimit,
 			tvb, pinfo, subtree,
 			ett_v2gdin_struct_dinPhysicalValueType,
-			"EVMaximumPowertLimit");
+			"EVMaximumPowerLimit");
 		value = v2gdin_physicalvalue_to_double(
 			&dc_evchargeparameter->EVMaximumPowerLimit);
 		it = proto_tree_add_double(subtree,
