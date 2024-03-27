@@ -68,21 +68,21 @@ function get_sdp_payload_type(type)
     local type_name = "UNKNOWN"
 
     local types = {
-        [0x90000000] = "SDP REQUEST",
-        [0x90010000] = "SDP RESPONSE",
-		[0x90040000] = "SDP EMSP REQUEST",
-		[0x90050000] = "SDP EMSP RESPONSE",
-        [0x80010000] = "EXI ENCODED",
-		[0x90020000] = "RESERVED",
-		[0X90030000] = "RESERVED",
+        [0x9000] = "SDP REQUEST",
+        [0x9001] = "SDP RESPONSE",
+	[0x9004] = "SDP EMSP REQUEST",
+	[0x9005] = "SDP EMSP RESPONSE",
+        [0x8001] = "EXI ENCODED",
+	[0x9002] = "RESERVED",
+	[0X9003] = "RESERVED",
     }
 
     if set_contains(types, type) then return types[type] end
 
-    if type < 0x80000000 then type_name = "RESERVED"
-    elseif type >= 0x8001000 and type <= 0x8FFFFFFFF then type_name = "RESERVED"
-    elseif type >= 0x9006000 and type <= 0x9FFFFFFFF then type_name = "RESERVED"
-    elseif type >= 0xA000000 and type <= 0xFFFFFFFFF then type_name = "MFG SPECIFIC"
+    if type < 0x8000 then type_name = "RESERVED"
+    elseif type >= 0x8001 and type <= 0x8FFF then type_name = "RESERVED"
+    elseif type >= 0x9006 and type <= 0x9FFF then type_name = "RESERVED"
+    elseif type >= 0xA000 and type <= 0xFFFF then type_name = "MFG SPECIFIC"
     end
 
     return type_name
@@ -111,7 +111,7 @@ function get_v2gtp_length(buffer, pinfo, offset)
 end
 
 function dissect_v2gtp(buffer, pinfo, tree)
-    local payload_type_name = get_sdp_payload_type(buffer(2,4):uint())
+    local payload_type_name = get_sdp_payload_type(buffer(2,2):uint())
     local sdp_pay_len = buffer(4,4):uint()
 
     local subtree = tree:add(v2gtp_protocol, buffer(), "V2G Transfer Protocol")
@@ -179,6 +179,8 @@ function dissect_v2gtp(buffer, pinfo, tree)
 	elseif payload_type_name == "SDP EMSP RESPONSE" then
 		pinfo.cols.info:set('SDP with EMSP Response')
 		local subtree = tree:add(v2gtp_protocol, buffer(), "SDP EMSP Response")
+		subtree:add(SDP["response_secc_ip_addr"], buffer(8,16))
+		subtree:add(SDP["response_secc_port"], buffer(24,2))
 		subtree:add(SDP["response_security"], buffer(26,1)):append_text("  (" .. get_sdp_security(buffer(26,1):uint()) .. ")")
 		subtree:add(SDP["response_transport_proto"], buffer(27,1)):append_text("  (" .. get_sdp_transport_name(buffer(27,1):uint()) .. ")")
 		
