@@ -18,15 +18,17 @@ local SDP = {
     payload_type = ProtoField.uint16("sdp.PayloadType", "SDP Payload Type", base.HEX),
     payload_length = ProtoField.uint32("sdp.PayloadLength", "SDP Payload Length", base.HEX),
 
-    -- request payload (2 bytes)
+    -- request payload (2 bytes only for normal SDP)
     request_security = ProtoField.uint8("sdp.RequestSecurity", "SDP Request Security", base.HEX),
     request_transport_proto = ProtoField.uint8("sdp.RequestTransportProtocol", "SDP Request Transport Protocol", base.HEX),
+    request_emsp_ids = ProtoField.string("sdp.RequestEMSPIDs", "EMSP IDs"),
 
     -- response payload
     response_secc_ip_addr = ProtoField.ipv6("sdp.ResponseSeccAddr", "SDP Response IP Address", base.HEX),
     response_secc_port = ProtoField.uint16("sdp.ResponseSeccPort", "SDP Response Port", base.DEC),
     response_security = ProtoField.uint8("sdp.ResponseSecurity", "SDP Response Security", base.HEX),
     response_transport_proto = ProtoField.uint8("sdp.ResponseTransportProtocol", "SDP Response Transport Protocol", base.HEX),
+    response_emsp_ids = ProtoField.string("sdp.ResponseEMSPIDs", "EMSP IDs"),
 }
 
 local V2GTP_EXIDISSECTOR_DEFAULT = 0
@@ -66,17 +68,21 @@ function get_sdp_payload_type(type)
     local type_name = "UNKNOWN"
 
     local types = {
-        [0x90000000] = "SDP REQUEST",
-        [0x90010000] = "SDP RESPONSE",
-        [0x80010000] = "EXI ENCODED",
+    [0x9000] = "SDP REQUEST",
+    [0x9001] = "SDP RESPONSE",
+    [0x9004] = "SDP EMSP REQUEST",
+    [0x9005] = "SDP EMSP RESPONSE",
+    [0x8001] = "EXI ENCODED",
+    [0x9002] = "RESERVED",
+    [0X9003] = "RESERVED",
     }
 
     if set_contains(types, type) then return types[type] end
 
-    if type < 0x80000000 then type_name = "RESERVED"
-    elseif type >= 0x8001000 and type <= 0x8FFFFFFFF then type_name = "RESERVED"
-    elseif type >= 0x9002000 and type <= 0x9FFFFFFFF then type_name = "RESERVED"
-    elseif type >= 0xA000000 and type <= 0xFFFFFFFFF then type_name = "MFG SPECIFIC"
+    if type < 0x8000 then type_name = "RESERVED"
+    elseif type >= 0x8001 and type <= 0x8FFF then type_name = "RESERVED"
+    elseif type >= 0x9006 and type <= 0x9FFF then type_name = "RESERVED"
+    elseif type >= 0xA000 and type <= 0xFFFF then type_name = "MFG SPECIFIC"
     end
 
     return type_name
@@ -105,7 +111,7 @@ function get_v2gtp_length(buffer, pinfo, offset)
 end
 
 function dissect_v2gtp(buffer, pinfo, tree)
-    local payload_type_name = get_sdp_payload_type(buffer(2,4):uint())
+    local payload_type_name = get_sdp_payload_type(buffer(2,2):uint())
     local sdp_pay_len = buffer(4,4):uint()
 
     local subtree = tree:add(v2gtp_protocol, buffer(), "V2G Transfer Protocol")
@@ -124,21 +130,27 @@ function dissect_v2gtp(buffer, pinfo, tree)
             payload_type_name
         )
     )
-    subtree:add(SDP["payload_length"], sdp_pay_len)
+    subtree:add(SDP["payload_length"], buffer(4,4), sdp_pay_len):append_text(
+        append_paren_text(
+            "Payload Length: " .. sdp_pay_len
+    )
+)
 
     if payload_type_name == "SDP REQUEST" then
-        pinfo.cols['info'] = 'SECC Discovery Protocol Request'
-        local subtree = tree:add(v2gtp_protocol, buffer(), "SECC Discovery Protocol Request")
+        local security_display = get_sdp_security(buffer(8,1):uint()) == "TLS: YES" and " (Secure)" or " (Non-Secure)"
+        pinfo.cols.info:set('SDP Request' .. security_display)
+        local subtree = tree:add(v2gtp_protocol, buffer(), "SDP Request")
         subtree:add(SDP["request_security"], buffer(8,1)):append_text("  (" .. get_sdp_security(buffer(8,1):uint()) .. ")")
         subtree:add(SDP["request_transport_proto"], buffer(9,1)):append_text("  (" .. get_sdp_transport_name(buffer(9,1):uint()) .. ")")
     elseif payload_type_name == "SDP RESPONSE" then
-        pinfo.cols['info'] = 'SECC Discovery Protocol Response'
-        local subtree = tree:add(v2gtp_protocol, buffer(), "SECC Discovery Protocol Response")
+        local security_display = get_sdp_security(buffer(26,1):uint()) == "TLS: YES" and " (Secure)" or " (Non-Secure)"
+        pinfo.cols.info:set('SDP Response' .. security_display)
+        local subtree = tree:add(v2gtp_protocol, buffer(), "SDP Response")
         local port = buffer(24,2):uint()
         local security = buffer(26,1):uint()
 
         subtree:add(SDP["response_secc_ip_addr"], buffer(8,16))
-        subtree:add(SDP["response_secc_port"], port)
+        subtree:add(SDP["response_secc_port"], buffer(24,2))
         subtree:add(SDP["response_security"], buffer(26,1)):append_text("  (" .. get_sdp_security(buffer(26,1):uint()) .. ")")
         subtree:add(SDP["response_transport_proto"], buffer(27,1)):append_text("  (" .. get_sdp_transport_name(buffer(27,1):uint()) .. ")")
         
@@ -155,6 +167,27 @@ function dissect_v2gtp(buffer, pinfo, tree)
                 DissectorTable.get("tls.port"):add(port, v2gtp_protocol)
             end
         end
+    elseif payload_type_name == "SDP EMSP REQUEST" then
+        pinfo.cols.info:set('SDP with EMSP Request')
+        local subtree = tree:add(v2gtp_protocol, buffer(), "SDP EMSP Request")
+        subtree:add(SDP["request_security"], buffer(8,1)):append_text("  (" .. get_sdp_security(buffer(8,1):uint()) .. ")")
+        subtree:add(SDP["request_transport_proto"], buffer(9,1)):append_text("  (" .. get_sdp_transport_name(buffer(9,1):uint()) .. ")")
+
+        local emsp_ids = buffer(10):string()
+        subtree:add(SDP["request_emsp_ids"], buffer(10, buffer:len() - 10)):set_text("EMSP IDs: " .. emsp_ids)
+
+    elseif payload_type_name == "SDP EMSP RESPONSE" then
+        pinfo.cols.info:set('SDP with EMSP Response')
+        local subtree = tree:add(v2gtp_protocol, buffer(), "SDP EMSP Response")
+        subtree:add(SDP["response_secc_ip_addr"], buffer(8,16))
+        subtree:add(SDP["response_secc_port"], buffer(24,2))
+        subtree:add(SDP["response_security"], buffer(26,1)):append_text("  (" .. get_sdp_security(buffer(26,1):uint()) .. ")")
+        subtree:add(SDP["response_transport_proto"], buffer(27,1)):append_text("  (" .. get_sdp_transport_name(buffer(27,1):uint()) .. ")")
+
+        local emsp_ids = buffer(28):string()
+        subtree:add(SDP["response_emsp_ids"], buffer(28, buffer:len() - 28)):set_text("EMSP IDs: " .. emsp_ids)
+
+
     elseif payload_type_name == "EXI ENCODED" then
         if v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_DIN then
             Dissector.get("v2gdin"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo, tree)
