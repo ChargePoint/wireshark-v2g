@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 ChargePoint, Inc.
+ * Copyright (c) 2022-2024 ChargePoint, Inc.
  * All rights reserved.
  *
  * See LICENSE file
@@ -19,10 +19,9 @@
 #include <epan/prefs.h>
 #include <epan/expert.h>
 
-/* openv2g */
-#include <codec/EXITypes.h>
-#include <din/dinEXIDatatypes.h>
-#include <din/dinEXIDatatypesDecoder.h>
+/* libcbv2g */
+#include <cbv2g/din/din_msgDefDatatypes.h>
+#include <cbv2g/din/din_msgDefDecoder.h>
 
 #include "v2gexi.h"
 
@@ -36,229 +35,229 @@ static dissector_handle_t v2gexi_handle;
 
 static int proto_v2gdin = -1;
 
-static int hf_v2gdin_struct_dinNotificationType_FaultCode = -1;
-static int hf_v2gdin_struct_dinNotificationType_FaultMsg = -1;
+static int hf_v2gdin_struct_din_NotificationType_FaultCode = -1;
+static int hf_v2gdin_struct_din_NotificationType_FaultMsg = -1;
 
-static int hf_v2gdin_struct_dinSignatureType_Id = -1;
-static int hf_v2gdin_struct_dinSignedInfoType_Id = -1;
-static int hf_v2gdin_struct_dinSignatureValueType_Id = -1;
-static int hf_v2gdin_struct_dinSignatureValueType_CONTENT = -1;
+static int hf_v2gdin_struct_din_SignatureType_Id = -1;
+static int hf_v2gdin_struct_din_SignedInfoType_Id = -1;
+static int hf_v2gdin_struct_din_SignatureValueType_Id = -1;
+static int hf_v2gdin_struct_din_SignatureValueType_CONTENT = -1;
 
-static int hf_v2gdin_struct_dinKeyInfoType_Id = -1;
-static int hf_v2gdin_struct_dinKeyInfoType_KeyName = -1;
-static int hf_v2gdin_struct_dinKeyInfoType_MgmtData = -1;
-static int hf_v2gdin_struct_dinKeyInfoType_ANY = -1;
-static int hf_v2gdin_struct_dinKeyValueType_ANY = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_P = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_Q = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_G = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_Y = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_J = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_Seed = -1;
-static int hf_v2gdin_struct_dinDSAKeyValueType_PgenCounter = -1;
-static int hf_v2gdin_struct_dinRSAKeyValueType_Modulus = -1;
-static int hf_v2gdin_struct_dinRSAKeyValueType_Exponent = -1;
+static int hf_v2gdin_struct_din_KeyInfoType_Id = -1;
+static int hf_v2gdin_struct_din_KeyInfoType_KeyName = -1;
+static int hf_v2gdin_struct_din_KeyInfoType_MgmtData = -1;
+static int hf_v2gdin_struct_din_KeyInfoType_ANY = -1;
+static int hf_v2gdin_struct_din_KeyValueType_ANY = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_P = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_Q = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_G = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_Y = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_J = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_Seed = -1;
+static int hf_v2gdin_struct_din_DSAKeyValueType_PgenCounter = -1;
+static int hf_v2gdin_struct_din_RSAKeyValueType_Modulus = -1;
+static int hf_v2gdin_struct_din_RSAKeyValueType_Exponent = -1;
 
-static int hf_v2gdin_struct_dinRetrievalMethodType_URI = -1;
-static int hf_v2gdin_struct_dinRetrievalMethodType_Type = -1;
+static int hf_v2gdin_struct_din_RetrievalMethodType_URI = -1;
+static int hf_v2gdin_struct_din_RetrievalMethodType_Type = -1;
 
-static int hf_v2gdin_struct_dinX509DataType_X509SKI = -1;
-static int hf_v2gdin_struct_dinX509DataType_X509SubjectName = -1;
-static int hf_v2gdin_struct_dinX509DataType_X509Certificate = -1;
-static int hf_v2gdin_struct_dinX509DataType_X509CRL = -1;
-static int hf_v2gdin_struct_dinX509DataType_ANY = -1;
+static int hf_v2gdin_struct_din_X509DataType_X509SKI = -1;
+static int hf_v2gdin_struct_din_X509DataType_X509SubjectName = -1;
+static int hf_v2gdin_struct_din_X509DataType_X509Certificate = -1;
+static int hf_v2gdin_struct_din_X509DataType_X509CRL = -1;
+static int hf_v2gdin_struct_din_X509DataType_ANY = -1;
 
-static int hf_v2gdin_struct_dinX509IssuerSerialType_X509IssuerName = -1;
-static int hf_v2gdin_struct_dinX509IssuerSerialType_X509SerialNumber = -1;
+static int hf_v2gdin_struct_din_X509IssuerSerialType_X509IssuerName = -1;
+static int hf_v2gdin_struct_din_X509IssuerSerialType_X509SerialNumber = -1;
 
-static int hf_v2gdin_struct_dinPGPDataType_PGPKeyID = -1;
-static int hf_v2gdin_struct_dinPGPDataType_PGPKeyPacket = -1;
-static int hf_v2gdin_struct_dinPGPDataType_ANY = -1;
+static int hf_v2gdin_struct_din_PGPDataType_PGPKeyID = -1;
+static int hf_v2gdin_struct_din_PGPDataType_PGPKeyPacket = -1;
+static int hf_v2gdin_struct_din_PGPDataType_ANY = -1;
 
-static int hf_v2gdin_struct_dinSPKIDataType_SPKISexp = -1;
-static int hf_v2gdin_struct_dinSPKIDataType_ANY = -1;
+static int hf_v2gdin_struct_din_SPKIDataType_SPKISexp = -1;
+static int hf_v2gdin_struct_din_SPKIDataType_ANY = -1;
 
-static int hf_v2gdin_struct_dinCanonicalizationMethodType_Algorithm = -1;
-static int hf_v2gdin_struct_dinCanonicalizationMethodType_ANY = -1;
+static int hf_v2gdin_struct_din_CanonicalizationMethodType_Algorithm = -1;
+static int hf_v2gdin_struct_din_CanonicalizationMethodType_ANY = -1;
 
-static int hf_v2gdin_struct_dinDigestMethodType_Algorithm = -1;
-static int hf_v2gdin_struct_dinDigestMethodType_ANY = -1;
+static int hf_v2gdin_struct_din_DigestMethodType_Algorithm = -1;
+static int hf_v2gdin_struct_din_DigestMethodType_ANY = -1;
 
-static int hf_v2gdin_struct_dinSignatureMethodType_Algorithm = -1;
-static int hf_v2gdin_struct_dinSignatureMethodType_HMACOutputLength = -1;
-static int hf_v2gdin_struct_dinSignatureMethodType_ANY = -1;
+static int hf_v2gdin_struct_din_SignatureMethodType_Algorithm = -1;
+static int hf_v2gdin_struct_din_SignatureMethodType_HMACOutputLength = -1;
+static int hf_v2gdin_struct_din_SignatureMethodType_ANY = -1;
 
-static int hf_v2gdin_struct_dinTransformType_Algorithm = -1;
-static int hf_v2gdin_struct_dinTransformType_ANY = -1;
-static int hf_v2gdin_struct_dinTransformType_XPath = -1;
+static int hf_v2gdin_struct_din_TransformType_Algorithm = -1;
+static int hf_v2gdin_struct_din_TransformType_ANY = -1;
+static int hf_v2gdin_struct_din_TransformType_XPath = -1;
 
-static int hf_v2gdin_struct_dinReferenceType_Id = -1;
-static int hf_v2gdin_struct_dinReferenceType_URI = -1;
-static int hf_v2gdin_struct_dinReferenceType_Type = -1;
-static int hf_v2gdin_struct_dinReferenceType_DigestValue = -1;
+static int hf_v2gdin_struct_din_ReferenceType_Id = -1;
+static int hf_v2gdin_struct_din_ReferenceType_URI = -1;
+static int hf_v2gdin_struct_din_ReferenceType_Type = -1;
+static int hf_v2gdin_struct_din_ReferenceType_DigestValue = -1;
 
-static int hf_v2gdin_struct_dinObjectType_Id = -1;
-static int hf_v2gdin_struct_dinObjectType_MimeType = -1;
-static int hf_v2gdin_struct_dinObjectType_Encoding = -1;
-static int hf_v2gdin_struct_dinObjectType_ANY = -1;
+static int hf_v2gdin_struct_din_ObjectType_Id = -1;
+static int hf_v2gdin_struct_din_ObjectType_MimeType = -1;
+static int hf_v2gdin_struct_din_ObjectType_Encoding = -1;
+static int hf_v2gdin_struct_din_ObjectType_ANY = -1;
 
-static int hf_v2gdin_struct_dinServiceTagType_ServiceID = -1;
-static int hf_v2gdin_struct_dinServiceTagType_ServiceName = -1;
-static int hf_v2gdin_struct_dinServiceTagType_ServiceCategory = -1;
-static int hf_v2gdin_struct_dinServiceTagType_ServiceScope = -1;
+static int hf_v2gdin_struct_din_ServiceTagType_ServiceID = -1;
+static int hf_v2gdin_struct_din_ServiceTagType_ServiceName = -1;
+static int hf_v2gdin_struct_din_ServiceTagType_ServiceCategory = -1;
+static int hf_v2gdin_struct_din_ServiceTagType_ServiceScope = -1;
 
-static int hf_v2gdin_struct_dinServiceChargeType_FreeService = -1;
-static int hf_v2gdin_struct_dinServiceChargeType_EnergyTransferType = -1;
+static int hf_v2gdin_struct_din_ServiceChargeType_FreeService = -1;
+static int hf_v2gdin_struct_din_ServiceChargeType_EnergyTransferType = -1;
 
-static int hf_v2gdin_struct_dinServiceType_FreeService = -1;
+static int hf_v2gdin_struct_din_ServiceType_FreeService = -1;
 
-static int hf_v2gdin_struct_dinSelectedServiceType_ServiceID = -1;
-static int hf_v2gdin_struct_dinSelectedServiceType_ParameterSetID = -1;
+static int hf_v2gdin_struct_din_SelectedServiceType_ServiceID = -1;
+static int hf_v2gdin_struct_din_SelectedServiceType_ParameterSetID = -1;
 
-static int hf_v2gdin_struct_dinParameterSetType_ParameterSetID = -1;
+static int hf_v2gdin_struct_din_ParameterSetType_ParameterSetID = -1;
 
-static int hf_v2gdin_struct_dinParameterType_Name = -1;
-static int hf_v2gdin_struct_dinParameterType_ValueType = -1;
-static int hf_v2gdin_struct_dinParameterType_boolValue = -1;
-static int hf_v2gdin_struct_dinParameterType_byteValue = -1;
-static int hf_v2gdin_struct_dinParameterType_shortValue = -1;
-static int hf_v2gdin_struct_dinParameterType_intValue = -1;
-static int hf_v2gdin_struct_dinParameterType_stringValue = -1;
+static int hf_v2gdin_struct_din_ParameterType_Name = -1;
+static int hf_v2gdin_struct_din_ParameterType_ValueType = -1;
+static int hf_v2gdin_struct_din_ParameterType_boolValue = -1;
+static int hf_v2gdin_struct_din_ParameterType_byteValue = -1;
+static int hf_v2gdin_struct_din_ParameterType_shortValue = -1;
+static int hf_v2gdin_struct_din_ParameterType_intValue = -1;
+static int hf_v2gdin_struct_din_ParameterType_stringValue = -1;
 
-static int hf_v2gdin_struct_dinPaymentOptionsType_PaymentOption = -1;
+static int hf_v2gdin_struct_din_PaymentOptionsType_PaymentOption = -1;
 
-static int hf_v2gdin_struct_dinPhysicalValueType_Multiplier = -1;
-static int hf_v2gdin_struct_dinPhysicalValueType_Unit = -1;
-static int hf_v2gdin_struct_dinPhysicalValueType_Value = -1;
+static int hf_v2gdin_struct_din_PhysicalValueType_Multiplier = -1;
+static int hf_v2gdin_struct_din_PhysicalValueType_Unit = -1;
+static int hf_v2gdin_struct_din_PhysicalValueType_Value = -1;
 
-static int hf_v2gdin_struct_dinCertificateChainType_Certificate = -1;
-static int hf_v2gdin_struct_dinSubCertificatesType_Certificate = -1;
-static int hf_v2gdin_struct_dinListOfRootCertificateIDsType_RootCertificateID = -1;
+static int hf_v2gdin_struct_din_CertificateChainType_Certificate = -1;
+static int hf_v2gdin_struct_din_SubCertificatesType_Certificate = -1;
+static int hf_v2gdin_struct_din_ListOfRootCertificateIDsType_RootCertificateID = -1;
 
-static int hf_v2gdin_struct_dinAC_EVChargeParameterType_DepartureTime = -1;
+static int hf_v2gdin_struct_din_AC_EVChargeParameterType_DepartureTime = -1;
 
-static int hf_v2gdin_struct_dinAC_EVSEStatusType_PowerSwitchClosed = -1;
-static int hf_v2gdin_struct_dinAC_EVSEStatusType_RCD = -1;
-static int hf_v2gdin_struct_dinAC_EVSEStatusType_NotificationMaxDelay = -1;
-static int hf_v2gdin_struct_dinAC_EVSEStatusType_EVSENotification = -1;
+static int hf_v2gdin_struct_din_AC_EVSEStatusType_PowerSwitchClosed = -1;
+static int hf_v2gdin_struct_din_AC_EVSEStatusType_RCD = -1;
+static int hf_v2gdin_struct_din_AC_EVSEStatusType_NotificationMaxDelay = -1;
+static int hf_v2gdin_struct_din_AC_EVSEStatusType_EVSENotification = -1;
 
-static int hf_v2gdin_struct_dinDC_EVStatusType_EVReady = -1;
-static int hf_v2gdin_struct_dinDC_EVStatusType_EVCabinConditioning = -1;
-static int hf_v2gdin_struct_dinDC_EVStatusType_EVRESSConditioning = -1;
-static int hf_v2gdin_struct_dinDC_EVStatusType_EVErrorCode = -1;
-static int hf_v2gdin_struct_dinDC_EVStatusType_EVRESSSOC = -1;
+static int hf_v2gdin_struct_din_DC_EVStatusType_EVReady = -1;
+static int hf_v2gdin_struct_din_DC_EVStatusType_EVCabinConditioning = -1;
+static int hf_v2gdin_struct_din_DC_EVStatusType_EVRESSConditioning = -1;
+static int hf_v2gdin_struct_din_DC_EVStatusType_EVErrorCode = -1;
+static int hf_v2gdin_struct_din_DC_EVStatusType_EVRESSSOC = -1;
 
-static int hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEIsolationStatus = -1;
-static int hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEStatusCode = -1;
-static int hf_v2gdin_struct_dinDC_EVSEStatusType_NotificationMaxDelay = -1;
-static int hf_v2gdin_struct_dinDC_EVSEStatusType_EVSENotification = -1;
+static int hf_v2gdin_struct_din_DC_EVSEStatusType_EVSEIsolationStatus = -1;
+static int hf_v2gdin_struct_din_DC_EVSEStatusType_EVSEStatusCode = -1;
+static int hf_v2gdin_struct_din_DC_EVSEStatusType_NotificationMaxDelay = -1;
+static int hf_v2gdin_struct_din_DC_EVSEStatusType_EVSENotification = -1;
 
-static int hf_v2gdin_struct_dinDC_EVChargeParameterType_FullSOC = -1;
-static int hf_v2gdin_struct_dinDC_EVChargeParameterType_BulkSOC = -1;
+static int hf_v2gdin_struct_din_DC_EVChargeParameterType_FullSOC = -1;
+static int hf_v2gdin_struct_din_DC_EVChargeParameterType_BulkSOC = -1;
 
-static int hf_v2gdin_struct_dinSAScheduleTupleType_SAScheduleTupleID = -1;
+static int hf_v2gdin_struct_din_SAScheduleTupleType_SAScheduleTupleID = -1;
 
-static int hf_v2gdin_struct_dinPMaxScheduleType_PMaxScheduleID = -1;
-static int hf_v2gdin_struct_dinPMaxScheduleEntryType_PMax = -1;
+static int hf_v2gdin_struct_din_PMaxScheduleType_PMaxScheduleID = -1;
+static int hf_v2gdin_struct_din_PMaxScheduleEntryType_PMax = -1;
 
-static int hf_v2gdin_struct_dinRelativeTimeIntervalType_start = -1;
-static int hf_v2gdin_struct_dinRelativeTimeIntervalType_duration = -1;
+static int hf_v2gdin_struct_din_RelativeTimeIntervalType_start = -1;
+static int hf_v2gdin_struct_din_RelativeTimeIntervalType_duration = -1;
 
-static int hf_v2gdin_struct_dinSalesTariffType_Id = -1;
-static int hf_v2gdin_struct_dinSalesTariffType_SalesTariffDescription = -1;
-static int hf_v2gdin_struct_dinSalesTariffType_NumEPriceLevels = -1;
-static int hf_v2gdin_struct_dinSalesTariffEntryType_EPriceLevel = -1;
-static int hf_v2gdin_struct_dinConsumptionCostType_startValue = -1;
-static int hf_v2gdin_struct_dinCostType_costKind = -1;
-static int hf_v2gdin_struct_dinCostType_amount = -1;
-static int hf_v2gdin_struct_dinCostType_amountMultiplier = -1;
+static int hf_v2gdin_struct_din_SalesTariffType_Id = -1;
+static int hf_v2gdin_struct_din_SalesTariffType_SalesTariffDescription = -1;
+static int hf_v2gdin_struct_din_SalesTariffType_NumEPriceLevels = -1;
+static int hf_v2gdin_struct_din_SalesTariffEntryType_EPriceLevel = -1;
+static int hf_v2gdin_struct_din_ConsumptionCostType_startValue = -1;
+static int hf_v2gdin_struct_din_CostType_costKind = -1;
+static int hf_v2gdin_struct_din_CostType_amount = -1;
+static int hf_v2gdin_struct_din_CostType_amountMultiplier = -1;
 
-static int hf_v2gdin_struct_dinChargingProfileType_SAScheduleTupleID = -1;
+static int hf_v2gdin_struct_din_ChargingProfileType_SAScheduleTupleID = -1;
 
-static int hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryStart = -1;
-static int hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryMaxPower = -1;
+static int hf_v2gdin_struct_din_ProfileEntryType_ChargingProfileEntryStart = -1;
+static int hf_v2gdin_struct_din_ProfileEntryType_ChargingProfileEntryMaxPower = -1;
 
-static int hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_BulkChargingComplete = -1;
-static int hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_ChargingComplete = -1;
+static int hf_v2gdin_struct_din_DC_EVPowerDeliveryParameterType_BulkChargingComplete = -1;
+static int hf_v2gdin_struct_din_DC_EVPowerDeliveryParameterType_ChargingComplete = -1;
 
-static int hf_v2gdin_struct_dinMeterInfoType_MeterID = -1;
-static int hf_v2gdin_struct_dinMeterInfoType_SigMeterReading = -1;
-static int hf_v2gdin_struct_dinMeterInfoType_MeterStatus = -1;
-static int hf_v2gdin_struct_dinMeterInfoType_TMeter = -1;
+static int hf_v2gdin_struct_din_MeterInfoType_MeterID = -1;
+static int hf_v2gdin_struct_din_MeterInfoType_SigMeterReading = -1;
+static int hf_v2gdin_struct_din_MeterInfoType_MeterStatus = -1;
+static int hf_v2gdin_struct_din_MeterInfoType_TMeter = -1;
 
-static int hf_v2gdin_struct_dinMessageHeaderType_SessionID = -1;
+static int hf_v2gdin_struct_din_MessageHeaderType_SessionID = -1;
 
-static int hf_v2gdin_struct_dinSessionSetupReqType_EVCCID = -1;
-static int hf_v2gdin_struct_dinSessionSetupResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinSessionSetupResType_EVSEID = -1;
-static int hf_v2gdin_struct_dinSessionSetupResType_DateTimeNow = -1;
-static int hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceScope = -1;
-static int hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceCategory = -1;
-static int hf_v2gdin_struct_dinServiceDiscoveryResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinServiceDetailReqType_ServiceID = -1;
-static int hf_v2gdin_struct_dinServiceDetailResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinServiceDetailResType_ServiceID = -1;
-static int hf_v2gdin_struct_dinServicePaymentSelectionReqType_SelectedPaymentOption = -1;
-static int hf_v2gdin_struct_dinServicePaymentSelectionResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinPaymentDetailsReqType_ContractID = -1;
-static int hf_v2gdin_struct_dinPaymentDetailsResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinPaymentDetailsResType_GenChallenge = -1;
-static int hf_v2gdin_struct_dinPaymentDetailsResType_DateTimeNow = -1;
-static int hf_v2gdin_struct_dinContractAuthenticationReqType_Id = -1;
-static int hf_v2gdin_struct_dinContractAuthenticationReqType_GenChallenge = -1;
-static int hf_v2gdin_struct_dinContractAuthenticationResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinContractAuthenticationResType_EVSEProcessing = -1;
-static int hf_v2gdin_struct_dinChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType = -1;
-static int hf_v2gdin_struct_dinChargeParameterDiscoveryResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinChargeParameterDiscoveryResType_EVSEProcessing = -1;
+static int hf_v2gdin_struct_din_SessionSetupReqType_EVCCID = -1;
+static int hf_v2gdin_struct_din_SessionSetupResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_SessionSetupResType_EVSEID = -1;
+static int hf_v2gdin_struct_din_SessionSetupResType_DateTimeNow = -1;
+static int hf_v2gdin_struct_din_ServiceDiscoveryReqType_ServiceScope = -1;
+static int hf_v2gdin_struct_din_ServiceDiscoveryReqType_ServiceCategory = -1;
+static int hf_v2gdin_struct_din_ServiceDiscoveryResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_ServiceDetailReqType_ServiceID = -1;
+static int hf_v2gdin_struct_din_ServiceDetailResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_ServiceDetailResType_ServiceID = -1;
+static int hf_v2gdin_struct_din_ServicePaymentSelectionReqType_SelectedPaymentOption = -1;
+static int hf_v2gdin_struct_din_ServicePaymentSelectionResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_PaymentDetailsReqType_ContractID = -1;
+static int hf_v2gdin_struct_din_PaymentDetailsResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_PaymentDetailsResType_GenChallenge = -1;
+static int hf_v2gdin_struct_din_PaymentDetailsResType_DateTimeNow = -1;
+static int hf_v2gdin_struct_din_ContractAuthenticationReqType_Id = -1;
+static int hf_v2gdin_struct_din_ContractAuthenticationReqType_GenChallenge = -1;
+static int hf_v2gdin_struct_din_ContractAuthenticationResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_ContractAuthenticationResType_EVSEProcessing = -1;
+static int hf_v2gdin_struct_din_ChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType = -1;
+static int hf_v2gdin_struct_din_ChargeParameterDiscoveryResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_ChargeParameterDiscoveryResType_EVSEProcessing = -1;
 
-static int hf_v2gdin_struct_dinPowerDeliveryReqType_ReadyToChargeState = -1;
-static int hf_v2gdin_struct_dinPowerDeliveryResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_PowerDeliveryReqType_ReadyToChargeState = -1;
+static int hf_v2gdin_struct_din_PowerDeliveryResType_ResponseCode = -1;
 
-static int hf_v2gdin_struct_dinChargingStatusResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinChargingStatusResType_EVSEID = -1;
-static int hf_v2gdin_struct_dinChargingStatusResType_SAScheduleTupleID = -1;
-static int hf_v2gdin_struct_dinChargingStatusResType_ReceiptRequired = -1;
+static int hf_v2gdin_struct_din_ChargingStatusResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_ChargingStatusResType_EVSEID = -1;
+static int hf_v2gdin_struct_din_ChargingStatusResType_SAScheduleTupleID = -1;
+static int hf_v2gdin_struct_din_ChargingStatusResType_ReceiptRequired = -1;
 
-static int hf_v2gdin_struct_dinMeteringReceiptReqType_Id = -1;
-static int hf_v2gdin_struct_dinMeteringReceiptReqType_SessionID = -1;
-static int hf_v2gdin_struct_dinMeteringReceiptReqType_SAScheduleTupleID = -1;
-static int hf_v2gdin_struct_dinMeteringReceiptResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_MeteringReceiptReqType_Id = -1;
+static int hf_v2gdin_struct_din_MeteringReceiptReqType_SessionID = -1;
+static int hf_v2gdin_struct_din_MeteringReceiptReqType_SAScheduleTupleID = -1;
+static int hf_v2gdin_struct_din_MeteringReceiptResType_ResponseCode = -1;
 
-static int hf_v2gdin_struct_dinSessionStopResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_SessionStopResType_ResponseCode = -1;
 
-static int hf_v2gdin_struct_dinCertificateUpdateReqType_Id = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateReqType_ContractID = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateReqType_DHParams = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateResType_Id = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateResType_ContractID = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateResType_DHParams = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateResType_RetryCounter = -1;
-static int hf_v2gdin_struct_dinCertificateUpdateResType_ContractSignatureEncryptedPrivateKey = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateReqType_Id = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateReqType_ContractID = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateReqType_DHParams = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateResType_Id = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateResType_ContractID = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateResType_DHParams = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateResType_RetryCounter = -1;
+static int hf_v2gdin_struct_din_CertificateUpdateResType_ContractSignatureEncryptedPrivateKey = -1;
 
-static int hf_v2gdin_struct_dinCertificateInstallationReqType_Id = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationReqType_OEMProvisioningCert = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationReqType_DHParams = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationResType_Id = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationResType_ContractSignatureEncryptedPrivateKey = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationResType_DHParams = -1;
-static int hf_v2gdin_struct_dinCertificateInstallationResType_ContractID = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationReqType_Id = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationReqType_OEMProvisioningCert = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationReqType_DHParams = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationResType_Id = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationResType_ContractSignatureEncryptedPrivateKey = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationResType_DHParams = -1;
+static int hf_v2gdin_struct_din_CertificateInstallationResType_ContractID = -1;
 
-static int hf_v2gdin_struct_dinCableCheckResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinCableCheckResType_EVSEProcessing = -1;
+static int hf_v2gdin_struct_din_CableCheckResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_CableCheckResType_EVSEProcessing = -1;
 
-static int hf_v2gdin_struct_dinPreChargeResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_PreChargeResType_ResponseCode = -1;
 
-static int hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete = -1;
-static int hf_v2gdin_struct_dinCurrentDemandReqType_BulkChargingComplete = -1;
-static int hf_v2gdin_struct_dinCurrentDemandResType_ResponseCode = -1;
-static int hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved = -1;
-static int hf_v2gdin_struct_dinCurrentDemandResType_EVSEVoltageLimitAchieved = -1;
-static int hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved = -1;
+static int hf_v2gdin_struct_din_CurrentDemandReqType_ChargingComplete = -1;
+static int hf_v2gdin_struct_din_CurrentDemandReqType_BulkChargingComplete = -1;
+static int hf_v2gdin_struct_din_CurrentDemandResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_CurrentDemandResType_EVSECurrentLimitAchieved = -1;
+static int hf_v2gdin_struct_din_CurrentDemandResType_EVSEVoltageLimitAchieved = -1;
+static int hf_v2gdin_struct_din_CurrentDemandResType_EVSEPowerLimitAchieved = -1;
 
-static int hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode = -1;
+static int hf_v2gdin_struct_din_WeldingDetectionResType_ResponseCode = -1;
 
 /* Specifically track voltage and current for graphing */
 static int hf_v2gdin_ev_target_voltage = -1;
@@ -281,297 +280,297 @@ static gint ett_v2gdin_body = -1;
 static gint ett_v2gdin_array = -1;
 static gint ett_v2gdin_array_i = -1;
 
-static gint ett_v2gdin_struct_dinNotificationType = -1;
-static gint ett_v2gdin_struct_dinSignatureType = -1;
-static gint ett_v2gdin_struct_dinSignedInfoType = -1;
-static gint ett_v2gdin_struct_dinCanonicalizationMethodType = -1;
-static gint ett_v2gdin_struct_dinDigestMethodType = -1;
-static gint ett_v2gdin_struct_dinSignatureMethodType = -1;
-static gint ett_v2gdin_struct_dinReferenceType = -1;
-static gint ett_v2gdin_struct_dinTransformsType = -1;
-static gint ett_v2gdin_struct_dinTransformType = -1;
-static gint ett_v2gdin_struct_dinSignatureValueType = -1;
-static gint ett_v2gdin_struct_dinKeyInfoType = -1;
-static gint ett_v2gdin_struct_dinKeyValueType = -1;
-static gint ett_v2gdin_struct_dinDSAKeyValueType = -1;
-static gint ett_v2gdin_struct_dinRSAKeyValueType = -1;
-static gint ett_v2gdin_struct_dinRetrievalMethodType = -1;
-static gint ett_v2gdin_struct_dinX509IssuerSerialType = -1;
-static gint ett_v2gdin_struct_dinX509DataType = -1;
-static gint ett_v2gdin_struct_dinPGPDataType = -1;
-static gint ett_v2gdin_struct_dinSPKIDataType = -1;
-static gint ett_v2gdin_struct_dinObjectType = -1;
-static gint ett_v2gdin_struct_dinServiceParameterListType = -1;
-static gint ett_v2gdin_struct_dinServiceTagListType = -1;
-static gint ett_v2gdin_struct_dinServiceTagType = -1;
-static gint ett_v2gdin_struct_dinServiceChargeType = -1;
-static gint ett_v2gdin_struct_dinServiceType = -1;
-static gint ett_v2gdin_struct_dinSelectedServiceType = -1;
-static gint ett_v2gdin_struct_dinSelectedServiceListType = -1;
-static gint ett_v2gdin_struct_dinParameterSetType = -1;
-static gint ett_v2gdin_struct_dinParameterType = -1;
-static gint ett_v2gdin_struct_dinPhysicalValueType = -1;
-static gint ett_v2gdin_struct_dinPaymentOptionsType = -1;
-static gint ett_v2gdin_struct_dinCertificateChainType = -1;
-static gint ett_v2gdin_struct_dinSubCertificatesType = -1;
-static gint ett_v2gdin_struct_dinListOfRootCertificateIDsType = -1;
-static gint ett_v2gdin_struct_dinEVChargeParameterType = -1;
-static gint ett_v2gdin_struct_dinAC_EVChargeParameterType = -1;
-static gint ett_v2gdin_struct_dinDC_EVChargeParameterType = -1;
-static gint ett_v2gdin_struct_dinDC_EVStatusType = -1;
-static gint ett_v2gdin_struct_dinEVSEChargeParameterType = -1;
-static gint ett_v2gdin_struct_dinEVSEStatusType = -1;
-static gint ett_v2gdin_struct_dinAC_EVSEChargeParameterType = -1;
-static gint ett_v2gdin_struct_dinAC_EVSEStatusType = -1;
-static gint ett_v2gdin_struct_dinDC_EVSEChargeParameterType = -1;
-static gint ett_v2gdin_struct_dinDC_EVSEStatusType = -1;
-static gint ett_v2gdin_struct_dinSASchedulesType = -1;
-static gint ett_v2gdin_struct_dinSAScheduleListType = -1;
-static gint ett_v2gdin_struct_dinSAScheduleTupleType = -1;
-static gint ett_v2gdin_struct_dinPMaxScheduleType = -1;
-static gint ett_v2gdin_struct_dinPMaxScheduleEntryType = -1;
-static gint ett_v2gdin_struct_dinRelativeTimeIntervalType = -1;
-static gint ett_v2gdin_struct_dinIntervalType = -1;
-static gint ett_v2gdin_struct_dinSalesTariffType = -1;
-static gint ett_v2gdin_struct_dinSalesTariffEntryType = -1;
-static gint ett_v2gdin_struct_dinConsumptionCostType = -1;
-static gint ett_v2gdin_struct_dinCostType = -1;
-static gint ett_v2gdin_struct_dinChargingProfileType = -1;
-static gint ett_v2gdin_struct_dinEVPowerDeliveryParameterType = -1;
-static gint ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType = -1;
-static gint ett_v2gdin_struct_dinProfileEntryType = -1;
-static gint ett_v2gdin_struct_dinMeterInfoType = -1;
+static gint ett_v2gdin_struct_din_NotificationType = -1;
+static gint ett_v2gdin_struct_din_SignatureType = -1;
+static gint ett_v2gdin_struct_din_SignedInfoType = -1;
+static gint ett_v2gdin_struct_din_CanonicalizationMethodType = -1;
+static gint ett_v2gdin_struct_din_DigestMethodType = -1;
+static gint ett_v2gdin_struct_din_SignatureMethodType = -1;
+static gint ett_v2gdin_struct_din_ReferenceType = -1;
+static gint ett_v2gdin_struct_din_TransformsType = -1;
+static gint ett_v2gdin_struct_din_TransformType = -1;
+static gint ett_v2gdin_struct_din_SignatureValueType = -1;
+static gint ett_v2gdin_struct_din_KeyInfoType = -1;
+static gint ett_v2gdin_struct_din_KeyValueType = -1;
+static gint ett_v2gdin_struct_din_DSAKeyValueType = -1;
+static gint ett_v2gdin_struct_din_RSAKeyValueType = -1;
+static gint ett_v2gdin_struct_din_RetrievalMethodType = -1;
+static gint ett_v2gdin_struct_din_X509IssuerSerialType = -1;
+static gint ett_v2gdin_struct_din_X509DataType = -1;
+static gint ett_v2gdin_struct_din_PGPDataType = -1;
+static gint ett_v2gdin_struct_din_SPKIDataType = -1;
+static gint ett_v2gdin_struct_din_ObjectType = -1;
+static gint ett_v2gdin_struct_din_ServiceParameterListType = -1;
+static gint ett_v2gdin_struct_din_ServiceTagListType = -1;
+static gint ett_v2gdin_struct_din_ServiceTagType = -1;
+static gint ett_v2gdin_struct_din_ServiceChargeType = -1;
+static gint ett_v2gdin_struct_din_ServiceType = -1;
+static gint ett_v2gdin_struct_din_SelectedServiceType = -1;
+static gint ett_v2gdin_struct_din_SelectedServiceListType = -1;
+static gint ett_v2gdin_struct_din_ParameterSetType = -1;
+static gint ett_v2gdin_struct_din_ParameterType = -1;
+static gint ett_v2gdin_struct_din_PhysicalValueType = -1;
+static gint ett_v2gdin_struct_din_PaymentOptionsType = -1;
+static gint ett_v2gdin_struct_din_CertificateChainType = -1;
+static gint ett_v2gdin_struct_din_SubCertificatesType = -1;
+static gint ett_v2gdin_struct_din_ListOfRootCertificateIDsType = -1;
+static gint ett_v2gdin_struct_din_EVChargeParameterType = -1;
+static gint ett_v2gdin_struct_din_AC_EVChargeParameterType = -1;
+static gint ett_v2gdin_struct_din_DC_EVChargeParameterType = -1;
+static gint ett_v2gdin_struct_din_DC_EVStatusType = -1;
+static gint ett_v2gdin_struct_din_EVSEChargeParameterType = -1;
+static gint ett_v2gdin_struct_din_EVSEStatusType = -1;
+static gint ett_v2gdin_struct_din_AC_EVSEChargeParameterType = -1;
+static gint ett_v2gdin_struct_din_AC_EVSEStatusType = -1;
+static gint ett_v2gdin_struct_din_DC_EVSEChargeParameterType = -1;
+static gint ett_v2gdin_struct_din_DC_EVSEStatusType = -1;
+static gint ett_v2gdin_struct_din_SASchedulesType = -1;
+static gint ett_v2gdin_struct_din_SAScheduleListType = -1;
+static gint ett_v2gdin_struct_din_SAScheduleTupleType = -1;
+static gint ett_v2gdin_struct_din_PMaxScheduleType = -1;
+static gint ett_v2gdin_struct_din_PMaxScheduleEntryType = -1;
+static gint ett_v2gdin_struct_din_RelativeTimeIntervalType = -1;
+static gint ett_v2gdin_struct_din_IntervalType = -1;
+static gint ett_v2gdin_struct_din_SalesTariffType = -1;
+static gint ett_v2gdin_struct_din_SalesTariffEntryType = -1;
+static gint ett_v2gdin_struct_din_ConsumptionCostType = -1;
+static gint ett_v2gdin_struct_din_CostType = -1;
+static gint ett_v2gdin_struct_din_ChargingProfileType = -1;
+static gint ett_v2gdin_struct_din_EVPowerDeliveryParameterType = -1;
+static gint ett_v2gdin_struct_din_DC_EVPowerDeliveryParameterType = -1;
+static gint ett_v2gdin_struct_din_ProfileEntryType = -1;
+static gint ett_v2gdin_struct_din_MeterInfoType = -1;
 
-static gint ett_v2gdin_struct_dinSessionSetupReqType = -1;
-static gint ett_v2gdin_struct_dinSessionSetupResType = -1;
-static gint ett_v2gdin_struct_dinServiceDiscoveryReqType = -1;
-static gint ett_v2gdin_struct_dinServiceDiscoveryResType = -1;
-static gint ett_v2gdin_struct_dinServiceDetailReqType = -1;
-static gint ett_v2gdin_struct_dinServiceDetailResType = -1;
-static gint ett_v2gdin_struct_dinServicePaymentSelectionReqType = -1;
-static gint ett_v2gdin_struct_dinServicePaymentSelectionResType = -1;
-static gint ett_v2gdin_struct_dinPaymentDetailsReqType = -1;
-static gint ett_v2gdin_struct_dinPaymentDetailsResType = -1;
-static gint ett_v2gdin_struct_dinContractAuthenticationReqType = -1;
-static gint ett_v2gdin_struct_dinContractAuthenticationResType = -1;
-static gint ett_v2gdin_struct_dinChargeParameterDiscoveryReqType = -1;
-static gint ett_v2gdin_struct_dinChargeParameterDiscoveryResType = -1;
-static gint ett_v2gdin_struct_dinPowerDeliveryReqType = -1;
-static gint ett_v2gdin_struct_dinPowerDeliveryResType = -1;
-static gint ett_v2gdin_struct_dinChargingStatusReqType = -1;
-static gint ett_v2gdin_struct_dinChargingStatusResType = -1;
-static gint ett_v2gdin_struct_dinMeteringReceiptReqType = -1;
-static gint ett_v2gdin_struct_dinMeteringReceiptResType = -1;
-static gint ett_v2gdin_struct_dinSessionStopType = -1;
-static gint ett_v2gdin_struct_dinSessionStopResType = -1;
-static gint ett_v2gdin_struct_dinCertificateUpdateReqType = -1;
-static gint ett_v2gdin_struct_dinCertificateUpdateResType = -1;
-static gint ett_v2gdin_struct_dinCertificateInstallationReqType = -1;
-static gint ett_v2gdin_struct_dinCertificateInstallationResType = -1;
-static gint ett_v2gdin_struct_dinCableCheckReqType = -1;
-static gint ett_v2gdin_struct_dinCableCheckResType = -1;
-static gint ett_v2gdin_struct_dinPreChargeReqType = -1;
-static gint ett_v2gdin_struct_dinPreChargeResType = -1;
-static gint ett_v2gdin_struct_dinCurrentDemandReqType = -1;
-static gint ett_v2gdin_struct_dinCurrentDemandResType = -1;
-static gint ett_v2gdin_struct_dinWeldingDetectionReqType = -1;
-static gint ett_v2gdin_struct_dinWeldingDetectionResType = -1;
+static gint ett_v2gdin_struct_din_SessionSetupReqType = -1;
+static gint ett_v2gdin_struct_din_SessionSetupResType = -1;
+static gint ett_v2gdin_struct_din_ServiceDiscoveryReqType = -1;
+static gint ett_v2gdin_struct_din_ServiceDiscoveryResType = -1;
+static gint ett_v2gdin_struct_din_ServiceDetailReqType = -1;
+static gint ett_v2gdin_struct_din_ServiceDetailResType = -1;
+static gint ett_v2gdin_struct_din_ServicePaymentSelectionReqType = -1;
+static gint ett_v2gdin_struct_din_ServicePaymentSelectionResType = -1;
+static gint ett_v2gdin_struct_din_PaymentDetailsReqType = -1;
+static gint ett_v2gdin_struct_din_PaymentDetailsResType = -1;
+static gint ett_v2gdin_struct_din_ContractAuthenticationReqType = -1;
+static gint ett_v2gdin_struct_din_ContractAuthenticationResType = -1;
+static gint ett_v2gdin_struct_din_ChargeParameterDiscoveryReqType = -1;
+static gint ett_v2gdin_struct_din_ChargeParameterDiscoveryResType = -1;
+static gint ett_v2gdin_struct_din_PowerDeliveryReqType = -1;
+static gint ett_v2gdin_struct_din_PowerDeliveryResType = -1;
+static gint ett_v2gdin_struct_din_ChargingStatusReqType = -1;
+static gint ett_v2gdin_struct_din_ChargingStatusResType = -1;
+static gint ett_v2gdin_struct_din_MeteringReceiptReqType = -1;
+static gint ett_v2gdin_struct_din_MeteringReceiptResType = -1;
+static gint ett_v2gdin_struct_din_SessionStopType = -1;
+static gint ett_v2gdin_struct_din_SessionStopResType = -1;
+static gint ett_v2gdin_struct_din_CertificateUpdateReqType = -1;
+static gint ett_v2gdin_struct_din_CertificateUpdateResType = -1;
+static gint ett_v2gdin_struct_din_CertificateInstallationReqType = -1;
+static gint ett_v2gdin_struct_din_CertificateInstallationResType = -1;
+static gint ett_v2gdin_struct_din_CableCheckReqType = -1;
+static gint ett_v2gdin_struct_din_CableCheckResType = -1;
+static gint ett_v2gdin_struct_din_PreChargeReqType = -1;
+static gint ett_v2gdin_struct_din_PreChargeResType = -1;
+static gint ett_v2gdin_struct_din_CurrentDemandReqType = -1;
+static gint ett_v2gdin_struct_din_CurrentDemandResType = -1;
+static gint ett_v2gdin_struct_din_WeldingDetectionReqType = -1;
+static gint ett_v2gdin_struct_din_WeldingDetectionResType = -1;
 
 static const value_string v2gdin_fault_code_names[] = {
-	{ dinfaultCodeType_ParsingError, "ParsingError" },
-	{ dinfaultCodeType_NoTLSRootCertificatAvailable,
+	{ din_faultCodeType_ParsingError, "ParsingError" },
+	{ din_faultCodeType_NoTLSRootCertificatAvailable,
 	  "NoTLSRootCertificatAvailable" },
-	{ dinfaultCodeType_UnknownError, "UnknownError" },
+	{ din_faultCodeType_UnknownError, "UnknownError" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_response_code_names[] = {
-	{ dinresponseCodeType_OK, "OK" },
-	{ dinresponseCodeType_OK_NewSessionEstablished,
+	{ din_responseCodeType_OK, "OK" },
+	{ din_responseCodeType_OK_NewSessionEstablished,
 	  "OK (NewSessionEstablished)" },
-	{ dinresponseCodeType_OK_OldSessionJoined,
+	{ din_responseCodeType_OK_OldSessionJoined,
 	  "OK (OldSessionJoined) " },
-	{ dinresponseCodeType_OK_CertificateExpiresSoon,
+	{ din_responseCodeType_OK_CertificateExpiresSoon,
 	  "OK (CertificateExpiresSoon)" },
-	{ dinresponseCodeType_FAILED, "FAILED" },
-	{ dinresponseCodeType_FAILED_SequenceError,
+	{ din_responseCodeType_FAILED, "FAILED" },
+	{ din_responseCodeType_FAILED_SequenceError,
 	  "FAILED (SequenceError)" },
-	{ dinresponseCodeType_FAILED_ServiceIDInvalid,
+	{ din_responseCodeType_FAILED_ServiceIDInvalid,
 	  "FAILED (ServiceIDInvalid)" },
-	{ dinresponseCodeType_FAILED_UnknownSession,
+	{ din_responseCodeType_FAILED_UnknownSession,
 	  "FAILED (UnknownSession)" },
-	{ dinresponseCodeType_FAILED_ServiceSelectionInvalid,
+	{ din_responseCodeType_FAILED_ServiceSelectionInvalid,
 	  "FAILED (ServiceSelectionInvalid)" },
-	{ dinresponseCodeType_FAILED_PaymentSelectionInvalid,
+	{ din_responseCodeType_FAILED_PaymentSelectionInvalid,
 	  "FAILED (PaymentSelectionInvalid)" },
-	{ dinresponseCodeType_FAILED_CertificateExpired,
+	{ din_responseCodeType_FAILED_CertificateExpired,
 	  "FAILED (CertificateExpired)" },
-	{ dinresponseCodeType_FAILED_SignatureError,
+	{ din_responseCodeType_FAILED_SignatureError,
 	  "FAILED (SignatureError)" },
-	{ dinresponseCodeType_FAILED_NoCertificateAvailable,
+	{ din_responseCodeType_FAILED_NoCertificateAvailable,
 	  "FAILED (NoCertificateAvailable)" },
-	{ dinresponseCodeType_FAILED_CertChainError,
+	{ din_responseCodeType_FAILED_CertChainError,
 	  "FAILED (CertChainError)" },
-	{ dinresponseCodeType_FAILED_ChallengeInvalid,
+	{ din_responseCodeType_FAILED_ChallengeInvalid,
 	  "FAILED (ChallengeInvalid)" },
-	{ dinresponseCodeType_FAILED_ContractCanceled,
+	{ din_responseCodeType_FAILED_ContractCanceled,
 	  "FAILED (ContractCanceled)" },
-	{ dinresponseCodeType_FAILED_WrongChargeParameter,
+	{ din_responseCodeType_FAILED_WrongChargeParameter,
 	  "FAILED (WrongChargeParameter)" },
-	{ dinresponseCodeType_FAILED_PowerDeliveryNotApplied,
+	{ din_responseCodeType_FAILED_PowerDeliveryNotApplied,
 	  "FAILED (PowerDeliveryNotApplied)" },
-	{ dinresponseCodeType_FAILED_TariffSelectionInvalid,
+	{ din_responseCodeType_FAILED_TariffSelectionInvalid,
 	  "FAILED (TariffSelectionInvalid)" },
-	{ dinresponseCodeType_FAILED_ChargingProfileInvalid,
+	{ din_responseCodeType_FAILED_ChargingProfileInvalid,
 	  "FAILED (ChargingProfileInvalid)" },
-	{ dinresponseCodeType_FAILED_EVSEPresentVoltageToLow,
+	{ din_responseCodeType_FAILED_EVSEPresentVoltageToLow,
 	  "FAILED (EVSEPresentVoltageToLow)" },
-	{ dinresponseCodeType_FAILED_MeteringSignatureNotValid,
+	{ din_responseCodeType_FAILED_MeteringSignatureNotValid,
 	  "FAILED (MeteringSignatureNotValid)" },
-	{ dinresponseCodeType_FAILED_WrongEnergyTransferType,
+	{ din_responseCodeType_FAILED_WrongEnergyTransferType,
 	  "FAILED (WrongEnergyTransferType)" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_service_category_names[] = {
-	{ dinserviceCategoryType_EVCharging, "EVCharging" },
-	{ dinserviceCategoryType_Internet, "Internet" },
-	{ dinserviceCategoryType_ContractCertificate, "ContractCertificate" },
-	{ dinserviceCategoryType_OtherCustom, "OtherCustom" },
+	{ din_serviceCategoryType_EVCharging, "EVCharging" },
+	{ din_serviceCategoryType_Internet, "Internet" },
+	{ din_serviceCategoryType_ContractCertificate, "ContractCertificate" },
+	{ din_serviceCategoryType_OtherCustom, "OtherCustom" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_payment_option_names[] = {
-	{ dinpaymentOptionType_Contract, "Contract" },
-	{ dinpaymentOptionType_ExternalPayment, "ExternalPayment" },
+	{ din_paymentOptionType_Contract, "Contract" },
+	{ din_paymentOptionType_ExternalPayment, "ExternalPayment" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_ev_requested_energy_transfer[] = {
-	{ dinEVRequestedEnergyTransferType_AC_single_phase_core,
+	{ din_EVRequestedEnergyTransferType_AC_single_phase_core,
 	  "AC_single_phase_core" },
-	{ dinEVRequestedEnergyTransferType_AC_three_phase_core,
+	{ din_EVRequestedEnergyTransferType_AC_three_phase_core,
 	  "AC_three_phase_core" },
-	{ dinEVRequestedEnergyTransferType_DC_core, "DC_core" },
-	{ dinEVRequestedEnergyTransferType_DC_extended, "DC_extended" },
-	{ dinEVRequestedEnergyTransferType_DC_combo_core, "DC_combo_core" },
-	{ dinEVRequestedEnergyTransferType_DC_unique, "DC_unique" },
+	{ din_EVRequestedEnergyTransferType_DC_core, "DC_core" },
+	{ din_EVRequestedEnergyTransferType_DC_extended, "DC_extended" },
+	{ din_EVRequestedEnergyTransferType_DC_combo_core, "DC_combo_core" },
+	{ din_EVRequestedEnergyTransferType_DC_unique, "DC_unique" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_evse_supported_energy_transfer_names[] = {
-	{ dinEVSESupportedEnergyTransferType_AC_single_phase_core,
+	{ din_EVSESupportedEnergyTransferType_AC_single_phase_core,
 	  "AC_single_phase_core" },
-	{ dinEVSESupportedEnergyTransferType_AC_three_phase_core,
+	{ din_EVSESupportedEnergyTransferType_AC_three_phase_core,
 	  "AC_three_phase_core" },
-	{ dinEVSESupportedEnergyTransferType_DC_core,
+	{ din_EVSESupportedEnergyTransferType_DC_core,
 	  "DC_core" },
-	{ dinEVSESupportedEnergyTransferType_DC_extended,
+	{ din_EVSESupportedEnergyTransferType_DC_extended,
 	  "DC_extended" },
-	{ dinEVSESupportedEnergyTransferType_DC_combo_core,
+	{ din_EVSESupportedEnergyTransferType_DC_combo_core,
 	  "DC_combo_core" },
-	{ dinEVSESupportedEnergyTransferType_DC_dual,
+	{ din_EVSESupportedEnergyTransferType_DC_dual,
 	  "DC_dual" },
-	{ dinEVSESupportedEnergyTransferType_AC_core1p_DC_extended,
+	{ din_EVSESupportedEnergyTransferType_AC_core1p_DC_extended,
 	  "AC_core1p_DC_extended" },
-	{ dinEVSESupportedEnergyTransferType_AC_single_DC_core,
+	{ din_EVSESupportedEnergyTransferType_AC_single_DC_core,
 	  "AC_single_DC_core" },
-	{ dinEVSESupportedEnergyTransferType_AC_single_phase_three_phase_core_DC_extended,
+	{ din_EVSESupportedEnergyTransferType_AC_single_phase_three_phase_core_DC_extended,
 	  "AC_single_phase_three_phase_core_DC_extended" },
-	{ dinEVSESupportedEnergyTransferType_AC_core3p_DC_extended,
+	{ din_EVSESupportedEnergyTransferType_AC_core3p_DC_extended,
 	  "AC_core3p_DC_extended" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_isolation_level_names[] = {
-	{ dinisolationLevelType_Invalid, "Invalid" },
-	{ dinisolationLevelType_Valid, "Valid" },
-	{ dinisolationLevelType_Warning, "Warning" },
-	{ dinisolationLevelType_Fault, "Fault" },
+	{ din_isolationLevelType_Invalid, "Invalid" },
+	{ din_isolationLevelType_Valid, "Valid" },
+	{ din_isolationLevelType_Warning, "Warning" },
+	{ din_isolationLevelType_Fault, "Fault" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_evse_processing_names[] = {
-	{ dinEVSEProcessingType_Finished, "Finished" },
-	{ dinEVSEProcessingType_Ongoing, "Ongoing" },
+	{ din_EVSEProcessingType_Finished, "Finished" },
+	{ din_EVSEProcessingType_Ongoing, "Ongoing" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_dc_everrorcode_names[] = {
-	{ dinDC_EVErrorCodeType_NO_ERROR, "NO ERROR" },
-	{ dinDC_EVErrorCodeType_FAILED_RESSTemperatureInhibit,
+	{ din_DC_EVErrorCodeType_NO_ERROR, "NO ERROR" },
+	{ din_DC_EVErrorCodeType_FAILED_RESSTemperatureInhibit,
 	  "FAILED (RESSTemperatureInhibit)" },
-	{ dinDC_EVErrorCodeType_FAILED_EVShiftPosition,
+	{ din_DC_EVErrorCodeType_FAILED_EVShiftPosition,
 	  "FAILED (EVShiftPosition)" },
-	{ dinDC_EVErrorCodeType_FAILED_ChargerConnectorLockFault,
+	{ din_DC_EVErrorCodeType_FAILED_ChargerConnectorLockFault,
 	  "FAILED (ChargerConnectorLockFault)" },
-	{ dinDC_EVErrorCodeType_FAILED_EVRESSMalfunction,
+	{ din_DC_EVErrorCodeType_FAILED_EVRESSMalfunction,
 	  "FAILED (EVRESSMalfunction)" },
-	{ dinDC_EVErrorCodeType_FAILED_ChargingCurrentdifferential,
+	{ din_DC_EVErrorCodeType_FAILED_ChargingCurrentdifferential,
 	  "FAILED (ChargingCurrentdifferential)" },
-	{ dinDC_EVErrorCodeType_FAILED_ChargingVoltageOutOfRange,
+	{ din_DC_EVErrorCodeType_FAILED_ChargingVoltageOutOfRange,
 	  "FAILED (ChargingVoltageOutOfRange)" },
-	{ dinDC_EVErrorCodeType_Reserved_A, "Reserved A" },
-	{ dinDC_EVErrorCodeType_Reserved_B, "Reserved B" },
-	{ dinDC_EVErrorCodeType_Reserved_C, "Reserved C" },
-	{ dinDC_EVErrorCodeType_FAILED_ChargingSystemIncompatibility,
+	{ din_DC_EVErrorCodeType_Reserved_A, "Reserved A" },
+	{ din_DC_EVErrorCodeType_Reserved_B, "Reserved B" },
+	{ din_DC_EVErrorCodeType_Reserved_C, "Reserved C" },
+	{ din_DC_EVErrorCodeType_FAILED_ChargingSystemIncompatibility,
 	  "FAILED (ChargingSystemIncompatibility)" },
-	{ dinDC_EVErrorCodeType_NoData, "NoData" },
+	{ din_DC_EVErrorCodeType_NoData, "NoData" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_dc_evsestatuscode_names[] = {
-	{ dinDC_EVSEStatusCodeType_EVSE_NotReady, "EVSE NotReady" },
-	{ dinDC_EVSEStatusCodeType_EVSE_Ready, "EVSE Ready" },
-	{ dinDC_EVSEStatusCodeType_EVSE_Shutdown, "EVSE Shutdown" },
-	{ dinDC_EVSEStatusCodeType_EVSE_UtilityInterruptEvent,
+	{ din_DC_EVSEStatusCodeType_EVSE_NotReady, "EVSE NotReady" },
+	{ din_DC_EVSEStatusCodeType_EVSE_Ready, "EVSE Ready" },
+	{ din_DC_EVSEStatusCodeType_EVSE_Shutdown, "EVSE Shutdown" },
+	{ din_DC_EVSEStatusCodeType_EVSE_UtilityInterruptEvent,
 	  "EVSE UtilityInterruptEvent" },
-	{ dinDC_EVSEStatusCodeType_EVSE_IsolationMonitoringActive,
+	{ din_DC_EVSEStatusCodeType_EVSE_IsolationMonitoringActive,
 	  "EVSE IsolationMonitoringActive" },
-	{ dinDC_EVSEStatusCodeType_EVSE_EmergencyShutdown,
+	{ din_DC_EVSEStatusCodeType_EVSE_EmergencyShutdown,
 	  "EVSE EmergencyShutdown" },
-	{ dinDC_EVSEStatusCodeType_EVSE_Malfunction,
+	{ din_DC_EVSEStatusCodeType_EVSE_Malfunction,
 	  "EVSE Malfunction" },
-	{ dinDC_EVSEStatusCodeType_Reserved_8, "Reserved 8" },
-	{ dinDC_EVSEStatusCodeType_Reserved_9, "Reserved 9" },
-	{ dinDC_EVSEStatusCodeType_Reserved_A, "Reserved A" },
-	{ dinDC_EVSEStatusCodeType_Reserved_B, "Reserved B" },
-	{ dinDC_EVSEStatusCodeType_Reserved_C, "Reserved C" },
+	{ din_DC_EVSEStatusCodeType_Reserved_8, "Reserved 8" },
+	{ din_DC_EVSEStatusCodeType_Reserved_9, "Reserved 9" },
+	{ din_DC_EVSEStatusCodeType_Reserved_A, "Reserved A" },
+	{ din_DC_EVSEStatusCodeType_Reserved_B, "Reserved B" },
+	{ din_DC_EVSEStatusCodeType_Reserved_C, "Reserved C" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_evsenotification_names[] = {
-	{ dinEVSENotificationType_None, "None" },
-	{ dinEVSENotificationType_StopCharging, "StopCharging" },
-	{ dinEVSENotificationType_ReNegotiation, "ReNegotiation" },
+	{ din_EVSENotificationType_None, "None" },
+	{ din_EVSENotificationType_StopCharging, "StopCharging" },
+	{ din_EVSENotificationType_ReNegotiation, "ReNegotiation" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_unitsymbol_names[] = {
-	{ dinunitSymbolType_h, "h" },
-	{ dinunitSymbolType_m, "m" },
-	{ dinunitSymbolType_s, "s" },
-	{ dinunitSymbolType_A, "A" },
-	{ dinunitSymbolType_Ah, "Ah" },
-	{ dinunitSymbolType_V, "V" },
-	{ dinunitSymbolType_VA, "VA" },
-	{ dinunitSymbolType_W, "W" },
-	{ dinunitSymbolType_W_s, "W_s" },
-	{ dinunitSymbolType_Wh, "Wh" },
+	{ din_unitSymbolType_h, "h" },
+	{ din_unitSymbolType_m, "m" },
+	{ din_unitSymbolType_s, "s" },
+	{ din_unitSymbolType_A, "A" },
+	{ din_unitSymbolType_Ah, "Ah" },
+	{ din_unitSymbolType_V, "V" },
+	{ din_unitSymbolType_VA, "VA" },
+	{ din_unitSymbolType_W, "W" },
+	{ din_unitSymbolType_W_s, "W_s" },
+	{ din_unitSymbolType_Wh, "Wh" },
 	{ 0, NULL }
 };
 
 static const value_string v2gdin_cost_kind_names[] = {
-	{ dincostKindType_relativePricePercentage, "relativePricePercentage" },
-	{ dincostKindType_RenewableGenerationPercentage,
+	{ din_costKindType_relativePricePercentage, "relativePricePercentage" },
+	{ din_costKindType_RenewableGenerationPercentage,
 	  "RenewableGenerationPercentage" },
-	{ dincostKindType_CarbonDioxideEmission, "CarbonDioxideEmission" },
+	{ din_costKindType_CarbonDioxideEmission, "CarbonDioxideEmission" },
 	{ 0, NULL }
 };
 
 
 static void
-dissect_v2gdin_notification(const struct dinNotificationType *notification,
+dissect_v2gdin_notification(const struct din_NotificationType *notification,
 			    tvbuff_t *tvb,
 			    packet_info *pinfo _U_,
 			    proto_tree *tree,
@@ -585,13 +584,13 @@ dissect_v2gdin_notification(const struct dinNotificationType *notification,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinNotificationType_FaultCode,
+		hf_v2gdin_struct_din_NotificationType_FaultCode,
 		tvb, 0, 0, notification->FaultCode);
 	proto_item_set_generated(it);
 
 	if (notification->FaultMsg_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinNotificationType_FaultMsg,
+			hf_v2gdin_struct_din_NotificationType_FaultMsg,
 			tvb,
 			notification->FaultMsg.characters,
 			notification->FaultMsg.charactersLen,
@@ -602,7 +601,7 @@ dissect_v2gdin_notification(const struct dinNotificationType *notification,
 }
 
 static void
-dissect_v2gdin_object(const struct dinObjectType *object,
+dissect_v2gdin_object(const struct din_ObjectType *object,
 		      tvbuff_t *tvb,
 		      packet_info *pinfo _U_,
 		      proto_tree *tree,
@@ -616,7 +615,7 @@ dissect_v2gdin_object(const struct dinObjectType *object,
 
 	if (object->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinObjectType_Id,
+			hf_v2gdin_struct_din_ObjectType_Id,
 			tvb,
 			object->Id.characters,
 			object->Id.charactersLen,
@@ -624,7 +623,7 @@ dissect_v2gdin_object(const struct dinObjectType *object,
 	}
 	if (object->MimeType_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinObjectType_MimeType,
+			hf_v2gdin_struct_din_ObjectType_MimeType,
 			tvb,
 			object->MimeType.characters,
 			object->MimeType.charactersLen,
@@ -632,103 +631,87 @@ dissect_v2gdin_object(const struct dinObjectType *object,
 	}
 	if (object->Encoding_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinObjectType_Encoding,
+			hf_v2gdin_struct_din_ObjectType_Encoding,
 			tvb,
 			object->Encoding.characters,
 			object->Encoding.charactersLen,
 			sizeof(object->Encoding.characters));
 	}
 	if (object->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinObjectType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_ObjectType_ANY,
 			tvb,
-			object->ANY.characters,
-			object->ANY.charactersLen,
-			sizeof(object->ANY.characters));
+			object->ANY.bytes,
+			object->ANY.bytesLen,
+			sizeof(object->ANY.bytes));
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_transform(const struct dinTransformType *transform,
+dissect_v2gdin_transform(const struct din_TransformType *transform,
 			 tvbuff_t *tvb,
 			 packet_info *pinfo _U_,
 			 proto_tree *tree,
 			 gint idx,
 			 const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *xpath_tree;
-	proto_tree *xpath_i_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinTransformType_Algorithm,
+		hf_v2gdin_struct_din_TransformType_Algorithm,
 		tvb,
 		transform->Algorithm.characters,
 		transform->Algorithm.charactersLen,
 		sizeof(transform->Algorithm.characters));
 
 	if (transform->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinTransformType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_TransformType_ANY,
 			tvb,
-			transform->ANY.characters,
-			transform->ANY.charactersLen,
-			sizeof(transform->ANY.characters));
+			transform->ANY.bytes,
+			transform->ANY.bytesLen,
+			sizeof(transform->ANY.bytes));
 	}
 
-	xpath_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "XPath");
-	for (i = 0; i < transform->XPath.arrayLen; i++) {
-		xpath_i_tree = proto_tree_add_subtree_format(xpath_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_characters(xpath_i_tree,
-			hf_v2gdin_struct_dinTransformType_XPath,
+	if (transform->XPath_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_din_TransformType_XPath,
 			tvb,
-			transform->XPath.array[i].characters,
-			transform->XPath.array[i].charactersLen,
-			sizeof(transform->XPath.array[i].characters));
+			transform->XPath.characters,
+			transform->XPath.charactersLen,
+			sizeof(transform->XPath.characters));
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_transforms(const struct dinTransformsType *transforms,
+dissect_v2gdin_transforms(const struct din_TransformsType *transforms,
 			  tvbuff_t *tvb,
 			  packet_info *pinfo,
 			  proto_tree *tree,
 			  gint idx,
 			  const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *transform_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	transform_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Transform");
-	for (i = 0; i < transforms->Transform.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_transform(&transforms->Transform.array[i],
-			tvb, pinfo, transform_tree,
-			ett_v2gdin_struct_dinTransformType, index);
-	}
+	dissect_v2gdin_transform(&transforms->Transform,
+		tvb, pinfo, subtree,
+		ett_v2gdin_struct_din_TransformType, "Transform");
 
 	return;
 }
 
 static void
-dissect_v2gdin_digestmethod(const struct dinDigestMethodType *digestmethod,
+dissect_v2gdin_digestmethod(const struct din_DigestMethodType *digestmethod,
 			    tvbuff_t *tvb,
 			    packet_info *pinfo _U_,
 			    proto_tree *tree,
@@ -741,26 +724,26 @@ dissect_v2gdin_digestmethod(const struct dinDigestMethodType *digestmethod,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinDigestMethodType_Algorithm,
+		hf_v2gdin_struct_din_DigestMethodType_Algorithm,
 		tvb,
 		digestmethod->Algorithm.characters,
 		digestmethod->Algorithm.charactersLen,
 		sizeof(digestmethod->Algorithm.characters));
 
 	if (digestmethod->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinDigestMethodType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_DigestMethodType_ANY,
 			tvb,
-			digestmethod->ANY.characters,
-			digestmethod->ANY.charactersLen,
-			sizeof(digestmethod->ANY.characters));
+			digestmethod->ANY.bytes,
+			digestmethod->ANY.bytesLen,
+			sizeof(digestmethod->ANY.bytes));
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_reference(const struct dinReferenceType *reference,
+dissect_v2gdin_reference(const struct din_ReferenceType *reference,
 			 tvbuff_t *tvb,
 			 packet_info *pinfo,
 			 proto_tree *tree,
@@ -774,7 +757,7 @@ dissect_v2gdin_reference(const struct dinReferenceType *reference,
 
 	if (reference->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinReferenceType_Id,
+			hf_v2gdin_struct_din_ReferenceType_Id,
 			tvb,
 			reference->Id.characters,
 			reference->Id.charactersLen,
@@ -782,7 +765,7 @@ dissect_v2gdin_reference(const struct dinReferenceType *reference,
 	}
 	if (reference->URI_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinReferenceType_URI,
+			hf_v2gdin_struct_din_ReferenceType_URI,
 			tvb,
 			reference->URI.characters,
 			reference->URI.charactersLen,
@@ -790,7 +773,7 @@ dissect_v2gdin_reference(const struct dinReferenceType *reference,
 	}
 	if (reference->Type_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinReferenceType_Type,
+			hf_v2gdin_struct_din_ReferenceType_Type,
 			tvb,
 			reference->Type.characters,
 			reference->Type.charactersLen,
@@ -799,17 +782,17 @@ dissect_v2gdin_reference(const struct dinReferenceType *reference,
 	if (reference->Transforms_isUsed) {
 		dissect_v2gdin_transforms(&reference->Transforms,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinTransformsType,
+			ett_v2gdin_struct_din_TransformsType,
 			"Transforms");
 	}
 
 	dissect_v2gdin_digestmethod(&reference->DigestMethod,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinDigestMethodType,
+			ett_v2gdin_struct_din_DigestMethodType,
 			"DigestMethod");
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinReferenceType_DigestValue,
+		hf_v2gdin_struct_din_ReferenceType_DigestValue,
 		tvb,
 		reference->DigestValue.bytes,
 		reference->DigestValue.bytesLen,
@@ -820,7 +803,7 @@ dissect_v2gdin_reference(const struct dinReferenceType *reference,
 
 static void
 dissect_v2gdin_canonicalizationmethod(
-	const struct dinCanonicalizationMethodType *canonicalizationmethod,
+	const struct din_CanonicalizationMethodType *canonicalizationmethod,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -833,19 +816,19 @@ dissect_v2gdin_canonicalizationmethod(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCanonicalizationMethodType_Algorithm,
+		hf_v2gdin_struct_din_CanonicalizationMethodType_Algorithm,
 		tvb,
 		canonicalizationmethod->Algorithm.characters,
 		canonicalizationmethod->Algorithm.charactersLen,
 		sizeof(canonicalizationmethod->Algorithm.characters));
 
 	if (canonicalizationmethod->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinCanonicalizationMethodType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_CanonicalizationMethodType_ANY,
 			tvb,
-			canonicalizationmethod->ANY.characters,
-			canonicalizationmethod->ANY.charactersLen,
-			sizeof(canonicalizationmethod->ANY.characters));
+			canonicalizationmethod->ANY.bytes,
+			canonicalizationmethod->ANY.bytesLen,
+			sizeof(canonicalizationmethod->ANY.bytes));
 	}
 
 	return;
@@ -853,7 +836,7 @@ dissect_v2gdin_canonicalizationmethod(
 
 static void
 dissect_v2gdin_signaturemethod(
-	const struct dinSignatureMethodType *signaturemethod,
+	const struct din_SignatureMethodType *signaturemethod,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -867,7 +850,7 @@ dissect_v2gdin_signaturemethod(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinSignatureMethodType_Algorithm,
+		hf_v2gdin_struct_din_SignatureMethodType_Algorithm,
 		tvb,
 		signaturemethod->Algorithm.characters,
 		signaturemethod->Algorithm.charactersLen,
@@ -875,18 +858,18 @@ dissect_v2gdin_signaturemethod(
 
 	if (signaturemethod->HMACOutputLength_isUsed) {
 		it = proto_tree_add_int64(subtree,
-			hf_v2gdin_struct_dinSignatureMethodType_HMACOutputLength,
+			hf_v2gdin_struct_din_SignatureMethodType_HMACOutputLength,
 			tvb, 0, 0, signaturemethod->HMACOutputLength);
 		proto_item_set_generated(it);
 	}
 
 	if (signaturemethod->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinSignatureMethodType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_SignatureMethodType_ANY,
 			tvb,
-			signaturemethod->ANY.characters,
-			signaturemethod->ANY.charactersLen,
-			sizeof(signaturemethod->ANY.characters));
+			signaturemethod->ANY.bytes,
+			signaturemethod->ANY.bytesLen,
+			sizeof(signaturemethod->ANY.bytes));
 	}
 
 	return;
@@ -894,7 +877,7 @@ dissect_v2gdin_signaturemethod(
 
 static void
 dissect_v2gdin_signaturevalue(
-	const struct dinSignatureValueType *signaturevalue,
+	const struct din_SignatureValueType *signaturevalue,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -908,7 +891,7 @@ dissect_v2gdin_signaturevalue(
 
 	if (signaturevalue->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinSignatureValueType_Id,
+			hf_v2gdin_struct_din_SignatureValueType_Id,
 			tvb,
 			signaturevalue->Id.characters,
 			signaturevalue->Id.charactersLen,
@@ -916,7 +899,7 @@ dissect_v2gdin_signaturevalue(
 	}
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinSignatureValueType_CONTENT,
+		hf_v2gdin_struct_din_SignatureValueType_CONTENT,
 		tvb,
 		signaturevalue->CONTENT.bytes,
 		signaturevalue->CONTENT.bytesLen,
@@ -926,23 +909,21 @@ dissect_v2gdin_signaturevalue(
 }
 
 static void
-dissect_v2gdin_signedinfo(const struct dinSignedInfoType *signedinfo,
+dissect_v2gdin_signedinfo(const struct din_SignedInfoType *signedinfo,
 			  tvbuff_t *tvb,
 			  packet_info *pinfo,
 			  proto_tree *tree,
 			  gint idx,
 			  const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *reference_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (signedinfo->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinSignedInfoType_Id,
+			hf_v2gdin_struct_din_SignedInfoType_Id,
 			tvb,
 			signedinfo->Id.characters,
 			signedinfo->Id.charactersLen,
@@ -952,30 +933,23 @@ dissect_v2gdin_signedinfo(const struct dinSignedInfoType *signedinfo,
 	dissect_v2gdin_canonicalizationmethod(
 		&signedinfo->CanonicalizationMethod,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinCanonicalizationMethodType,
+		ett_v2gdin_struct_din_CanonicalizationMethodType,
 		"CanonicalizationMethod");
 	dissect_v2gdin_signaturemethod(
 		&signedinfo->SignatureMethod,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinSignatureMethodType,
+		ett_v2gdin_struct_din_SignatureMethodType,
 		"SignatureMethod");
-
-	reference_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Reference");
-	for (i = 0; i < signedinfo->Reference.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_reference(&signedinfo->Reference.array[i],
-			tvb, pinfo, reference_tree,
-			ett_v2gdin_struct_dinReferenceType, index);
-	}
+	dissect_v2gdin_reference(&signedinfo->Reference,
+		tvb, pinfo, subtree,
+		ett_v2gdin_struct_din_ReferenceType,
+		"Reference");
 
 	return;
 }
 
 static void
-dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
+dissect_v2gdin_dsakeyvalue(const struct din_DSAKeyValueType *dsakeyvalue,
 			   tvbuff_t *tvb,
 			   packet_info *pinfo _U_,
 			   proto_tree *tree,
@@ -989,7 +963,7 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 
 	if (dsakeyvalue->P_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinDSAKeyValueType_P,
+			hf_v2gdin_struct_din_DSAKeyValueType_P,
 			tvb,
 			dsakeyvalue->P.bytes,
 			dsakeyvalue->P.bytesLen,
@@ -997,7 +971,7 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 	}
 	if (dsakeyvalue->Q_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinDSAKeyValueType_Q,
+			hf_v2gdin_struct_din_DSAKeyValueType_Q,
 			tvb,
 			dsakeyvalue->Q.bytes,
 			dsakeyvalue->Q.bytesLen,
@@ -1005,21 +979,21 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 	}
 	if (dsakeyvalue->G_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinDSAKeyValueType_G,
+			hf_v2gdin_struct_din_DSAKeyValueType_G,
 			tvb,
 			dsakeyvalue->G.bytes,
 			dsakeyvalue->G.bytesLen,
 			sizeof(dsakeyvalue->G.bytes));
 	}
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinDSAKeyValueType_Y,
+		hf_v2gdin_struct_din_DSAKeyValueType_Y,
 		tvb,
 		dsakeyvalue->Y.bytes,
 		dsakeyvalue->Y.bytesLen,
 		sizeof(dsakeyvalue->Y.bytes));
 	if (dsakeyvalue->J_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinDSAKeyValueType_J,
+			hf_v2gdin_struct_din_DSAKeyValueType_J,
 			tvb,
 			dsakeyvalue->J.bytes,
 			dsakeyvalue->J.bytesLen,
@@ -1027,7 +1001,7 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 	}
 	if (dsakeyvalue->Seed_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinDSAKeyValueType_Seed,
+			hf_v2gdin_struct_din_DSAKeyValueType_Seed,
 			tvb,
 			dsakeyvalue->Seed.bytes,
 			dsakeyvalue->Seed.bytesLen,
@@ -1035,7 +1009,7 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 	}
 	if (dsakeyvalue->PgenCounter_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinDSAKeyValueType_PgenCounter,
+			hf_v2gdin_struct_din_DSAKeyValueType_PgenCounter,
 			tvb,
 			dsakeyvalue->PgenCounter.bytes,
 			dsakeyvalue->PgenCounter.bytesLen,
@@ -1046,7 +1020,7 @@ dissect_v2gdin_dsakeyvalue(const struct dinDSAKeyValueType *dsakeyvalue,
 }
 
 static void
-dissect_v2gdin_rsakeyvalue(const struct dinRSAKeyValueType *rsakeyvalue,
+dissect_v2gdin_rsakeyvalue(const struct din_RSAKeyValueType *rsakeyvalue,
 			   tvbuff_t *tvb,
 			   packet_info *pinfo _U_,
 			   proto_tree *tree,
@@ -1059,14 +1033,14 @@ dissect_v2gdin_rsakeyvalue(const struct dinRSAKeyValueType *rsakeyvalue,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinRSAKeyValueType_Modulus,
+		hf_v2gdin_struct_din_RSAKeyValueType_Modulus,
 		tvb,
 		rsakeyvalue->Modulus.bytes,
 		rsakeyvalue->Modulus.bytesLen,
 		sizeof(rsakeyvalue->Modulus.bytes));
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinRSAKeyValueType_Exponent,
+		hf_v2gdin_struct_din_RSAKeyValueType_Exponent,
 		tvb,
 		rsakeyvalue->Exponent.bytes,
 		rsakeyvalue->Exponent.bytesLen,
@@ -1076,7 +1050,7 @@ dissect_v2gdin_rsakeyvalue(const struct dinRSAKeyValueType *rsakeyvalue,
 }
 
 static void
-dissect_v2gdin_keyvalue(const struct dinKeyValueType *keyvalue,
+dissect_v2gdin_keyvalue(const struct din_KeyValueType *keyvalue,
 			tvbuff_t *tvb,
 			packet_info *pinfo,
 			proto_tree *tree,
@@ -1091,29 +1065,29 @@ dissect_v2gdin_keyvalue(const struct dinKeyValueType *keyvalue,
 	if (keyvalue->DSAKeyValue_isUsed) {
 		dissect_v2gdin_dsakeyvalue(&keyvalue->DSAKeyValue,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinDSAKeyValueType,
+			ett_v2gdin_struct_din_DSAKeyValueType,
 			"DSAKeyValue");
 	}
 	if (keyvalue->RSAKeyValue_isUsed) {
 		dissect_v2gdin_rsakeyvalue(&keyvalue->RSAKeyValue,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinRSAKeyValueType,
+			ett_v2gdin_struct_din_RSAKeyValueType,
 			"RSAKeyValue");
 	}
 
-	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinKeyValueType_ANY,
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_din_KeyValueType_ANY,
 		tvb,
-		keyvalue->ANY.characters,
-		keyvalue->ANY.charactersLen,
-		sizeof(keyvalue->ANY.characters));
+		keyvalue->ANY.bytes,
+		keyvalue->ANY.bytesLen,
+		sizeof(keyvalue->ANY.bytes));
 
 	return;
 }
 
 static void
 dissect_v2gdin_retrievalmethod(
-	const struct dinRetrievalMethodType *retrievalmethod,
+	const struct din_RetrievalMethodType *retrievalmethod,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -1127,7 +1101,7 @@ dissect_v2gdin_retrievalmethod(
 
 	if (retrievalmethod->URI_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinRetrievalMethodType_URI,
+			hf_v2gdin_struct_din_RetrievalMethodType_URI,
 			tvb,
 			retrievalmethod->URI.characters,
 			retrievalmethod->URI.charactersLen,
@@ -1135,7 +1109,7 @@ dissect_v2gdin_retrievalmethod(
 	}
 	if (retrievalmethod->Type_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinRetrievalMethodType_Type,
+			hf_v2gdin_struct_din_RetrievalMethodType_Type,
 			tvb,
 			retrievalmethod->Type.characters,
 			retrievalmethod->Type.charactersLen,
@@ -1144,7 +1118,7 @@ dissect_v2gdin_retrievalmethod(
 	if (retrievalmethod->Transforms_isUsed) {
 		dissect_v2gdin_transforms(&retrievalmethod->Transforms,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinTransformsType,
+			ett_v2gdin_struct_din_TransformsType,
 			"Transforms");
 	}
 
@@ -1153,7 +1127,7 @@ dissect_v2gdin_retrievalmethod(
 
 static void
 dissect_v2gdin_x509issuerserial(
-	const struct dinX509IssuerSerialType *x509issuerserial,
+	const struct din_X509IssuerSerialType *x509issuerserial,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1167,14 +1141,14 @@ dissect_v2gdin_x509issuerserial(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinX509IssuerSerialType_X509IssuerName,
+		hf_v2gdin_struct_din_X509IssuerSerialType_X509IssuerName,
 		tvb,
 		x509issuerserial->X509IssuerName.characters,
 		x509issuerserial->X509IssuerName.charactersLen,
 		sizeof(x509issuerserial->X509IssuerName.characters));
 
 	it = proto_tree_add_int64(subtree,
-		hf_v2gdin_struct_dinX509IssuerSerialType_X509SerialNumber,
+		hf_v2gdin_struct_din_X509IssuerSerialType_X509SerialNumber,
 		tvb, 0, 0, x509issuerserial->X509SerialNumber);
 	proto_item_set_generated(it);
 
@@ -1182,108 +1156,76 @@ dissect_v2gdin_x509issuerserial(
 }
 
 static void
-dissect_v2gdin_x509data(const struct dinX509DataType *x509data,
+dissect_v2gdin_x509data(const struct din_X509DataType *x509data,
 			tvbuff_t *tvb,
 			packet_info *pinfo,
 			proto_tree *tree,
 			gint idx,
 			const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *x509issuerserial_tree;
-	proto_tree *x509ski_tree;
-	proto_tree *x509ski_i_tree;
-	proto_tree *x509subjectname_tree;
-	proto_tree *x509subjectname_i_tree;
-	proto_tree *x509certificate_tree;
-	proto_tree *x509certificate_i_tree;
-	proto_tree *x509crl_tree;
-	proto_tree *x509crl_i_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	x509issuerserial_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "X509IssuerSerial");
-	for (i = 0; i < x509data->X509IssuerSerial.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
+	if (x509data->X509IssuerSerial_isUsed) {
 		dissect_v2gdin_x509issuerserial(
-			&x509data->X509IssuerSerial.array[i],
-			tvb, pinfo, x509issuerserial_tree,
-			ett_v2gdin_struct_dinX509IssuerSerialType, index);
+			&x509data->X509IssuerSerial,
+			tvb, pinfo, subtree,
+			ett_v2gdin_struct_din_X509IssuerSerialType,
+			"X509IssuerSerial");
 	}
 
-	x509ski_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "X509SKI");
-	for (i = 0; i < x509data->X509SKI.arrayLen; i++) {
-		x509ski_i_tree = proto_tree_add_subtree_format(x509ski_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_bytes(x509ski_i_tree,
-			hf_v2gdin_struct_dinX509DataType_X509SKI,
+	if (x509data->X509SKI_isUsed) {
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_X509DataType_X509SKI,
 			tvb,
-			x509data->X509SKI.array[i].bytes,
-			x509data->X509SKI.array[i].bytesLen,
-			sizeof(x509data->X509SKI.array[i].bytes));
+			x509data->X509SKI.bytes,
+			x509data->X509SKI.bytesLen,
+			sizeof(x509data->X509SKI.bytes));
 	}
 
-	x509subjectname_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "X509SKI");
-	for (i = 0; i < x509data->X509SubjectName.arrayLen; i++) {
-		x509subjectname_i_tree = proto_tree_add_subtree_format(
-			x509subjectname_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_characters(x509subjectname_i_tree,
-			hf_v2gdin_struct_dinX509DataType_X509SubjectName,
+	if (x509data->X509SubjectName_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_din_X509DataType_X509SubjectName,
 			tvb,
-			x509data->X509SubjectName.array[i].characters,
-			x509data->X509SubjectName.array[i].charactersLen,
-			sizeof(x509data->X509SubjectName.array[i].characters));
+			x509data->X509SubjectName.characters,
+			x509data->X509SubjectName.charactersLen,
+			sizeof(x509data->X509SubjectName.characters));
 	}
 
-	x509certificate_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "X509SKI");
-	for (i = 0; i < x509data->X509Certificate.arrayLen; i++) {
-		x509certificate_i_tree = proto_tree_add_subtree_format(
-			x509certificate_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_bytes(x509certificate_i_tree,
-			hf_v2gdin_struct_dinX509DataType_X509Certificate,
+	if (x509data->X509Certificate_isUsed) {
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_X509DataType_X509Certificate,
 			tvb,
-			x509data->X509Certificate.array[i].bytes,
-			x509data->X509Certificate.array[i].bytesLen,
-			sizeof(x509data->X509Certificate.array[i].bytes));
+			x509data->X509Certificate.bytes,
+			x509data->X509Certificate.bytesLen,
+			sizeof(x509data->X509Certificate.bytes));
 	}
 
-	x509crl_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "X509CRL");
-	for (i = 0; i < x509data->X509CRL.arrayLen; i++) {
-		x509crl_i_tree = proto_tree_add_subtree_format(x509crl_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_bytes(x509crl_i_tree,
-			hf_v2gdin_struct_dinX509DataType_X509CRL,
+	if (x509data->X509CRL_isUsed) {
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_X509DataType_X509CRL,
 			tvb,
-			x509data->X509CRL.array[i].bytes,
-			x509data->X509CRL.array[i].bytesLen,
-			sizeof(x509data->X509CRL.array[i].bytes));
+			x509data->X509CRL.bytes,
+			x509data->X509CRL.bytesLen,
+			sizeof(x509data->X509CRL.bytes));
 	}
 
 	if (x509data->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinX509DataType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_X509DataType_ANY,
 			tvb,
-			x509data->ANY.characters,
-			x509data->ANY.charactersLen,
-			sizeof(x509data->ANY.characters));
+			x509data->ANY.bytes,
+			x509data->ANY.bytesLen,
+			sizeof(x509data->ANY.bytes));
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_pgpdata(const struct dinPGPDataType *pgpdata,
+dissect_v2gdin_pgpdata(const struct din_PGPDataType *pgpdata,
 		       tvbuff_t *tvb,
 		       packet_info *pinfo _U_,
 		       proto_tree *tree,
@@ -1295,225 +1237,190 @@ dissect_v2gdin_pgpdata(const struct dinPGPDataType *pgpdata,
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	if (pgpdata->PGPKeyID_isUsed) {
+	if (pgpdata->choice_1_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinPGPDataType_PGPKeyID,
+			hf_v2gdin_struct_din_PGPDataType_PGPKeyID,
 			tvb,
-			pgpdata->PGPKeyID.bytes,
-			pgpdata->PGPKeyID.bytesLen,
-			sizeof(pgpdata->PGPKeyID.bytes));
+			pgpdata->choice_1.PGPKeyID.bytes,
+			pgpdata->choice_1.PGPKeyID.bytesLen,
+			sizeof(pgpdata->choice_1.PGPKeyID.bytes));
+
+		if (pgpdata->choice_1.PGPKeyPacket_isUsed) {
+			exi_add_bytes(subtree,
+				hf_v2gdin_struct_din_PGPDataType_PGPKeyPacket,
+				tvb,
+				pgpdata->choice_1.PGPKeyPacket.bytes,
+				pgpdata->choice_1.PGPKeyPacket.bytesLen,
+				sizeof(pgpdata->choice_1.PGPKeyPacket.bytes));
+		}
+
+		if (pgpdata->choice_1.ANY_isUsed) {
+			exi_add_bytes(subtree,
+				hf_v2gdin_struct_din_PGPDataType_ANY,
+				tvb,
+				pgpdata->choice_1.ANY.bytes,
+				pgpdata->choice_1.ANY.bytesLen,
+				sizeof(pgpdata->choice_1.ANY.bytes));
+		}
 	}
 
-	if (pgpdata->PGPKeyPacket_isUsed) {
+	if (pgpdata->choice_2_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinPGPDataType_PGPKeyPacket,
+			hf_v2gdin_struct_din_PGPDataType_PGPKeyPacket,
 			tvb,
-			pgpdata->PGPKeyPacket.bytes,
-			pgpdata->PGPKeyPacket.bytesLen,
-			sizeof(pgpdata->PGPKeyPacket.bytes));
-	}
+			pgpdata->choice_2.PGPKeyPacket.bytes,
+			pgpdata->choice_2.PGPKeyPacket.bytesLen,
+			sizeof(pgpdata->choice_2.PGPKeyPacket.bytes));
 
-	if (pgpdata->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinPGPDataType_ANY,
-			tvb,
-			pgpdata->ANY.characters,
-			pgpdata->ANY.charactersLen,
-			sizeof(pgpdata->ANY.characters));
+		if (pgpdata->choice_2.ANY_isUsed) {
+			exi_add_bytes(subtree,
+				hf_v2gdin_struct_din_PGPDataType_ANY,
+				tvb,
+				pgpdata->choice_2.ANY.bytes,
+				pgpdata->choice_2.ANY.bytesLen,
+				sizeof(pgpdata->choice_2.ANY.bytes));
+		}
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_spkidata(const struct dinSPKIDataType *spkidata,
+dissect_v2gdin_spkidata(const struct din_SPKIDataType *spkidata,
 			tvbuff_t *tvb,
 			packet_info *pinfo _U_,
 			proto_tree *tree,
 			gint idx,
 			const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *spkisexp_tree;
-	proto_tree *spkisexp_i_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	spkisexp_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "SPKISexp");
-	for (i = 0; i < spkidata->SPKISexp.arrayLen; i++) {
-		spkisexp_i_tree = proto_tree_add_subtree_format(spkisexp_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_bytes(spkisexp_i_tree,
-			hf_v2gdin_struct_dinSPKIDataType_SPKISexp,
-			tvb,
-			spkidata->SPKISexp.array[i].bytes,
-			spkidata->SPKISexp.array[i].bytesLen,
-			sizeof(spkidata->SPKISexp.array[i].bytes));
-	}
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_din_SPKIDataType_SPKISexp,
+		tvb,
+		spkidata->SPKISexp.bytes,
+		spkidata->SPKISexp.bytesLen,
+		sizeof(spkidata->SPKISexp.bytes));
 
 	if (spkidata->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinSPKIDataType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_SPKIDataType_ANY,
 			tvb,
-			spkidata->ANY.characters,
-			spkidata->ANY.charactersLen,
-			sizeof(spkidata->ANY.characters));
+			spkidata->ANY.bytes,
+			spkidata->ANY.bytesLen,
+			sizeof(spkidata->ANY.bytes));
 	}
+
 	return;
 }
 
 static void
-dissect_v2gdin_keyinfo(const struct dinKeyInfoType *keyinfo,
+dissect_v2gdin_keyinfo(const struct din_KeyInfoType *keyinfo,
 		       tvbuff_t *tvb,
 		       packet_info *pinfo,
 		       proto_tree *tree,
 		       gint idx,
 		       const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *keyname_tree;
-	proto_tree *keyname_i_tree;
-	proto_tree *keyvalue_tree;
-	proto_tree *retrievalmethod_tree;
-	proto_tree *x509data_tree;
-	proto_tree *pgpdata_tree;
-	proto_tree *spkidata_tree;
-	proto_tree *mgmtdata_tree;
-	proto_tree *mgmtdata_i_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (keyinfo->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinKeyInfoType_Id,
+			hf_v2gdin_struct_din_KeyInfoType_Id,
 			tvb,
 			keyinfo->Id.characters,
 			keyinfo->Id.charactersLen,
 			sizeof(keyinfo->Id.characters));
 	}
 
-	keyname_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "KeyName");
-	for (i = 0; i < keyinfo->KeyName.arrayLen; i++) {
-		keyname_i_tree = proto_tree_add_subtree_format(keyname_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_characters(keyname_i_tree,
-			hf_v2gdin_struct_dinKeyInfoType_KeyName,
+	if (keyinfo->KeyName_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_din_KeyInfoType_KeyName,
 			tvb,
-			keyinfo->KeyName.array[i].characters,
-			keyinfo->KeyName.array[i].charactersLen,
-			sizeof(keyinfo->KeyName.array[i].characters));
+			keyinfo->KeyName.characters,
+			keyinfo->KeyName.charactersLen,
+			sizeof(keyinfo->KeyName.characters));
 	}
 
-	keyvalue_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "KeyValue");
-	for (i = 0; i < keyinfo->KeyValue.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_keyvalue(&keyinfo->KeyValue.array[i],
-					tvb, pinfo, keyvalue_tree,
-					ett_v2gdin_struct_dinKeyValueType,
-					index);
+	if (keyinfo->KeyValue_isUsed) {
+		dissect_v2gdin_keyvalue(&keyinfo->KeyValue,
+					tvb, pinfo, subtree,
+					ett_v2gdin_struct_din_KeyValueType,
+					"KeyValue");
 	}
 
-	retrievalmethod_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "RetrievalMethod");
-	for (i = 0; i < keyinfo->RetrievalMethod.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
+	if (keyinfo->RetrievalMethod_isUsed) {
 		dissect_v2gdin_retrievalmethod(
-			&keyinfo->RetrievalMethod.array[i],
-			tvb, pinfo, retrievalmethod_tree,
-			ett_v2gdin_struct_dinRetrievalMethodType,
-			index);
+			&keyinfo->RetrievalMethod,
+			tvb, pinfo, subtree,
+			ett_v2gdin_struct_din_RetrievalMethodType,
+			"RetrievalMethod");
 	}
 
-	x509data_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "X509Data");
-	for (i = 0; i < keyinfo->X509Data.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_x509data(&keyinfo->X509Data.array[i],
-					tvb, pinfo, x509data_tree,
-					ett_v2gdin_struct_dinX509DataType,
-					index);
+	if (keyinfo->X509Data_isUsed) {
+		dissect_v2gdin_x509data(&keyinfo->X509Data,
+					tvb, pinfo, subtree,
+					ett_v2gdin_struct_din_X509DataType,
+					"X509Data");
 	}
 
-	pgpdata_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "PGPData");
-	for (i = 0; i < keyinfo->PGPData.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_pgpdata(&keyinfo->PGPData.array[i],
-				       tvb, pinfo, pgpdata_tree,
-				       ett_v2gdin_struct_dinPGPDataType,
-				       index);
+	if (keyinfo->PGPData_isUsed) {
+		dissect_v2gdin_pgpdata(&keyinfo->PGPData,
+				       tvb, pinfo, subtree,
+				       ett_v2gdin_struct_din_PGPDataType,
+				       "PGPData");
 	}
 
-	spkidata_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "SPKIData");
-	for (i = 0; i < keyinfo->SPKIData.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_spkidata(&keyinfo->SPKIData.array[i],
-					tvb, pinfo, spkidata_tree,
-					ett_v2gdin_struct_dinSPKIDataType,
-					index);
+	if (keyinfo->SPKIData_isUsed) {
+		dissect_v2gdin_spkidata(&keyinfo->SPKIData,
+					tvb, pinfo, subtree,
+					ett_v2gdin_struct_din_SPKIDataType,
+					"SPKIData");
 	}
 
-	mgmtdata_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "MgmtData");
-	for (i = 0; i < keyinfo->MgmtData.arrayLen; i++) {
-		mgmtdata_i_tree = proto_tree_add_subtree_format(mgmtdata_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_characters(mgmtdata_i_tree,
-			hf_v2gdin_struct_dinKeyInfoType_MgmtData,
+	if (keyinfo->MgmtData_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2gdin_struct_din_KeyInfoType_MgmtData,
 			tvb,
-			keyinfo->MgmtData.array[i].characters,
-			keyinfo->MgmtData.array[i].charactersLen,
-			sizeof(keyinfo->MgmtData.array[i].characters));
+			keyinfo->MgmtData.characters,
+			keyinfo->MgmtData.charactersLen,
+			sizeof(keyinfo->MgmtData.characters));
 	}
 
 	if (keyinfo->ANY_isUsed) {
-		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinKeyInfoType_ANY,
+		exi_add_bytes(subtree,
+			hf_v2gdin_struct_din_KeyInfoType_ANY,
 			tvb,
-			keyinfo->ANY.characters,
-			keyinfo->ANY.charactersLen,
-			sizeof(keyinfo->ANY.characters));
+			keyinfo->ANY.bytes,
+			keyinfo->ANY.bytesLen,
+			sizeof(keyinfo->ANY.bytes));
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_signature(const struct dinSignatureType *signature,
+dissect_v2gdin_signature(const struct din_SignatureType *signature,
 			 tvbuff_t *tvb,
 			 packet_info *pinfo,
 			 proto_tree *tree,
 			 gint idx,
 			 const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *object_tree;
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	if (signature->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinSignatureType_Id,
+			hf_v2gdin_struct_din_SignatureType_Id,
 			tvb,
 			signature->Id.characters,
 			signature->Id.charactersLen,
@@ -1522,27 +1429,22 @@ dissect_v2gdin_signature(const struct dinSignatureType *signature,
 
 	dissect_v2gdin_signedinfo(&signature->SignedInfo,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinSignedInfoType, "SignedInfo");
+		ett_v2gdin_struct_din_SignedInfoType, "SignedInfo");
 	dissect_v2gdin_signaturevalue(&signature->SignatureValue,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinSignatureValueType,
+		ett_v2gdin_struct_din_SignatureValueType,
 		"SignatureValue");
 
 	if (signature->KeyInfo_isUsed) {
 		dissect_v2gdin_keyinfo(&signature->KeyInfo,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinKeyInfoType, "KeyInfo");
+			ett_v2gdin_struct_din_KeyInfoType, "KeyInfo");
 	}
 
-	object_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Object");
-	for (i = 0; i < signature->Object.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_object(&signature->Object.array[i],
-			tvb, pinfo, object_tree,
-			ett_v2gdin_struct_dinObjectType, index);
+	if (signature->Object_isUsed) {
+		dissect_v2gdin_object(&signature->Object,
+			tvb, pinfo, subtree,
+			ett_v2gdin_struct_din_ObjectType, "Object");
 	}
 
 	return;
@@ -1550,7 +1452,7 @@ dissect_v2gdin_signature(const struct dinSignatureType *signature,
 
 static void
 dissect_v2gdin_paymentoptions(
-	const struct dinPaymentOptionsType *paymentoptions,
+	const struct din_PaymentOptionsType *paymentoptions,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1577,7 +1479,7 @@ dissect_v2gdin_paymentoptions(
 			ett_v2gdin_array_i, NULL, index);
 
 		it = proto_tree_add_uint(paymentoption_i_tree,
-			hf_v2gdin_struct_dinPaymentOptionsType_PaymentOption,
+			hf_v2gdin_struct_din_PaymentOptionsType_PaymentOption,
 			tvb, 0, 0,
 			paymentoptions->PaymentOption.array[i]);
 		proto_item_set_generated(it);
@@ -1587,7 +1489,7 @@ dissect_v2gdin_paymentoptions(
 }
 
 static void
-dissect_v2gdin_servicetag(const struct dinServiceTagType *servicetag,
+dissect_v2gdin_servicetag(const struct din_ServiceTagType *servicetag,
 			  tvbuff_t *tvb,
 			  packet_info *pinfo _U_,
 			  proto_tree *tree,
@@ -1601,13 +1503,13 @@ dissect_v2gdin_servicetag(const struct dinServiceTagType *servicetag,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceTagType_ServiceID, tvb, 0, 0,
+		hf_v2gdin_struct_din_ServiceTagType_ServiceID, tvb, 0, 0,
 		servicetag->ServiceID);
 	proto_item_set_generated(it);
 
 	if (servicetag->ServiceName_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinServiceTagType_ServiceName,
+			hf_v2gdin_struct_din_ServiceTagType_ServiceName,
 			tvb,
 			servicetag->ServiceName.characters,
 			servicetag->ServiceName.charactersLen,
@@ -1615,13 +1517,13 @@ dissect_v2gdin_servicetag(const struct dinServiceTagType *servicetag,
 	}
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceTagType_ServiceCategory, tvb, 0, 0,
+		hf_v2gdin_struct_din_ServiceTagType_ServiceCategory, tvb, 0, 0,
 		servicetag->ServiceCategory);
 	proto_item_set_generated(it);
 
 	if (servicetag->ServiceScope_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinServiceTagType_ServiceScope,
+			hf_v2gdin_struct_din_ServiceTagType_ServiceScope,
 			tvb,
 			servicetag->ServiceScope.characters,
 			servicetag->ServiceScope.charactersLen,
@@ -1632,7 +1534,7 @@ dissect_v2gdin_servicetag(const struct dinServiceTagType *servicetag,
 }
 
 static void
-dissect_v2gdin_servicecharge(const struct dinServiceChargeType *servicecharge,
+dissect_v2gdin_servicecharge(const struct din_ServiceChargeType *servicecharge,
 			     tvbuff_t *tvb,
 			     packet_info *pinfo,
 			     proto_tree *tree,
@@ -1647,16 +1549,16 @@ dissect_v2gdin_servicecharge(const struct dinServiceChargeType *servicecharge,
 
 	dissect_v2gdin_servicetag(&servicecharge->ServiceTag,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinServiceTagType,
+		ett_v2gdin_struct_din_ServiceTagType,
 		"ServiceTag");
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinServiceChargeType_FreeService,
+		hf_v2gdin_struct_din_ServiceChargeType_FreeService,
 		tvb, 0, 0, servicecharge->FreeService);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceChargeType_EnergyTransferType,
+		hf_v2gdin_struct_din_ServiceChargeType_EnergyTransferType,
 		tvb, 0, 0, servicecharge->EnergyTransferType);
 	proto_item_set_generated(it);
 
@@ -1664,7 +1566,7 @@ dissect_v2gdin_servicecharge(const struct dinServiceChargeType *servicecharge,
 }
 
 static void
-dissect_v2gdin_service(const struct dinServiceType *service,
+dissect_v2gdin_service(const struct din_ServiceType *service,
 		       tvbuff_t *tvb,
 		       packet_info *pinfo,
 		       proto_tree *tree,
@@ -1679,11 +1581,11 @@ dissect_v2gdin_service(const struct dinServiceType *service,
 
 	dissect_v2gdin_servicetag(&service->ServiceTag,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinServiceTagType,
+		ett_v2gdin_struct_din_ServiceTagType,
 		"ServiceTag");
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinServiceType_FreeService, tvb, 0, 0,
+		hf_v2gdin_struct_din_ServiceType_FreeService, tvb, 0, 0,
 		service->FreeService);
 	proto_item_set_generated(it);
 
@@ -1692,38 +1594,29 @@ dissect_v2gdin_service(const struct dinServiceType *service,
 
 static void
 dissect_v2gdin_servicetaglist(
-	const struct dinServiceTagListType *servicetaglist,
+	const struct din_ServiceTagListType *servicetaglist,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *service_tree;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
-	service_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Service");
-	for (i = 0; i < servicetaglist->Service.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_service(
-			&servicetaglist->Service.array[i],
-			tvb, pinfo, service_tree,
-			ett_v2gdin_struct_dinServiceType, index);
-	}
+	dissect_v2gdin_service(
+		&servicetaglist->Service,
+		tvb, pinfo, subtree,
+		ett_v2gdin_struct_din_ServiceType, "Service");
 
 	return;
 }
 
 static inline double
 v2gdin_physicalvalue_to_double(
-	const struct dinPhysicalValueType *physicalvalue)
+	const struct din_PhysicalValueType *physicalvalue)
 {
 	double value;
 	int32_t multiplier;
@@ -1745,7 +1638,7 @@ v2gdin_physicalvalue_to_double(
 }
 
 static void
-dissect_v2gdin_physicalvalue(const struct dinPhysicalValueType *physicalvalue,
+dissect_v2gdin_physicalvalue(const struct din_PhysicalValueType *physicalvalue,
 			     tvbuff_t *tvb,
 			     packet_info *pinfo _U_,
 			     proto_tree *tree,
@@ -1759,19 +1652,19 @@ dissect_v2gdin_physicalvalue(const struct dinPhysicalValueType *physicalvalue,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinPhysicalValueType_Multiplier,
+		hf_v2gdin_struct_din_PhysicalValueType_Multiplier,
 		tvb, 0, 0, physicalvalue->Multiplier);
 	proto_item_set_generated(it);
 
 	if (physicalvalue->Unit_isUsed) {
 		it = proto_tree_add_uint(subtree,
-			hf_v2gdin_struct_dinPhysicalValueType_Unit,
+			hf_v2gdin_struct_din_PhysicalValueType_Unit,
 			tvb, 0, 0, physicalvalue->Unit);
 		proto_item_set_generated(it);
 	}
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinPhysicalValueType_Value,
+		hf_v2gdin_struct_din_PhysicalValueType_Value,
 		tvb, 0, 0, physicalvalue->Value);
 	proto_item_set_generated(it);
 
@@ -1780,7 +1673,7 @@ dissect_v2gdin_physicalvalue(const struct dinPhysicalValueType *physicalvalue,
 
 static void
 dissect_v2gdin_parameter(
-	const struct dinParameterType *parameter,
+	const struct din_ParameterType *parameter,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -1794,50 +1687,50 @@ dissect_v2gdin_parameter(
 		idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinParameterType_Name,
+		hf_v2gdin_struct_din_ParameterType_Name,
 		tvb,
 		parameter->Name.characters,
 		parameter->Name.charactersLen,
 		sizeof(parameter->Name.characters));
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinParameterType_ValueType,
+		hf_v2gdin_struct_din_ParameterType_ValueType,
 		tvb, 0, 0, parameter->ValueType);
 	proto_item_set_generated(it);
 
 	if (parameter->boolValue_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinParameterType_boolValue,
+			hf_v2gdin_struct_din_ParameterType_boolValue,
 			tvb, 0, 0, parameter->boolValue);
 		proto_item_set_generated(it);
 	}
 	if (parameter->byteValue_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinParameterType_byteValue,
+			hf_v2gdin_struct_din_ParameterType_byteValue,
 			tvb, 0, 0, parameter->byteValue);
 		proto_item_set_generated(it);
 	}
 	if (parameter->shortValue_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinParameterType_shortValue,
+			hf_v2gdin_struct_din_ParameterType_shortValue,
 			tvb, 0, 0, parameter->shortValue);
 		proto_item_set_generated(it);
 	}
 	if (parameter->intValue_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinParameterType_intValue,
+			hf_v2gdin_struct_din_ParameterType_intValue,
 			tvb, 0, 0, parameter->intValue);
 		proto_item_set_generated(it);
 	}
 	if (parameter->physicalValue_isUsed) {
 		dissect_v2gdin_physicalvalue(&parameter->physicalValue,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"physicalValue");
 	}
 	if (parameter->stringValue_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinParameterType_stringValue,
+			hf_v2gdin_struct_din_ParameterType_stringValue,
 			tvb,
 			parameter->stringValue.characters,
 			parameter->stringValue.charactersLen,
@@ -1849,44 +1742,35 @@ dissect_v2gdin_parameter(
 
 static void
 dissect_v2gdin_parameterset(
-	const struct dinParameterSetType *parameterset,
+	const struct din_ParameterSetType *parameterset,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *parameter_tree;
 	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinParameterSetType_ParameterSetID,
+		hf_v2gdin_struct_din_ParameterSetType_ParameterSetID,
 		tvb, 0, 0, parameterset->ParameterSetID);
 	proto_item_set_generated(it);
 
-	parameter_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Parameter");
-	for (i = 0; i < parameterset->Parameter.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2gdin_parameter(
-			&parameterset->Parameter.array[i],
-			tvb, pinfo, parameter_tree,
-			ett_v2gdin_struct_dinParameterType, index);
-	}
+	dissect_v2gdin_parameter(
+		&parameterset->Parameter,
+		tvb, pinfo, subtree,
+		ett_v2gdin_struct_din_ParameterType, "Parameter");
 
 	return;
 }
 
 static void
 dissect_v2gdin_serviceparameterlist(
-	const struct dinServiceParameterListType *serviceparameterlist,
+	const struct din_ServiceParameterListType *serviceparameterlist,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -1909,7 +1793,7 @@ dissect_v2gdin_serviceparameterlist(
 		dissect_v2gdin_parameterset(
 			&serviceparameterlist->ParameterSet.array[i],
 			tvb, pinfo, parameterset_tree,
-			ett_v2gdin_struct_dinParameterSetType, index);
+			ett_v2gdin_struct_din_ParameterSetType, index);
 	}
 
 	return;
@@ -1917,7 +1801,7 @@ dissect_v2gdin_serviceparameterlist(
 
 static void
 dissect_v2gdin_selectedservice(
-	const struct dinSelectedServiceType *selectedservice,
+	const struct din_SelectedServiceType *selectedservice,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1931,13 +1815,13 @@ dissect_v2gdin_selectedservice(
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinSelectedServiceType_ServiceID,
+		hf_v2gdin_struct_din_SelectedServiceType_ServiceID,
 		tvb, 0, 0, selectedservice->ServiceID);
 	proto_item_set_generated(it);
 
 	if (selectedservice->ParameterSetID_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinSelectedServiceType_ParameterSetID,
+			hf_v2gdin_struct_din_SelectedServiceType_ParameterSetID,
 			tvb, 0, 0, selectedservice->ParameterSetID);
 		proto_item_set_generated(it);
 	}
@@ -1947,7 +1831,7 @@ dissect_v2gdin_selectedservice(
 
 static void
 dissect_v2gdin_selectedservicelist(
-	const struct dinSelectedServiceListType *selectedservicelist,
+	const struct din_SelectedServiceListType *selectedservicelist,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -1970,7 +1854,7 @@ dissect_v2gdin_selectedservicelist(
 		dissect_v2gdin_selectedservice(
 			&selectedservicelist->SelectedService.array[i],
 			tvb, pinfo, selectedservicelist_tree,
-			ett_v2gdin_struct_dinSelectedServiceType, index);
+			ett_v2gdin_struct_din_SelectedServiceType, index);
 	}
 
 	return;
@@ -1978,41 +1862,31 @@ dissect_v2gdin_selectedservicelist(
 
 static void
 dissect_v2gdin_subcertificates(
-	const struct dinSubCertificatesType *subcertificates,
+	const struct din_SubCertificatesType *subcertificates,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *certificate_tree;
-	proto_tree *certificate_i_tree;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
-	certificate_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Certificate");
-	for (i = 0; i < subcertificates->Certificate.arrayLen; i++) {
-		certificate_i_tree = proto_tree_add_subtree_format(
-			certificate_tree,
-			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
-		exi_add_bytes(certificate_i_tree,
-			hf_v2gdin_struct_dinSubCertificatesType_Certificate,
-			tvb,
-			subcertificates->Certificate.array[i].bytes,
-			subcertificates->Certificate.array[i].bytesLen,
-			sizeof(subcertificates->Certificate.array[i].bytes));
-	}
+	exi_add_bytes(subtree,
+		hf_v2gdin_struct_din_SubCertificatesType_Certificate,
+		tvb,
+		subcertificates->Certificate.bytes,
+		subcertificates->Certificate.bytesLen,
+		sizeof(subcertificates->Certificate.bytes));
 
 	return;
 }
 
 static void
 dissect_v2gdin_certificatechain(
-	const struct dinCertificateChainType *certificatechain,
+	const struct din_CertificateChainType *certificatechain,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2025,7 +1899,7 @@ dissect_v2gdin_certificatechain(
 		idx, NULL, subtree_name);
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateChainType_Certificate,
+		hf_v2gdin_struct_din_CertificateChainType_Certificate,
 		tvb,
 		certificatechain->Certificate.bytes,
 		certificatechain->Certificate.bytesLen,
@@ -2035,7 +1909,7 @@ dissect_v2gdin_certificatechain(
 		dissect_v2gdin_subcertificates(
 			&certificatechain->SubCertificates,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinSubCertificatesType,
+			ett_v2gdin_struct_din_SubCertificatesType,
 			"SubCertificates");
 	}
 
@@ -2044,7 +1918,7 @@ dissect_v2gdin_certificatechain(
 
 static void
 dissect_v2gdin_listofrootcertificateids(
-	const struct dinListOfRootCertificateIDsType *listofrootcertificateids,
+	const struct din_ListOfRootCertificateIDsType *listofrootcertificateids,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -2066,7 +1940,7 @@ dissect_v2gdin_listofrootcertificateids(
 			rootcertificateid_tree,
 			tvb, 0, 0, ett_v2gdin_array_i, NULL, "[%u]", i);
 		exi_add_characters(rootcertificateid_i_tree,
-			hf_v2gdin_struct_dinListOfRootCertificateIDsType_RootCertificateID,
+			hf_v2gdin_struct_din_ListOfRootCertificateIDsType_RootCertificateID,
 			tvb,
 			listofrootcertificateids->RootCertificateID.array[i].characters,
 			listofrootcertificateids->RootCertificateID.array[i].charactersLen,
@@ -2078,7 +1952,7 @@ dissect_v2gdin_listofrootcertificateids(
 
 static void
 dissect_v2gdin_evchargeparameter(
-	const struct dinEVChargeParameterType *evchargeparameter _U_,
+	const struct din_EVChargeParameterType *evchargeparameter _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -2091,7 +1965,7 @@ dissect_v2gdin_evchargeparameter(
 
 static void
 dissect_v2gdin_ac_evchargeparameter(
-	const struct dinAC_EVChargeParameterType *ac_evchargeparameter,
+	const struct din_AC_EVChargeParameterType *ac_evchargeparameter,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2105,31 +1979,31 @@ dissect_v2gdin_ac_evchargeparameter(
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinAC_EVChargeParameterType_DepartureTime,
+		hf_v2gdin_struct_din_AC_EVChargeParameterType_DepartureTime,
 		tvb, 0, 0, ac_evchargeparameter->DepartureTime);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EAmount,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EAmount");
+		ett_v2gdin_struct_din_PhysicalValueType, "EAmount");
 
 	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EVMaxVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EVMaxVoltage");
+		ett_v2gdin_struct_din_PhysicalValueType, "EVMaxVoltage");
 
 	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EVMaxCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EVMaxCurrent");
+		ett_v2gdin_struct_din_PhysicalValueType, "EVMaxCurrent");
 
 	dissect_v2gdin_physicalvalue(&ac_evchargeparameter->EVMinCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EVMinCurrent");
+		ett_v2gdin_struct_din_PhysicalValueType, "EVMinCurrent");
 
 	return;
 }
 
 static void
-dissect_v2gdin_dc_evstatus(const struct dinDC_EVStatusType *dc_evstatus,
+dissect_v2gdin_dc_evstatus(const struct din_DC_EVStatusType *dc_evstatus,
 			   tvbuff_t *tvb,
 			   packet_info *pinfo _U_,
 			   proto_tree *tree,
@@ -2143,31 +2017,31 @@ dissect_v2gdin_dc_evstatus(const struct dinDC_EVStatusType *dc_evstatus,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinDC_EVStatusType_EVReady,
+		hf_v2gdin_struct_din_DC_EVStatusType_EVReady,
 		tvb, 0, 0, dc_evstatus->EVReady);
 	proto_item_set_generated(it);
 
 	if (dc_evstatus->EVCabinConditioning_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinDC_EVStatusType_EVCabinConditioning,
+			hf_v2gdin_struct_din_DC_EVStatusType_EVCabinConditioning,
 			tvb, 0, 0, dc_evstatus->EVCabinConditioning);
 		proto_item_set_generated(it);
 	}
 
 	if (dc_evstatus->EVRESSConditioning_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinDC_EVStatusType_EVRESSConditioning,
+			hf_v2gdin_struct_din_DC_EVStatusType_EVRESSConditioning,
 			tvb, 0, 0, dc_evstatus->EVRESSConditioning);
 		proto_item_set_generated(it);
 	}
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinDC_EVStatusType_EVErrorCode,
+		hf_v2gdin_struct_din_DC_EVStatusType_EVErrorCode,
 		tvb, 0, 0, dc_evstatus->EVErrorCode);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinDC_EVStatusType_EVRESSSOC,
+		hf_v2gdin_struct_din_DC_EVStatusType_EVRESSSOC,
 		tvb, 0, 0, dc_evstatus->EVRESSSOC);
 	proto_item_set_generated(it);
 
@@ -2176,7 +2050,7 @@ dissect_v2gdin_dc_evstatus(const struct dinDC_EVStatusType *dc_evstatus,
 
 static void
 dissect_v2gdin_dc_evchargeparameter(
-	const struct dinDC_EVChargeParameterType *dc_evchargeparameter,
+	const struct din_DC_EVChargeParameterType *dc_evchargeparameter,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2192,13 +2066,13 @@ dissect_v2gdin_dc_evchargeparameter(
 
 	dissect_v2gdin_dc_evstatus(&dc_evchargeparameter->DC_EVStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVStatusType,
+		ett_v2gdin_struct_din_DC_EVStatusType,
 		"DC_EVStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evchargeparameter->EVMaximumVoltageLimit,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVMaximumVoltageLimit");
 	value = v2gdin_physicalvalue_to_double(
 		&dc_evchargeparameter->EVMaximumVoltageLimit);
@@ -2210,7 +2084,7 @@ dissect_v2gdin_dc_evchargeparameter(
 	dissect_v2gdin_physicalvalue(
 		&dc_evchargeparameter->EVMaximumCurrentLimit,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVMaximumCurrentLimit");
 	value = v2gdin_physicalvalue_to_double(
 		&dc_evchargeparameter->EVMaximumCurrentLimit);
@@ -2223,7 +2097,7 @@ dissect_v2gdin_dc_evchargeparameter(
 		dissect_v2gdin_physicalvalue(
 			&dc_evchargeparameter->EVMaximumPowerLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVMaximumPowerLimit");
 		value = v2gdin_physicalvalue_to_double(
 			&dc_evchargeparameter->EVMaximumPowerLimit);
@@ -2237,7 +2111,7 @@ dissect_v2gdin_dc_evchargeparameter(
 		dissect_v2gdin_physicalvalue(
 			&dc_evchargeparameter->EVEnergyCapacity,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVEnergyCapacity");
 	}
 
@@ -2245,20 +2119,20 @@ dissect_v2gdin_dc_evchargeparameter(
 		dissect_v2gdin_physicalvalue(
 			&dc_evchargeparameter->EVEnergyRequest,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVEnergyRequest");
 	}
 
 	if (dc_evchargeparameter->FullSOC_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinDC_EVChargeParameterType_FullSOC,
+			hf_v2gdin_struct_din_DC_EVChargeParameterType_FullSOC,
 			tvb, 0, 0, dc_evchargeparameter->FullSOC);
 		proto_item_set_generated(it);
 	}
 
 	if (dc_evchargeparameter->BulkSOC_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinDC_EVChargeParameterType_BulkSOC,
+			hf_v2gdin_struct_din_DC_EVChargeParameterType_BulkSOC,
 			tvb, 0, 0, dc_evchargeparameter->BulkSOC);
 		proto_item_set_generated(it);
 	}
@@ -2267,7 +2141,7 @@ dissect_v2gdin_dc_evchargeparameter(
 }
 
 static void
-dissect_v2gdin_evsestatus(const struct dinEVSEStatusType *evsestatus _U_,
+dissect_v2gdin_evsestatus(const struct din_EVSEStatusType *evsestatus _U_,
 			  tvbuff_t *tvb _U_,
 			  packet_info *pinfo _U_,
 			  proto_tree *tree _U_,
@@ -2279,7 +2153,7 @@ dissect_v2gdin_evsestatus(const struct dinEVSEStatusType *evsestatus _U_,
 }
 
 static void
-dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
+dissect_v2gdin_dc_evsestatus(const struct din_DC_EVSEStatusType *dc_evsestatus,
 			     tvbuff_t *tvb,
 			     packet_info *pinfo _U_,
 			     proto_tree *tree,
@@ -2294,23 +2168,23 @@ dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
 
 	if (dc_evsestatus->EVSEIsolationStatus_isUsed) {
 		it = proto_tree_add_uint(subtree,
-			hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEIsolationStatus,
+			hf_v2gdin_struct_din_DC_EVSEStatusType_EVSEIsolationStatus,
 			tvb, 0, 0, dc_evsestatus->EVSEIsolationStatus);
 		proto_item_set_generated(it);
 	}
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEStatusCode,
+		hf_v2gdin_struct_din_DC_EVSEStatusType_EVSEStatusCode,
 		tvb, 0, 0, dc_evsestatus->EVSEStatusCode);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinDC_EVSEStatusType_NotificationMaxDelay,
+		hf_v2gdin_struct_din_DC_EVSEStatusType_NotificationMaxDelay,
 		tvb, 0, 0, dc_evsestatus->NotificationMaxDelay);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinDC_EVSEStatusType_EVSENotification,
+		hf_v2gdin_struct_din_DC_EVSEStatusType_EVSENotification,
 		tvb, 0, 0, dc_evsestatus->EVSENotification);
 	proto_item_set_generated(it);
 
@@ -2319,7 +2193,7 @@ dissect_v2gdin_dc_evsestatus(const struct dinDC_EVSEStatusType *dc_evsestatus,
 
 static void
 dissect_v2gdin_evsechargeparameter(
-	const struct dinEVSEChargeParameterType *evsechargeparameter _U_,
+	const struct din_EVSEChargeParameterType *evsechargeparameter _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -2331,7 +2205,7 @@ dissect_v2gdin_evsechargeparameter(
 }
 
 static void
-dissect_v2gdin_ac_evsestatus(const struct dinAC_EVSEStatusType *ac_evsestatus,
+dissect_v2gdin_ac_evsestatus(const struct din_AC_EVSEStatusType *ac_evsestatus,
 			     tvbuff_t *tvb,
 			     packet_info *pinfo _U_,
 			     proto_tree *tree,
@@ -2345,22 +2219,22 @@ dissect_v2gdin_ac_evsestatus(const struct dinAC_EVSEStatusType *ac_evsestatus,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinAC_EVSEStatusType_PowerSwitchClosed,
+		hf_v2gdin_struct_din_AC_EVSEStatusType_PowerSwitchClosed,
 		tvb, 0, 0, ac_evsestatus->PowerSwitchClosed);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinAC_EVSEStatusType_RCD,
+		hf_v2gdin_struct_din_AC_EVSEStatusType_RCD,
 		tvb, 0, 0, ac_evsestatus->RCD);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinAC_EVSEStatusType_NotificationMaxDelay,
+		hf_v2gdin_struct_din_AC_EVSEStatusType_NotificationMaxDelay,
 		tvb, 0, 0, ac_evsestatus->NotificationMaxDelay);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinAC_EVSEStatusType_EVSENotification,
+		hf_v2gdin_struct_din_AC_EVSEStatusType_EVSENotification,
 		tvb, 0, 0, ac_evsestatus->EVSENotification);
 	proto_item_set_generated(it);
 
@@ -2369,7 +2243,7 @@ dissect_v2gdin_ac_evsestatus(const struct dinAC_EVSEStatusType *ac_evsestatus,
 
 static void
 dissect_v2gdin_ac_evsechargeparameter(
-	const struct dinAC_EVSEChargeParameterType *ac_evsechargeparameter,
+	const struct din_AC_EVSEChargeParameterType *ac_evsechargeparameter,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2383,26 +2257,26 @@ dissect_v2gdin_ac_evsechargeparameter(
 
 	dissect_v2gdin_ac_evsestatus(&ac_evsechargeparameter->AC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinAC_EVSEStatusType, "AC_EVSEStatus");
+		ett_v2gdin_struct_din_AC_EVSEStatusType, "AC_EVSEStatus");
 
 	dissect_v2gdin_physicalvalue(&ac_evsechargeparameter->EVSEMaxVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EVSEMaxVoltage");
+		ett_v2gdin_struct_din_PhysicalValueType, "EVSEMaxVoltage");
 
 	dissect_v2gdin_physicalvalue(&ac_evsechargeparameter->EVSEMaxCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EVSEMaxCurrent");
+		ett_v2gdin_struct_din_PhysicalValueType, "EVSEMaxCurrent");
 
 	dissect_v2gdin_physicalvalue(&ac_evsechargeparameter->EVSEMaxCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType, "EVSEMinCurrent");
+		ett_v2gdin_struct_din_PhysicalValueType, "EVSEMinCurrent");
 
 	return;
 }
 
 static void
 dissect_v2gdin_dc_evsechargeparameter(
-	const struct dinDC_EVSEChargeParameterType *dc_evsechargeparameter,
+	const struct din_DC_EVSEChargeParameterType *dc_evsechargeparameter,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2418,12 +2292,12 @@ dissect_v2gdin_dc_evsechargeparameter(
 
 	dissect_v2gdin_dc_evsestatus(&dc_evsechargeparameter->DC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVSEStatusType, "DC_EVSEStatus");
+		ett_v2gdin_struct_din_DC_EVSEStatusType, "DC_EVSEStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEMaximumVoltageLimit,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEMaximumVoltageLimit");
 	value = v2gdin_physicalvalue_to_double(
 		&dc_evsechargeparameter->EVSEMaximumVoltageLimit);
@@ -2435,13 +2309,13 @@ dissect_v2gdin_dc_evsechargeparameter(
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEMinimumVoltageLimit,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEMinimumVoltageLimit");
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEMaximumCurrentLimit,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEMaximumCurrentLimit");
 	value = v2gdin_physicalvalue_to_double(
 		&dc_evsechargeparameter->EVSEMaximumCurrentLimit);
@@ -2453,14 +2327,14 @@ dissect_v2gdin_dc_evsechargeparameter(
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEMinimumCurrentLimit,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEMinimumCurrentLimit");
 
 	if (dc_evsechargeparameter->EVSEMaximumPowerLimit_isUsed) {
 		dissect_v2gdin_physicalvalue(
 			&dc_evsechargeparameter->EVSEMaximumPowerLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSEMaximumPowerLimit");
 		value = v2gdin_physicalvalue_to_double(
 			&dc_evsechargeparameter->EVSEMaximumPowerLimit);
@@ -2474,21 +2348,21 @@ dissect_v2gdin_dc_evsechargeparameter(
 		dissect_v2gdin_physicalvalue(
 			&dc_evsechargeparameter->EVSECurrentRegulationTolerance,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSECurrentRegulationTolerance");
 	}
 
 	dissect_v2gdin_physicalvalue(
 		&dc_evsechargeparameter->EVSEPeakCurrentRipple,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEPeakCurrentRipple");
 
 	if (dc_evsechargeparameter->EVSEEnergyToBeDelivered_isUsed) {
 		dissect_v2gdin_physicalvalue(
 			&dc_evsechargeparameter->EVSEEnergyToBeDelivered,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSEEnergyToBeDelivered");
 	}
 
@@ -2496,7 +2370,7 @@ dissect_v2gdin_dc_evsechargeparameter(
 }
 
 static void
-dissect_v2gdin_interval(const struct dinIntervalType *interval _U_,
+dissect_v2gdin_interval(const struct din_IntervalType *interval _U_,
 			tvbuff_t *tvb _U_,
 			packet_info *pinfo _U_,
 			proto_tree *tree _U_,
@@ -2509,7 +2383,7 @@ dissect_v2gdin_interval(const struct dinIntervalType *interval _U_,
 
 static void
 dissect_v2gdin_relativetimeinterval(
-	const struct dinRelativeTimeIntervalType *relativetimeinterval,
+	const struct din_RelativeTimeIntervalType *relativetimeinterval,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -2523,13 +2397,13 @@ dissect_v2gdin_relativetimeinterval(
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinRelativeTimeIntervalType_start,
+		hf_v2gdin_struct_din_RelativeTimeIntervalType_start,
 		tvb, 0, 0, relativetimeinterval->start);
 	proto_item_set_generated(it);
 
 	if (relativetimeinterval->duration_isUsed) {
 		it = proto_tree_add_uint(subtree,
-			hf_v2gdin_struct_dinRelativeTimeIntervalType_duration,
+			hf_v2gdin_struct_din_RelativeTimeIntervalType_duration,
 			tvb, 0, 0, relativetimeinterval->duration);
 		proto_item_set_generated(it);
 	}
@@ -2539,7 +2413,7 @@ dissect_v2gdin_relativetimeinterval(
 
 static void
 dissect_v2gdin_pmaxscheduleentry(
-	const struct dinPMaxScheduleEntryType *pmaxscheduleentry,
+	const struct din_PMaxScheduleEntryType *pmaxscheduleentry,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2555,7 +2429,7 @@ dissect_v2gdin_pmaxscheduleentry(
 	if (pmaxscheduleentry->TimeInterval_isUsed) {
 		dissect_v2gdin_interval(&pmaxscheduleentry->TimeInterval,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinIntervalType,
+			ett_v2gdin_struct_din_IntervalType,
 			"TimeInterval");
 	}
 
@@ -2563,12 +2437,12 @@ dissect_v2gdin_pmaxscheduleentry(
 		dissect_v2gdin_relativetimeinterval(
 			&pmaxscheduleentry->RelativeTimeInterval,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinRelativeTimeIntervalType,
+			ett_v2gdin_struct_din_RelativeTimeIntervalType,
 			"RelativeTimeInterval");
 	}
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinPMaxScheduleEntryType_PMax,
+		hf_v2gdin_struct_din_PMaxScheduleEntryType_PMax,
 		tvb, 0, 0, pmaxscheduleentry->PMax);
 	proto_item_set_generated(it);
 
@@ -2576,7 +2450,7 @@ dissect_v2gdin_pmaxscheduleentry(
 }
 
 static void
-dissect_v2gdin_pmaxschedule(const struct dinPMaxScheduleType *pmaxschedule,
+dissect_v2gdin_pmaxschedule(const struct din_PMaxScheduleType *pmaxschedule,
 			    tvbuff_t *tvb,
 			    packet_info *pinfo,
 			    proto_tree *tree,
@@ -2592,7 +2466,7 @@ dissect_v2gdin_pmaxschedule(const struct dinPMaxScheduleType *pmaxschedule,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinPMaxScheduleType_PMaxScheduleID,
+		hf_v2gdin_struct_din_PMaxScheduleType_PMaxScheduleID,
 		tvb, 0, 0, pmaxschedule->PMaxScheduleID);
 	proto_item_set_generated(it);
 
@@ -2605,14 +2479,14 @@ dissect_v2gdin_pmaxschedule(const struct dinPMaxScheduleType *pmaxschedule,
 		dissect_v2gdin_pmaxscheduleentry(
 			&pmaxschedule->PMaxScheduleEntry.array[i],
 			tvb, pinfo, pmaxscheduleentry_tree,
-			ett_v2gdin_struct_dinPMaxScheduleEntryType, index);
+			ett_v2gdin_struct_din_PMaxScheduleEntryType, index);
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_cost(const struct dinCostType *cost,
+dissect_v2gdin_cost(const struct din_CostType *cost,
 		    tvbuff_t *tvb,
 		    packet_info *pinfo _U_,
 		    proto_tree *tree,
@@ -2626,18 +2500,18 @@ dissect_v2gdin_cost(const struct dinCostType *cost,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCostType_costKind,
+		hf_v2gdin_struct_din_CostType_costKind,
 		tvb, 0, 0, cost->costKind);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCostType_amount,
+		hf_v2gdin_struct_din_CostType_amount,
 		tvb, 0, 0, cost->amount);
 	proto_item_set_generated(it);
 
 	if (cost->amountMultiplier_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinCostType_amountMultiplier,
+			hf_v2gdin_struct_din_CostType_amountMultiplier,
 			tvb, 0, 0, cost->amount);
 		proto_item_set_generated(it);
 	}
@@ -2647,36 +2521,29 @@ dissect_v2gdin_cost(const struct dinCostType *cost,
 
 static void
 dissect_v2gdin_consumptioncost(
-	const struct dinConsumptionCostType *consumptioncost,
+	const struct din_ConsumptionCostType *consumptioncost,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *cost_tree;
 	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinConsumptionCostType_startValue,
+		hf_v2gdin_struct_din_ConsumptionCostType_startValue,
 		tvb, 0, 0, consumptioncost->startValue);
 	proto_item_set_generated(it);
 
-	cost_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "Cost");
-	for (i = 0; i < consumptioncost->Cost.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
+	if (consumptioncost->Cost_isUsed) {
 		dissect_v2gdin_cost(
-			&consumptioncost->Cost.array[i],
-			tvb, pinfo, cost_tree,
-			ett_v2gdin_struct_dinCostType, index);
+			&consumptioncost->Cost,
+			tvb, pinfo, subtree,
+			ett_v2gdin_struct_din_CostType, "Cost");
 	}
 
 	return;
@@ -2684,58 +2551,52 @@ dissect_v2gdin_consumptioncost(
 
 static void
 dissect_v2gdin_salestariffentry(
-	const struct dinSalesTariffEntryType *salestariffentry,
+	const struct din_SalesTariffEntryType *salestariffentry,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
 {
-	unsigned int i;
 	proto_tree *subtree;
-	proto_tree *consumptioncost_tree;
 	proto_item *it;
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
-	if (salestariffentry->TimeInterval_isUsed) {
-		dissect_v2gdin_interval(&salestariffentry->TimeInterval,
-			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinIntervalType,
-			"TimeInterval");
-	}
-
 	if (salestariffentry->RelativeTimeInterval_isUsed) {
 		dissect_v2gdin_relativetimeinterval(
 			&salestariffentry->RelativeTimeInterval,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinRelativeTimeIntervalType,
+			ett_v2gdin_struct_din_RelativeTimeIntervalType,
 			"RelativeTimeInterval");
 	}
 
+	if (salestariffentry->TimeInterval_isUsed) {
+		dissect_v2gdin_interval(&salestariffentry->TimeInterval,
+			tvb, pinfo, subtree,
+			ett_v2gdin_struct_din_IntervalType,
+			"TimeInterval");
+	}
+
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinSalesTariffEntryType_EPriceLevel,
+		hf_v2gdin_struct_din_SalesTariffEntryType_EPriceLevel,
 		tvb, 0, 0, salestariffentry->EPriceLevel);
 	proto_item_set_generated(it);
 
-	consumptioncost_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2gdin_array, NULL, "ConsumptionCost");
-	for (i = 0; i < salestariffentry->ConsumptionCost.arrayLen; i++) {
-		char index[sizeof("[65536]")];
-
-		snprintf(index, sizeof(index), "[%u]", i);
+	if (salestariffentry->ConsumptionCost_isUsed) {
 		dissect_v2gdin_consumptioncost(
-			&salestariffentry->ConsumptionCost.array[i],
-			tvb, pinfo, consumptioncost_tree,
-			ett_v2gdin_struct_dinConsumptionCostType, index);
+			&salestariffentry->ConsumptionCost,
+			tvb, pinfo, subtree,
+			ett_v2gdin_struct_din_ConsumptionCostType,
+			"ConsumptionCost");
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
+dissect_v2gdin_salestariff(const struct din_SalesTariffType *salestariff,
 			   tvbuff_t *tvb,
 			   packet_info *pinfo,
 			   proto_tree *tree,
@@ -2751,7 +2612,7 @@ dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
 		idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinSalesTariffType_Id,
+		hf_v2gdin_struct_din_SalesTariffType_Id,
 		tvb,
 		salestariff->Id.characters,
 		salestariff->Id.charactersLen,
@@ -2759,7 +2620,7 @@ dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
 
 	if (salestariff->SalesTariffDescription_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinSalesTariffType_SalesTariffDescription,
+			hf_v2gdin_struct_din_SalesTariffType_SalesTariffDescription,
 			tvb,
 			salestariff->SalesTariffDescription.characters,
 			salestariff->SalesTariffDescription.charactersLen,
@@ -2767,7 +2628,7 @@ dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
 	}
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinSalesTariffType_NumEPriceLevels,
+		hf_v2gdin_struct_din_SalesTariffType_NumEPriceLevels,
 		tvb, 0, 0, salestariff->NumEPriceLevels);
 	proto_item_set_generated(it);
 
@@ -2780,14 +2641,14 @@ dissect_v2gdin_salestariff(const struct dinSalesTariffType *salestariff,
 		dissect_v2gdin_salestariffentry(
 			&salestariff->SalesTariffEntry.array[i],
 			tvb, pinfo, salestariffentry_tree,
-			ett_v2gdin_struct_dinSalesTariffEntryType, index);
+			ett_v2gdin_struct_din_SalesTariffEntryType, index);
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_saschedules(const struct dinSASchedulesType *saschedules _U_,
+dissect_v2gdin_saschedules(const struct din_SASchedulesType *saschedules _U_,
 			   tvbuff_t *tvb _U_,
 			   packet_info *pinfo _U_,
 			   proto_tree *tree _U_,
@@ -2800,7 +2661,7 @@ dissect_v2gdin_saschedules(const struct dinSASchedulesType *saschedules _U_,
 
 static void
 dissect_v2gdin_sascheduletuple(
-	const struct dinSAScheduleTupleType *sascheduletuple,
+	const struct din_SAScheduleTupleType *sascheduletuple,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2814,19 +2675,19 @@ dissect_v2gdin_sascheduletuple(
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinSAScheduleTupleType_SAScheduleTupleID,
+		hf_v2gdin_struct_din_SAScheduleTupleType_SAScheduleTupleID,
 		tvb, 0, 0, sascheduletuple->SAScheduleTupleID);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_pmaxschedule(&sascheduletuple->PMaxSchedule,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPMaxScheduleType,
+		ett_v2gdin_struct_din_PMaxScheduleType,
 		"PMaxSchedule");
 
 	if (sascheduletuple->SalesTariff_isUsed) {
 		dissect_v2gdin_salestariff(&sascheduletuple->SalesTariff,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinSalesTariffType,
+			ett_v2gdin_struct_din_SalesTariffType,
 			"SalesTariff");
 	}
 
@@ -2835,7 +2696,7 @@ dissect_v2gdin_sascheduletuple(
 
 static void
 dissect_v2gdin_saschedulelist(
-	const struct dinSAScheduleListType *saschedulelist,
+	const struct din_SAScheduleListType *saschedulelist,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2858,7 +2719,7 @@ dissect_v2gdin_saschedulelist(
 		dissect_v2gdin_sascheduletuple(
 			&saschedulelist->SAScheduleTuple.array[i],
 			tvb, pinfo, sascheduletuple_tree,
-			ett_v2gdin_struct_dinSAScheduleTupleType, index);
+			ett_v2gdin_struct_din_SAScheduleTupleType, index);
 	}
 
 	return;
@@ -2866,7 +2727,7 @@ dissect_v2gdin_saschedulelist(
 
 static void
 dissect_v2gdin_profileentry(
-	const struct dinProfileEntryType *profileentry,
+	const struct din_ProfileEntryType *profileentry,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -2880,12 +2741,12 @@ dissect_v2gdin_profileentry(
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryStart,
+		hf_v2gdin_struct_din_ProfileEntryType_ChargingProfileEntryStart,
 		tvb, 0, 0, profileentry->ChargingProfileEntryStart);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryMaxPower,
+		hf_v2gdin_struct_din_ProfileEntryType_ChargingProfileEntryMaxPower,
 		tvb, 0, 0, profileentry->ChargingProfileEntryMaxPower);
 	proto_item_set_generated(it);
 
@@ -2894,7 +2755,7 @@ dissect_v2gdin_profileentry(
 
 static void
 dissect_v2gdin_chargingprofile(
-	const struct dinChargingProfileType *chargingprofile,
+	const struct din_ChargingProfileType *chargingprofile,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2910,7 +2771,7 @@ dissect_v2gdin_chargingprofile(
 		idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinChargingProfileType_SAScheduleTupleID,
+		hf_v2gdin_struct_din_ChargingProfileType_SAScheduleTupleID,
 		tvb, 0, 0, chargingprofile->SAScheduleTupleID);
 	proto_item_set_generated(it);
 
@@ -2923,14 +2784,14 @@ dissect_v2gdin_chargingprofile(
 		dissect_v2gdin_profileentry(
 			&chargingprofile->ProfileEntry.array[i],
 			tvb, pinfo, profileentry_tree,
-			ett_v2gdin_struct_dinProfileEntryType, index);
+			ett_v2gdin_struct_din_ProfileEntryType, index);
 	}
 
 	return;
 }
 
 static void
-dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
+dissect_v2gdin_meterinfo(const struct din_MeterInfoType *meterinfo,
 			 tvbuff_t *tvb,
 			 packet_info *pinfo,
 			 proto_tree *tree,
@@ -2944,7 +2805,7 @@ dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
 		idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinMeterInfoType_MeterID,
+		hf_v2gdin_struct_din_MeterInfoType_MeterID,
 		tvb,
 		meterinfo->MeterID.characters,
 		meterinfo->MeterID.charactersLen,
@@ -2953,13 +2814,13 @@ dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
 	if (meterinfo->MeterReading_isUsed) {
 		dissect_v2gdin_physicalvalue(&meterinfo->MeterReading,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"MeterReading");
 	}
 
 	if (meterinfo->SigMeterReading_isUsed) {
 		exi_add_bytes(subtree,
-			hf_v2gdin_struct_dinMeterInfoType_SigMeterReading,
+			hf_v2gdin_struct_din_MeterInfoType_SigMeterReading,
 			tvb,
 			meterinfo->SigMeterReading.bytes,
 			meterinfo->SigMeterReading.bytesLen,
@@ -2968,14 +2829,14 @@ dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
 
 	if (meterinfo->MeterStatus_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinMeterInfoType_MeterStatus,
+			hf_v2gdin_struct_din_MeterInfoType_MeterStatus,
 			tvb, 0, 0, meterinfo->MeterStatus);
 		proto_item_set_generated(it);
 	}
 
 	if (meterinfo->TMeter_isUsed) {
 		it = proto_tree_add_int64(subtree,
-			hf_v2gdin_struct_dinMeterInfoType_TMeter,
+			hf_v2gdin_struct_din_MeterInfoType_TMeter,
 			tvb, 0, 0, meterinfo->TMeter);
 		proto_item_set_generated(it);
 	}
@@ -2985,7 +2846,7 @@ dissect_v2gdin_meterinfo(const struct dinMeterInfoType *meterinfo,
 
 static void
 dissect_v2gdin_evpowerdeliveryparameter(
-	const struct dinEVPowerDeliveryParameterType *evpowerdeliveryparameter _U_,
+	const struct din_EVPowerDeliveryParameterType *evpowerdeliveryparameter _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -2998,7 +2859,7 @@ dissect_v2gdin_evpowerdeliveryparameter(
 
 static void
 dissect_v2gdin_dc_evpowerdeliveryparameter(
-	const struct dinDC_EVPowerDeliveryParameterType *dc_evpowerdeliveryparameter,
+	const struct din_DC_EVPowerDeliveryParameterType *dc_evpowerdeliveryparameter,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3013,19 +2874,19 @@ dissect_v2gdin_dc_evpowerdeliveryparameter(
 
 	dissect_v2gdin_dc_evstatus(&dc_evpowerdeliveryparameter->DC_EVStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVStatusType,
+		ett_v2gdin_struct_din_DC_EVStatusType,
 		"DC_EVStatus");
 
 	if (dc_evpowerdeliveryparameter->BulkChargingComplete_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_BulkChargingComplete,
+			hf_v2gdin_struct_din_DC_EVPowerDeliveryParameterType_BulkChargingComplete,
 			tvb, 0, 0,
 			dc_evpowerdeliveryparameter->BulkChargingComplete);
 		proto_item_set_generated(it);
 	}
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_ChargingComplete,
+		hf_v2gdin_struct_din_DC_EVPowerDeliveryParameterType_ChargingComplete,
 		tvb, 0, 0,
 		dc_evpowerdeliveryparameter->ChargingComplete);
 		proto_item_set_generated(it);
@@ -3035,7 +2896,7 @@ dissect_v2gdin_dc_evpowerdeliveryparameter(
 
 
 static void
-dissect_v2gdin_header(const struct dinMessageHeaderType *header,
+dissect_v2gdin_header(const struct din_MessageHeaderType *header,
 		      tvbuff_t *tvb,
 		      packet_info *pinfo,
 		      proto_tree *tree,
@@ -3047,7 +2908,7 @@ dissect_v2gdin_header(const struct dinMessageHeaderType *header,
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	exi_add_bytes(subtree, hf_v2gdin_struct_dinMessageHeaderType_SessionID, tvb,
+	exi_add_bytes(subtree, hf_v2gdin_struct_din_MessageHeaderType_SessionID, tvb,
 		header->SessionID.bytes,
 		header->SessionID.bytesLen,
 		sizeof(header->SessionID.bytes));
@@ -3055,14 +2916,14 @@ dissect_v2gdin_header(const struct dinMessageHeaderType *header,
 	if (header->Notification_isUsed) {
 		dissect_v2gdin_notification(
 			&header->Notification, tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinNotificationType,
+			ett_v2gdin_struct_din_NotificationType,
 			"Notification");
 	}
 
 	if (header->Signature_isUsed) {
 		dissect_v2gdin_signature(
 			&header->Signature, tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinSignatureType,
+			ett_v2gdin_struct_din_SignatureType,
 			"Signature");
 	}
 
@@ -3072,7 +2933,7 @@ dissect_v2gdin_header(const struct dinMessageHeaderType *header,
 
 static void
 dissect_v2gdin_sessionsetupreq(
-	const struct dinSessionSetupReqType *sessionsetupreq,
+	const struct din_SessionSetupReqType *sessionsetupreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3085,7 +2946,7 @@ dissect_v2gdin_sessionsetupreq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinSessionSetupReqType_EVCCID,
+		hf_v2gdin_struct_din_SessionSetupReqType_EVCCID,
 		tvb,
 		sessionsetupreq->EVCCID.bytes,
 		sessionsetupreq->EVCCID.bytesLen,
@@ -3096,7 +2957,7 @@ dissect_v2gdin_sessionsetupreq(
 
 static void
 dissect_v2gdin_sessionsetupres(
-	const struct dinSessionSetupResType *sessionsetupres,
+	const struct din_SessionSetupResType *sessionsetupres,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3110,12 +2971,12 @@ dissect_v2gdin_sessionsetupres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinSessionSetupResType_ResponseCode,
+		hf_v2gdin_struct_din_SessionSetupResType_ResponseCode,
 		tvb, 0, 0, sessionsetupres->ResponseCode);
 	proto_item_set_generated(it);
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinSessionSetupResType_EVSEID,
+		hf_v2gdin_struct_din_SessionSetupResType_EVSEID,
 		tvb,
 		sessionsetupres->EVSEID.bytes,
 		sessionsetupres->EVSEID.bytesLen,
@@ -3123,7 +2984,7 @@ dissect_v2gdin_sessionsetupres(
 
 	if (sessionsetupres->DateTimeNow_isUsed) {
 		it = proto_tree_add_int64(subtree,
-			hf_v2gdin_struct_dinSessionSetupResType_DateTimeNow,
+			hf_v2gdin_struct_din_SessionSetupResType_DateTimeNow,
 			tvb, 0, 0, sessionsetupres->DateTimeNow);
 		proto_item_set_generated(it);
 	}
@@ -3133,7 +2994,7 @@ dissect_v2gdin_sessionsetupres(
 
 static void
 dissect_v2gdin_servicediscoveryreq(
-	const struct dinServiceDiscoveryReqType *servicediscoveryreq,
+	const struct din_ServiceDiscoveryReqType *servicediscoveryreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3148,7 +3009,7 @@ dissect_v2gdin_servicediscoveryreq(
 
 	if (servicediscoveryreq->ServiceScope_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceScope,
+			hf_v2gdin_struct_din_ServiceDiscoveryReqType_ServiceScope,
 			tvb,
 			servicediscoveryreq->ServiceScope.characters,
 			servicediscoveryreq->ServiceScope.charactersLen,
@@ -3157,7 +3018,7 @@ dissect_v2gdin_servicediscoveryreq(
 
 	if (servicediscoveryreq->ServiceCategory_isUsed) {
 		it = proto_tree_add_uint(subtree,
-			hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceCategory,
+			hf_v2gdin_struct_din_ServiceDiscoveryReqType_ServiceCategory,
 			tvb, 0, 0, servicediscoveryreq->ServiceCategory);
 		proto_item_set_generated(it);
 	}
@@ -3167,7 +3028,7 @@ dissect_v2gdin_servicediscoveryreq(
 
 static void
 dissect_v2gdin_servicediscoveryres(
-	const struct dinServiceDiscoveryResType *servicediscoveryres,
+	const struct din_ServiceDiscoveryResType *servicediscoveryres,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3181,27 +3042,27 @@ dissect_v2gdin_servicediscoveryres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceDiscoveryResType_ResponseCode,
+		hf_v2gdin_struct_din_ServiceDiscoveryResType_ResponseCode,
 		tvb, 0, 0, servicediscoveryres->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_paymentoptions(
 		&servicediscoveryres->PaymentOptions,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPaymentOptionsType,
+		ett_v2gdin_struct_din_PaymentOptionsType,
 		"PaymentOptions");
 
 	dissect_v2gdin_servicecharge(
 		&servicediscoveryres->ChargeService,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinServiceChargeType,
+		ett_v2gdin_struct_din_ServiceChargeType,
 		"ChargeService");
 
 	if (servicediscoveryres->ServiceList_isUsed) {
 		dissect_v2gdin_servicetaglist(
 			&servicediscoveryres->ServiceList,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinServiceTagListType,
+			ett_v2gdin_struct_din_ServiceTagListType,
 			"ServiceList");
 	}
 
@@ -3210,7 +3071,7 @@ dissect_v2gdin_servicediscoveryres(
 
 static void
 dissect_v2gdin_servicedetailreq(
-	const struct dinServiceDetailReqType *servicedetailreq,
+	const struct din_ServiceDetailReqType *servicedetailreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3224,7 +3085,7 @@ dissect_v2gdin_servicedetailreq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceDetailReqType_ServiceID,
+		hf_v2gdin_struct_din_ServiceDetailReqType_ServiceID,
 		tvb, 0, 0, servicedetailreq->ServiceID);
 	proto_item_set_generated(it);
 
@@ -3233,7 +3094,7 @@ dissect_v2gdin_servicedetailreq(
 
 static void
 dissect_v2gdin_servicedetailres(
-	const struct dinServiceDetailResType *servicedetailres,
+	const struct din_ServiceDetailResType *servicedetailres,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3247,12 +3108,12 @@ dissect_v2gdin_servicedetailres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceDetailResType_ResponseCode,
+		hf_v2gdin_struct_din_ServiceDetailResType_ResponseCode,
 		tvb, 0, 0, servicedetailres->ResponseCode);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServiceDetailResType_ServiceID,
+		hf_v2gdin_struct_din_ServiceDetailResType_ServiceID,
 		tvb, 0, 0, servicedetailres->ServiceID);
 	proto_item_set_generated(it);
 
@@ -3260,7 +3121,7 @@ dissect_v2gdin_servicedetailres(
 		dissect_v2gdin_serviceparameterlist(
 			&servicedetailres->ServiceParameterList,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinServiceParameterListType,
+			ett_v2gdin_struct_din_ServiceParameterListType,
 			"ServiceParameterList");
 	}
 
@@ -3269,7 +3130,7 @@ dissect_v2gdin_servicedetailres(
 
 static void
 dissect_v2gdin_servicepaymentselectionreq(
-	const struct dinServicePaymentSelectionReqType
+	const struct din_ServicePaymentSelectionReqType
 		*servicepaymentselectionreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
@@ -3284,14 +3145,14 @@ dissect_v2gdin_servicepaymentselectionreq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServicePaymentSelectionReqType_SelectedPaymentOption,
+		hf_v2gdin_struct_din_ServicePaymentSelectionReqType_SelectedPaymentOption,
 		tvb, 0, 0, servicepaymentselectionreq->SelectedPaymentOption);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_selectedservicelist(
 		&servicepaymentselectionreq->SelectedServiceList,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinSelectedServiceListType,
+		ett_v2gdin_struct_din_SelectedServiceListType,
 		"SelectedServiceList");
 
 	return;
@@ -3299,7 +3160,7 @@ dissect_v2gdin_servicepaymentselectionreq(
 
 static void
 dissect_v2gdin_servicepaymentselectionres(
-	const struct dinServicePaymentSelectionResType
+	const struct din_ServicePaymentSelectionResType
 		*servicepaymentselectionres,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
@@ -3314,7 +3175,7 @@ dissect_v2gdin_servicepaymentselectionres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinServicePaymentSelectionResType_ResponseCode,
+		hf_v2gdin_struct_din_ServicePaymentSelectionResType_ResponseCode,
 		tvb, 0, 0,
 		servicepaymentselectionres->ResponseCode);
 	proto_item_set_generated(it);
@@ -3324,7 +3185,7 @@ dissect_v2gdin_servicepaymentselectionres(
 
 static void
 dissect_v2gdin_paymentdetailsreq(
-	const struct dinPaymentDetailsReqType *paymentdetailsreq,
+	const struct din_PaymentDetailsReqType *paymentdetailsreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3337,7 +3198,7 @@ dissect_v2gdin_paymentdetailsreq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinPaymentDetailsReqType_ContractID,
+		hf_v2gdin_struct_din_PaymentDetailsReqType_ContractID,
 		tvb,
 		paymentdetailsreq->ContractID.characters,
 		paymentdetailsreq->ContractID.charactersLen,
@@ -3346,7 +3207,7 @@ dissect_v2gdin_paymentdetailsreq(
 	dissect_v2gdin_certificatechain(
 		&paymentdetailsreq->ContractSignatureCertChain,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinCertificateChainType,
+		ett_v2gdin_struct_din_CertificateChainType,
 		"ContractSignatureCertChain");
 
 	return;
@@ -3354,7 +3215,7 @@ dissect_v2gdin_paymentdetailsreq(
 
 static void
 dissect_v2gdin_paymentdetailsres(
-	const struct dinPaymentDetailsResType *paymentdetailsres,
+	const struct din_PaymentDetailsResType *paymentdetailsres,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3368,20 +3229,20 @@ dissect_v2gdin_paymentdetailsres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinPaymentDetailsResType_ResponseCode,
+		hf_v2gdin_struct_din_PaymentDetailsResType_ResponseCode,
 		tvb, 0, 0,
 		paymentdetailsres->ResponseCode);
 	proto_item_set_generated(it);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinPaymentDetailsResType_GenChallenge,
+		hf_v2gdin_struct_din_PaymentDetailsResType_GenChallenge,
 		tvb,
 		paymentdetailsres->GenChallenge.characters,
 		paymentdetailsres->GenChallenge.charactersLen,
 		sizeof(paymentdetailsres->GenChallenge.characters));
 
 	it = proto_tree_add_int64(subtree,
-		hf_v2gdin_struct_dinPaymentDetailsResType_DateTimeNow,
+		hf_v2gdin_struct_din_PaymentDetailsResType_DateTimeNow,
 		tvb, 0, 0,
 		paymentdetailsres->DateTimeNow);
 	proto_item_set_generated(it);
@@ -3391,7 +3252,7 @@ dissect_v2gdin_paymentdetailsres(
 
 static void
 dissect_v2gdin_contractauthenticationreq(
-	const struct dinContractAuthenticationReqType
+	const struct din_ContractAuthenticationReqType
 		*contractauthenticationreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
@@ -3406,7 +3267,7 @@ dissect_v2gdin_contractauthenticationreq(
 
 	if (contractauthenticationreq->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinContractAuthenticationReqType_Id,
+			hf_v2gdin_struct_din_ContractAuthenticationReqType_Id,
 			tvb,
 			contractauthenticationreq->Id.characters,
 			contractauthenticationreq->Id.charactersLen,
@@ -3414,7 +3275,7 @@ dissect_v2gdin_contractauthenticationreq(
 	}
 	if (contractauthenticationreq->GenChallenge_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinContractAuthenticationReqType_GenChallenge,
+			hf_v2gdin_struct_din_ContractAuthenticationReqType_GenChallenge,
 			tvb,
 			contractauthenticationreq->GenChallenge.characters,
 			contractauthenticationreq->GenChallenge.charactersLen,
@@ -3426,7 +3287,7 @@ dissect_v2gdin_contractauthenticationreq(
 
 static void
 dissect_v2gdin_contractauthenticationres(
-	const struct dinContractAuthenticationResType
+	const struct din_ContractAuthenticationResType
 		*contractauthenticationres,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
@@ -3441,13 +3302,13 @@ dissect_v2gdin_contractauthenticationres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinContractAuthenticationResType_ResponseCode,
+		hf_v2gdin_struct_din_ContractAuthenticationResType_ResponseCode,
 		tvb, 0, 0,
 		contractauthenticationres->ResponseCode);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinContractAuthenticationResType_EVSEProcessing,
+		hf_v2gdin_struct_din_ContractAuthenticationResType_EVSEProcessing,
 		tvb, 0, 0,
 		contractauthenticationres->EVSEProcessing);
 	proto_item_set_generated(it);
@@ -3457,7 +3318,7 @@ dissect_v2gdin_contractauthenticationres(
 
 static void
 dissect_v2gdin_chargeparameterdiscoveryreq(
-	const struct dinChargeParameterDiscoveryReqType
+	const struct din_ChargeParameterDiscoveryReqType
 		*chargeparameterdiscoveryreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
@@ -3472,7 +3333,7 @@ dissect_v2gdin_chargeparameterdiscoveryreq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType,
+		hf_v2gdin_struct_din_ChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType,
 		tvb, 0, 0,
 		chargeparameterdiscoveryreq->EVRequestedEnergyTransferType);
 	proto_item_set_generated(it);
@@ -3481,7 +3342,7 @@ dissect_v2gdin_chargeparameterdiscoveryreq(
 		dissect_v2gdin_evchargeparameter(
 			&chargeparameterdiscoveryreq->EVChargeParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinEVChargeParameterType,
+			ett_v2gdin_struct_din_EVChargeParameterType,
 			"EVChargeParameter");
 	}
 
@@ -3489,7 +3350,7 @@ dissect_v2gdin_chargeparameterdiscoveryreq(
 		dissect_v2gdin_ac_evchargeparameter(
 			&chargeparameterdiscoveryreq->AC_EVChargeParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinAC_EVChargeParameterType,
+			ett_v2gdin_struct_din_AC_EVChargeParameterType,
 			"AC_EVChargeParameter");
 	}
 
@@ -3497,7 +3358,7 @@ dissect_v2gdin_chargeparameterdiscoveryreq(
 		dissect_v2gdin_dc_evchargeparameter(
 			&chargeparameterdiscoveryreq->DC_EVChargeParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinDC_EVChargeParameterType,
+			ett_v2gdin_struct_din_DC_EVChargeParameterType,
 			"DC_EVChargeParameter");
 	}
 
@@ -3506,7 +3367,7 @@ dissect_v2gdin_chargeparameterdiscoveryreq(
 
 static void
 dissect_v2gdin_chargeparameterdiscoveryres(
-	const struct dinChargeParameterDiscoveryResType
+	const struct din_ChargeParameterDiscoveryResType
 		*chargeparameterdiscoveryres,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
@@ -3521,13 +3382,13 @@ dissect_v2gdin_chargeparameterdiscoveryres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinChargeParameterDiscoveryResType_ResponseCode,
+		hf_v2gdin_struct_din_ChargeParameterDiscoveryResType_ResponseCode,
 		tvb, 0, 0,
 		chargeparameterdiscoveryres->ResponseCode);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinChargeParameterDiscoveryResType_EVSEProcessing,
+		hf_v2gdin_struct_din_ChargeParameterDiscoveryResType_EVSEProcessing,
 		tvb, 0, 0,
 		chargeparameterdiscoveryres->EVSEProcessing);
 	proto_item_set_generated(it);
@@ -3536,34 +3397,34 @@ dissect_v2gdin_chargeparameterdiscoveryres(
 		dissect_v2gdin_saschedules(
 			&chargeparameterdiscoveryres->SASchedules,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinSASchedulesType,
+			ett_v2gdin_struct_din_SASchedulesType,
 			"SASchedules");
 	}
 	if (chargeparameterdiscoveryres->SAScheduleList_isUsed) {
 		dissect_v2gdin_saschedulelist(
 			&chargeparameterdiscoveryres->SAScheduleList,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinSAScheduleListType,
+			ett_v2gdin_struct_din_SAScheduleListType,
 			"SAScheduleList");
 	}
 	if (chargeparameterdiscoveryres->EVSEChargeParameter_isUsed) {
 		dissect_v2gdin_evsechargeparameter(&chargeparameterdiscoveryres->EVSEChargeParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinEVSEChargeParameterType,
+			ett_v2gdin_struct_din_EVSEChargeParameterType,
 			"EVSEChargeParameter");
 	}
 	if (chargeparameterdiscoveryres->AC_EVSEChargeParameter_isUsed) {
 		dissect_v2gdin_ac_evsechargeparameter(
 			&chargeparameterdiscoveryres->AC_EVSEChargeParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinAC_EVSEChargeParameterType,
+			ett_v2gdin_struct_din_AC_EVSEChargeParameterType,
 			"AC_EVSEChargeParameter");
 	}
 	if (chargeparameterdiscoveryres->DC_EVSEChargeParameter_isUsed) {
 		dissect_v2gdin_dc_evsechargeparameter(
 			&chargeparameterdiscoveryres->DC_EVSEChargeParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinDC_EVSEChargeParameterType,
+			ett_v2gdin_struct_din_DC_EVSEChargeParameterType,
 			"DC_EVSEChargeParameter");
 	}
 
@@ -3572,7 +3433,7 @@ dissect_v2gdin_chargeparameterdiscoveryres(
 
 static void
 dissect_v2gdin_powerdeliveryreq(
-	const struct dinPowerDeliveryReqType *powerdeliveryreq,
+	const struct din_PowerDeliveryReqType *powerdeliveryreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3586,7 +3447,7 @@ dissect_v2gdin_powerdeliveryreq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinPowerDeliveryReqType_ReadyToChargeState,
+		hf_v2gdin_struct_din_PowerDeliveryReqType_ReadyToChargeState,
 		tvb, 0, 0, powerdeliveryreq->ReadyToChargeState);
 	proto_item_set_generated(it);
 
@@ -3594,21 +3455,21 @@ dissect_v2gdin_powerdeliveryreq(
 		dissect_v2gdin_chargingprofile(
 			&powerdeliveryreq->ChargingProfile,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinChargingProfileType,
+			ett_v2gdin_struct_din_ChargingProfileType,
 			"ChargingProfile");
 	}
 	if (powerdeliveryreq->EVPowerDeliveryParameter_isUsed) {
 		dissect_v2gdin_evpowerdeliveryparameter(
 			&powerdeliveryreq->EVPowerDeliveryParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinEVPowerDeliveryParameterType,
+			ett_v2gdin_struct_din_EVPowerDeliveryParameterType,
 			"EVPowerDeliveryParameter");
 	}
 	if (powerdeliveryreq->DC_EVPowerDeliveryParameter_isUsed) {
 		dissect_v2gdin_dc_evpowerdeliveryparameter(
 			&powerdeliveryreq->DC_EVPowerDeliveryParameter,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
+			ett_v2gdin_struct_din_DC_EVPowerDeliveryParameterType,
 			"DC_EVPowerDeliveryParameter");
 	}
 
@@ -3617,7 +3478,7 @@ dissect_v2gdin_powerdeliveryreq(
 
 static void
 dissect_v2gdin_powerdeliveryres(
-	const struct dinPowerDeliveryResType *powerdeliveryres,
+	const struct din_PowerDeliveryResType *powerdeliveryres,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3631,7 +3492,7 @@ dissect_v2gdin_powerdeliveryres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinPowerDeliveryResType_ResponseCode,
+		hf_v2gdin_struct_din_PowerDeliveryResType_ResponseCode,
 		tvb, 0, 0,
 		powerdeliveryres->ResponseCode);
 	proto_item_set_generated(it);
@@ -3640,21 +3501,21 @@ dissect_v2gdin_powerdeliveryres(
 		dissect_v2gdin_evsestatus(
 			&powerdeliveryres->EVSEStatus,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinEVSEStatusType,
+			ett_v2gdin_struct_din_EVSEStatusType,
 			"EVSEStatus");
 	}
 	if (powerdeliveryres->AC_EVSEStatus_isUsed) {
 		dissect_v2gdin_ac_evsestatus(
 			&powerdeliveryres->AC_EVSEStatus,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinAC_EVSEStatusType,
+			ett_v2gdin_struct_din_AC_EVSEStatusType,
 			"AC_EVSEStatus");
 	}
 	if (powerdeliveryres->DC_EVSEStatus_isUsed) {
 		dissect_v2gdin_dc_evsestatus(
 			&powerdeliveryres->DC_EVSEStatus,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinDC_EVSEStatusType,
+			ett_v2gdin_struct_din_DC_EVSEStatusType,
 			"DC_EVSEStatus");
 	}
 
@@ -3663,7 +3524,7 @@ dissect_v2gdin_powerdeliveryres(
 
 static void
 dissect_v2gdin_chargingstatusreq(
-	const struct dinChargingStatusReqType *chargingstatusreq _U_,
+	const struct din_ChargingStatusReqType *chargingstatusreq _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -3679,7 +3540,7 @@ dissect_v2gdin_chargingstatusreq(
 
 static void
 dissect_v2gdin_chargingstatusres(
-	const struct dinChargingStatusResType *chargingstatusres,
+	const struct din_ChargingStatusResType *chargingstatusres,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3693,20 +3554,20 @@ dissect_v2gdin_chargingstatusres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinChargingStatusResType_ResponseCode,
+		hf_v2gdin_struct_din_ChargingStatusResType_ResponseCode,
 		tvb, 0, 0,
 		chargingstatusres->ResponseCode);
 	proto_item_set_generated(it);
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinChargingStatusResType_EVSEID,
+		hf_v2gdin_struct_din_ChargingStatusResType_EVSEID,
 		tvb,
 		chargingstatusres->EVSEID.bytes,
 		chargingstatusres->EVSEID.bytesLen,
 		sizeof(chargingstatusres->EVSEID.bytes));
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinChargingStatusResType_SAScheduleTupleID,
+		hf_v2gdin_struct_din_ChargingStatusResType_SAScheduleTupleID,
 		tvb, 0, 0,
 		chargingstatusres->SAScheduleTupleID);
 	proto_item_set_generated(it);
@@ -3715,7 +3576,7 @@ dissect_v2gdin_chargingstatusres(
 		dissect_v2gdin_physicalvalue(
 			&chargingstatusres->EVSEMaxCurrent,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSEMaxCurrent");
 	}
 
@@ -3723,12 +3584,12 @@ dissect_v2gdin_chargingstatusres(
 		dissect_v2gdin_meterinfo(
 			&chargingstatusres->MeterInfo,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinMeterInfoType,
+			ett_v2gdin_struct_din_MeterInfoType,
 			"MeterInfo");
 	}
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinChargingStatusResType_ReceiptRequired,
+		hf_v2gdin_struct_din_ChargingStatusResType_ReceiptRequired,
 		tvb, 0, 0,
 		chargingstatusres->ReceiptRequired);
 	proto_item_set_generated(it);
@@ -3736,7 +3597,7 @@ dissect_v2gdin_chargingstatusres(
 	dissect_v2gdin_ac_evsestatus(
 		&chargingstatusres->AC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinAC_EVSEStatusType,
+		ett_v2gdin_struct_din_AC_EVSEStatusType,
 		"AC_EVSEStatus");
 
 	return;
@@ -3744,7 +3605,7 @@ dissect_v2gdin_chargingstatusres(
 
 static void
 dissect_v2gdin_meteringreceiptreq(
-	const struct dinMeteringReceiptReqType *meteringreceiptreq,
+	const struct din_MeteringReceiptReqType *meteringreceiptreq,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3759,7 +3620,7 @@ dissect_v2gdin_meteringreceiptreq(
 
 	if (meteringreceiptreq->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinMeteringReceiptReqType_Id,
+			hf_v2gdin_struct_din_MeteringReceiptReqType_Id,
 			tvb,
 			meteringreceiptreq->Id.characters,
 			meteringreceiptreq->Id.charactersLen,
@@ -3767,7 +3628,7 @@ dissect_v2gdin_meteringreceiptreq(
 	}
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinMeteringReceiptReqType_SessionID,
+		hf_v2gdin_struct_din_MeteringReceiptReqType_SessionID,
 		tvb,
 		meteringreceiptreq->SessionID.bytes,
 		meteringreceiptreq->SessionID.bytesLen,
@@ -3775,7 +3636,7 @@ dissect_v2gdin_meteringreceiptreq(
 
 	if (meteringreceiptreq->SAScheduleTupleID_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinMeteringReceiptReqType_SAScheduleTupleID,
+			hf_v2gdin_struct_din_MeteringReceiptReqType_SAScheduleTupleID,
 			tvb, 0, 0,
 			meteringreceiptreq->SAScheduleTupleID);
 		proto_item_set_generated(it);
@@ -3784,7 +3645,7 @@ dissect_v2gdin_meteringreceiptreq(
 	dissect_v2gdin_meterinfo(
 		&meteringreceiptreq->MeterInfo,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinMeterInfoType,
+		ett_v2gdin_struct_din_MeterInfoType,
 		"MeterInfo");
 
 	return;
@@ -3792,7 +3653,7 @@ dissect_v2gdin_meteringreceiptreq(
 
 static void
 dissect_v2gdin_meteringreceiptres(
-	const struct dinMeteringReceiptResType *meteringreceiptres,
+	const struct din_MeteringReceiptResType *meteringreceiptres,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3806,7 +3667,7 @@ dissect_v2gdin_meteringreceiptres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinMeteringReceiptResType_ResponseCode,
+		hf_v2gdin_struct_din_MeteringReceiptResType_ResponseCode,
 		tvb, 0, 0,
 		meteringreceiptres->ResponseCode);
 	proto_item_set_generated(it);
@@ -3814,7 +3675,7 @@ dissect_v2gdin_meteringreceiptres(
 	dissect_v2gdin_ac_evsestatus(
 		&meteringreceiptres->AC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinAC_EVSEStatusType,
+		ett_v2gdin_struct_din_AC_EVSEStatusType,
 		"AC_EVSEStatus");
 
 	return;
@@ -3822,7 +3683,7 @@ dissect_v2gdin_meteringreceiptres(
 
 static void
 dissect_v2gdin_sessionstop(
-	const struct dinSessionStopType *sessionstop _U_,
+	const struct din_SessionStopType *sessionstop _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -3838,7 +3699,7 @@ dissect_v2gdin_sessionstop(
 
 static void
 dissect_v2gdin_sessionstopres(
-	const struct dinSessionStopResType *sessionstopres,
+	const struct din_SessionStopResType *sessionstopres,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3852,7 +3713,7 @@ dissect_v2gdin_sessionstopres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinSessionStopResType_ResponseCode,
+		hf_v2gdin_struct_din_SessionStopResType_ResponseCode,
 		tvb, 0, 0, sessionstopres->ResponseCode);
 	proto_item_set_generated(it);
 
@@ -3861,7 +3722,7 @@ dissect_v2gdin_sessionstopres(
 
 static void
 dissect_v2gdin_certificateupdatereq(
-	const struct dinCertificateUpdateReqType *req,
+	const struct din_CertificateUpdateReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3874,7 +3735,7 @@ dissect_v2gdin_certificateupdatereq(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateReqType_Id,
+		hf_v2gdin_struct_din_CertificateUpdateReqType_Id,
 		tvb,
 		req->Id.characters,
 		req->Id.charactersLen,
@@ -3883,11 +3744,11 @@ dissect_v2gdin_certificateupdatereq(
 	dissect_v2gdin_certificatechain(
 		&req->ContractSignatureCertChain,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinCertificateChainType,
+		ett_v2gdin_struct_din_CertificateChainType,
 		"ContractSignatureCertChain");
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateReqType_ContractID,
+		hf_v2gdin_struct_din_CertificateUpdateReqType_ContractID,
 		tvb,
 		req->ContractID.characters,
 		req->ContractID.charactersLen,
@@ -3896,11 +3757,11 @@ dissect_v2gdin_certificateupdatereq(
 	dissect_v2gdin_listofrootcertificateids(
 		&req->ListOfRootCertificateIDs,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinListOfRootCertificateIDsType,
+		ett_v2gdin_struct_din_ListOfRootCertificateIDsType,
 		"ListOfRootCertificateIDs");
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateReqType_DHParams,
+		hf_v2gdin_struct_din_CertificateUpdateReqType_DHParams,
 		tvb,
 		req->DHParams.bytes,
 		req->DHParams.bytesLen,
@@ -3911,7 +3772,7 @@ dissect_v2gdin_certificateupdatereq(
 
 static void
 dissect_v2gdin_certificateupdateres(
-	const struct dinCertificateUpdateResType *res,
+	const struct din_CertificateUpdateResType *res,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3925,46 +3786,46 @@ dissect_v2gdin_certificateupdateres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateResType_Id,
+		hf_v2gdin_struct_din_CertificateUpdateResType_Id,
 		tvb,
 		res->Id.characters,
 		res->Id.charactersLen,
 		sizeof(res->Id.characters));
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateResType_ResponseCode,
+		hf_v2gdin_struct_din_CertificateUpdateResType_ResponseCode,
 		tvb, 0, 0, res->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_certificatechain(
 		&res->ContractSignatureCertChain,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinCertificateChainType,
+		ett_v2gdin_struct_din_CertificateChainType,
 		"ContractSignatureCertChain");
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateResType_ContractSignatureEncryptedPrivateKey,
+		hf_v2gdin_struct_din_CertificateUpdateResType_ContractSignatureEncryptedPrivateKey,
 		tvb,
 		res->ContractSignatureEncryptedPrivateKey.bytes,
 		res->ContractSignatureEncryptedPrivateKey.bytesLen,
 		sizeof(res->ContractSignatureEncryptedPrivateKey.bytes));
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateResType_DHParams,
+		hf_v2gdin_struct_din_CertificateUpdateResType_DHParams,
 		tvb,
 		res->DHParams.bytes,
 		res->DHParams.bytesLen,
 		sizeof(res->DHParams.bytes));
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateResType_ContractID,
+		hf_v2gdin_struct_din_CertificateUpdateResType_ContractID,
 		tvb,
 		res->ContractID.characters,
 		res->ContractID.charactersLen,
 		sizeof(res->ContractID.characters));
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCertificateUpdateResType_RetryCounter,
+		hf_v2gdin_struct_din_CertificateUpdateResType_RetryCounter,
 		tvb, 0, 0, res->RetryCounter);
 	proto_item_set_generated(it);
 
@@ -3973,7 +3834,7 @@ dissect_v2gdin_certificateupdateres(
 
 static void
 dissect_v2gdin_certificateinstallationreq(
-	const struct dinCertificateInstallationReqType *req,
+	const struct din_CertificateInstallationReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -3987,7 +3848,7 @@ dissect_v2gdin_certificateinstallationreq(
 
 	if (req->Id_isUsed) {
 		exi_add_characters(subtree,
-			hf_v2gdin_struct_dinCertificateInstallationReqType_Id,
+			hf_v2gdin_struct_din_CertificateInstallationReqType_Id,
 			tvb,
 			req->Id.characters,
 			req->Id.charactersLen,
@@ -3995,7 +3856,7 @@ dissect_v2gdin_certificateinstallationreq(
 	}
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationReqType_OEMProvisioningCert,
+		hf_v2gdin_struct_din_CertificateInstallationReqType_OEMProvisioningCert,
 		tvb,
 		req->OEMProvisioningCert.bytes,
 		req->OEMProvisioningCert.bytesLen,
@@ -4003,11 +3864,11 @@ dissect_v2gdin_certificateinstallationreq(
 	dissect_v2gdin_listofrootcertificateids(
 		&req->ListOfRootCertificateIDs,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinListOfRootCertificateIDsType,
+		ett_v2gdin_struct_din_ListOfRootCertificateIDsType,
 		"ListOfRootCertificateIDs");
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationReqType_DHParams,
+		hf_v2gdin_struct_din_CertificateInstallationReqType_DHParams,
 		tvb,
 		req->DHParams.bytes,
 		req->DHParams.bytesLen,
@@ -4018,7 +3879,7 @@ dissect_v2gdin_certificateinstallationreq(
 
 static void
 dissect_v2gdin_certificateinstallationres(
-	const struct dinCertificateInstallationResType *res,
+	const struct din_CertificateInstallationResType *res,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4032,39 +3893,39 @@ dissect_v2gdin_certificateinstallationres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationResType_Id,
+		hf_v2gdin_struct_din_CertificateInstallationResType_Id,
 		tvb,
 		res->Id.characters,
 		res->Id.charactersLen,
 		sizeof(res->Id.characters));
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationResType_ResponseCode,
+		hf_v2gdin_struct_din_CertificateInstallationResType_ResponseCode,
 		tvb, 0, 0, res->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_certificatechain(
 		&res->ContractSignatureCertChain,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinCertificateChainType,
+		ett_v2gdin_struct_din_CertificateChainType,
 		"ContractSignatureCertChain");
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationResType_ContractSignatureEncryptedPrivateKey,
+		hf_v2gdin_struct_din_CertificateInstallationResType_ContractSignatureEncryptedPrivateKey,
 		tvb,
 		res->ContractSignatureEncryptedPrivateKey.bytes,
 		res->ContractSignatureEncryptedPrivateKey.bytesLen,
 		sizeof(res->ContractSignatureEncryptedPrivateKey.bytes));
 
 	exi_add_bytes(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationResType_DHParams,
+		hf_v2gdin_struct_din_CertificateInstallationResType_DHParams,
 		tvb,
 		res->DHParams.bytes,
 		res->DHParams.bytesLen,
 		sizeof(res->DHParams.bytes));
 
 	exi_add_characters(subtree,
-		hf_v2gdin_struct_dinCertificateInstallationResType_ContractID,
+		hf_v2gdin_struct_din_CertificateInstallationResType_ContractID,
 		tvb,
 		res->ContractID.characters,
 		res->ContractID.charactersLen,
@@ -4075,7 +3936,7 @@ dissect_v2gdin_certificateinstallationres(
 
 static void
 dissect_v2gdin_cablecheckreq(
-	const struct dinCableCheckReqType *req,
+	const struct din_CableCheckReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4090,7 +3951,7 @@ dissect_v2gdin_cablecheckreq(
 	dissect_v2gdin_dc_evstatus(
 		&req->DC_EVStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVStatusType,
+		ett_v2gdin_struct_din_DC_EVStatusType,
 		"DC_EVStatus");
 
 	return;
@@ -4098,7 +3959,7 @@ dissect_v2gdin_cablecheckreq(
 
 static void
 dissect_v2gdin_cablecheckres(
-	const struct dinCableCheckResType *res,
+	const struct din_CableCheckResType *res,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4112,18 +3973,18 @@ dissect_v2gdin_cablecheckres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCableCheckResType_ResponseCode,
+		hf_v2gdin_struct_din_CableCheckResType_ResponseCode,
 		tvb, 0, 0, res->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_dc_evsestatus(
 		&res->DC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		ett_v2gdin_struct_din_DC_EVSEStatusType,
 		"DC_EVSEStatus");
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCableCheckResType_EVSEProcessing,
+		hf_v2gdin_struct_din_CableCheckResType_EVSEProcessing,
 		tvb, 0, 0, res->EVSEProcessing);
 	proto_item_set_generated(it);
 
@@ -4132,7 +3993,7 @@ dissect_v2gdin_cablecheckres(
 
 static void
 dissect_v2gdin_prechargereq(
-	const struct dinPreChargeReqType *req,
+	const struct din_PreChargeReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4149,13 +4010,13 @@ dissect_v2gdin_prechargereq(
 	dissect_v2gdin_dc_evstatus(
 		&req->DC_EVStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVStatusType,
+		ett_v2gdin_struct_din_DC_EVStatusType,
 		"DC_EVStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&req->EVTargetVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVTargetVoltage");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetVoltage);
 	it = proto_tree_add_double(subtree,
@@ -4166,7 +4027,7 @@ dissect_v2gdin_prechargereq(
 	dissect_v2gdin_physicalvalue(
 		&req->EVTargetCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVTargetCurrent");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetCurrent);
 	it = proto_tree_add_double(subtree,
@@ -4179,7 +4040,7 @@ dissect_v2gdin_prechargereq(
 
 static void
 dissect_v2gdin_prechargeres(
-	const struct dinPreChargeResType *res,
+	const struct din_PreChargeResType *res,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4194,20 +4055,20 @@ dissect_v2gdin_prechargeres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinPreChargeResType_ResponseCode,
+		hf_v2gdin_struct_din_PreChargeResType_ResponseCode,
 		tvb, 0, 0, res->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_dc_evsestatus(
 		&res->DC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		ett_v2gdin_struct_din_DC_EVSEStatusType,
 		"DC_EVSEStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&res->EVSEPresentVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEPresentVoltage");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
@@ -4220,7 +4081,7 @@ dissect_v2gdin_prechargeres(
 
 static void
 dissect_v2gdin_currentdemandreq(
-	const struct dinCurrentDemandReqType *req,
+	const struct din_CurrentDemandReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4237,13 +4098,13 @@ dissect_v2gdin_currentdemandreq(
 	dissect_v2gdin_dc_evstatus(
 		&req->DC_EVStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVStatusType,
+		ett_v2gdin_struct_din_DC_EVStatusType,
 		"DC_EVStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&req->EVTargetVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVTargetVoltage");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetVoltage);
 	it = proto_tree_add_double(subtree,
@@ -4254,7 +4115,7 @@ dissect_v2gdin_currentdemandreq(
 	dissect_v2gdin_physicalvalue(
 		&req->EVTargetCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVTargetCurrent");
 	value = v2gdin_physicalvalue_to_double(&req->EVTargetCurrent);
 	it = proto_tree_add_double(subtree,
@@ -4263,13 +4124,13 @@ dissect_v2gdin_currentdemandreq(
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete,
+		hf_v2gdin_struct_din_CurrentDemandReqType_ChargingComplete,
 		tvb, 0, 0, req->ChargingComplete);
 	proto_item_set_generated(it);
 
 	if (req->BulkChargingComplete_isUsed) {
 		it = proto_tree_add_int(subtree,
-			hf_v2gdin_struct_dinCurrentDemandReqType_BulkChargingComplete,
+			hf_v2gdin_struct_din_CurrentDemandReqType_BulkChargingComplete,
 			tvb, 0, 0, req->BulkChargingComplete);
 		proto_item_set_generated(it);
 	}
@@ -4278,7 +4139,7 @@ dissect_v2gdin_currentdemandreq(
 		dissect_v2gdin_physicalvalue(
 			&req->EVMaximumVoltageLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVMaximumVoltageLimit");
 		value = v2gdin_physicalvalue_to_double(&req->EVMaximumVoltageLimit);
 		it = proto_tree_add_double(subtree,
@@ -4291,7 +4152,7 @@ dissect_v2gdin_currentdemandreq(
 		dissect_v2gdin_physicalvalue(
 			&req->EVMaximumCurrentLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVMaximumCurrentLimit");
 		value = v2gdin_physicalvalue_to_double(&req->EVMaximumCurrentLimit);
 		it = proto_tree_add_double(subtree,
@@ -4304,7 +4165,7 @@ dissect_v2gdin_currentdemandreq(
 		dissect_v2gdin_physicalvalue(
 			&req->EVMaximumPowerLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVMaximumPowerLimit");
 		value = v2gdin_physicalvalue_to_double(&req->EVMaximumPowerLimit);
 		it = proto_tree_add_double(subtree,
@@ -4317,7 +4178,7 @@ dissect_v2gdin_currentdemandreq(
 		dissect_v2gdin_physicalvalue(
 			&req->RemainingTimeToFullSoC,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"RemainingTimeToFullSoC");
 		value = v2gdin_physicalvalue_to_double(&req->RemainingTimeToFullSoC);
 		it = proto_tree_add_double(subtree,
@@ -4330,7 +4191,7 @@ dissect_v2gdin_currentdemandreq(
 		dissect_v2gdin_physicalvalue(
 			&req->RemainingTimeToBulkSoC,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"RemainingTimeToBulkSoC");
 		value = v2gdin_physicalvalue_to_double(&req->RemainingTimeToBulkSoC);
 		it = proto_tree_add_double(subtree,
@@ -4344,7 +4205,7 @@ dissect_v2gdin_currentdemandreq(
 
 static void
 dissect_v2gdin_currentdemandres(
-	const struct dinCurrentDemandResType *res,
+	const struct din_CurrentDemandResType *res,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4359,20 +4220,20 @@ dissect_v2gdin_currentdemandres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinCurrentDemandResType_ResponseCode,
+		hf_v2gdin_struct_din_CurrentDemandResType_ResponseCode,
 		tvb, 0, 0, res->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_dc_evsestatus(
 		&res->DC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		ett_v2gdin_struct_din_DC_EVSEStatusType,
 		"DC_EVSEStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&res->EVSEPresentVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEPresentVoltage");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
@@ -4383,7 +4244,7 @@ dissect_v2gdin_currentdemandres(
 	dissect_v2gdin_physicalvalue(
 		&res->EVSEPresentCurrent,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEPresentCurrent");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentCurrent);
 	it = proto_tree_add_double(subtree,
@@ -4392,17 +4253,17 @@ dissect_v2gdin_currentdemandres(
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved,
+		hf_v2gdin_struct_din_CurrentDemandResType_EVSECurrentLimitAchieved,
 		tvb, 0, 0, res->EVSECurrentLimitAchieved);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinCurrentDemandResType_EVSEVoltageLimitAchieved,
+		hf_v2gdin_struct_din_CurrentDemandResType_EVSEVoltageLimitAchieved,
 		tvb, 0, 0, res->EVSEVoltageLimitAchieved);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_int(subtree,
-		hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved,
+		hf_v2gdin_struct_din_CurrentDemandResType_EVSEPowerLimitAchieved,
 		tvb, 0, 0, res->EVSEPowerLimitAchieved);
 	proto_item_set_generated(it);
 
@@ -4410,7 +4271,7 @@ dissect_v2gdin_currentdemandres(
 		dissect_v2gdin_physicalvalue(
 			&res->EVSEMaximumVoltageLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSEMaximumVoltageLimit");
 		value = v2gdin_physicalvalue_to_double(&res->EVSEMaximumVoltageLimit);
 		it = proto_tree_add_double(subtree,
@@ -4422,7 +4283,7 @@ dissect_v2gdin_currentdemandres(
 		dissect_v2gdin_physicalvalue(
 			&res->EVSEMaximumCurrentLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSEMaximumCurrentLimit");
 		value = v2gdin_physicalvalue_to_double(&res->EVSEMaximumCurrentLimit);
 		it = proto_tree_add_double(subtree,
@@ -4434,7 +4295,7 @@ dissect_v2gdin_currentdemandres(
 		dissect_v2gdin_physicalvalue(
 			&res->EVSEMaximumPowerLimit,
 			tvb, pinfo, subtree,
-			ett_v2gdin_struct_dinPhysicalValueType,
+			ett_v2gdin_struct_din_PhysicalValueType,
 			"EVSEMaximumPowerLimit");
 		value = v2gdin_physicalvalue_to_double(&res->EVSEMaximumPowerLimit);
 		it = proto_tree_add_double(subtree,
@@ -4448,7 +4309,7 @@ dissect_v2gdin_currentdemandres(
 
 static void
 dissect_v2gdin_weldingdetectionreq(
-	const struct dinWeldingDetectionReqType *req,
+	const struct din_WeldingDetectionReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4463,14 +4324,14 @@ dissect_v2gdin_weldingdetectionreq(
 	dissect_v2gdin_dc_evstatus(
 		&req->DC_EVStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVStatusType, "DC_EVStatus");
+		ett_v2gdin_struct_din_DC_EVStatusType, "DC_EVStatus");
 
 	return;
 }
 
 static void
 dissect_v2gdin_weldingdetectionres(
-	const struct dinWeldingDetectionResType *res,
+	const struct din_WeldingDetectionResType *res,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -4485,20 +4346,20 @@ dissect_v2gdin_weldingdetectionres(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	it = proto_tree_add_uint(subtree,
-		hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode,
+		hf_v2gdin_struct_din_WeldingDetectionResType_ResponseCode,
 		tvb, 0, 0, res->ResponseCode);
 	proto_item_set_generated(it);
 
 	dissect_v2gdin_dc_evsestatus(
 		&res->DC_EVSEStatus,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinDC_EVSEStatusType,
+		ett_v2gdin_struct_din_DC_EVSEStatusType,
 		"DC_EVSEStatus");
 
 	dissect_v2gdin_physicalvalue(
 		&res->EVSEPresentVoltage,
 		tvb, pinfo, subtree,
-		ett_v2gdin_struct_dinPhysicalValueType,
+		ett_v2gdin_struct_din_PhysicalValueType,
 		"EVSEPresentVoltage");
 	value = v2gdin_physicalvalue_to_double(&res->EVSEPresentVoltage);
 	it = proto_tree_add_double(subtree,
@@ -4511,7 +4372,7 @@ dissect_v2gdin_weldingdetectionres(
 
 
 static void
-dissect_v2gdin_body(const struct dinBodyType *body,
+dissect_v2gdin_body(const struct din_BodyType *body,
 		    tvbuff_t *tvb,
 		    packet_info *pinfo,
 		    proto_tree *tree,
@@ -4528,7 +4389,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_sessionsetupreq(
 			&body->SessionSetupReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinSessionSetupReqType,
+			ett_v2gdin_struct_din_SessionSetupReqType,
 			"SessionSetupReq");
 	}
 	if (body->SessionSetupRes_isUsed) {
@@ -4536,7 +4397,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_sessionsetupres(
 			&body->SessionSetupRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinSessionSetupResType,
+			ett_v2gdin_struct_din_SessionSetupResType,
 			"SessionSetupRes");
 	}
 
@@ -4545,7 +4406,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_servicediscoveryreq(
 			&body->ServiceDiscoveryReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinServiceDiscoveryReqType,
+			ett_v2gdin_struct_din_ServiceDiscoveryReqType,
 			"ServiceDiscoveryReq");
 	}
 	if (body->ServiceDiscoveryRes_isUsed) {
@@ -4553,7 +4414,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_servicediscoveryres(
 			&body->ServiceDiscoveryRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinServiceDiscoveryResType,
+			ett_v2gdin_struct_din_ServiceDiscoveryResType,
 			"ServiceDiscoveryRes");
 	}
 
@@ -4562,7 +4423,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_servicedetailreq(
 			&body->ServiceDetailReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinServiceDetailReqType,
+			ett_v2gdin_struct_din_ServiceDetailReqType,
 			"ServiceDetailReq");
 	}
 	if (body->ServiceDetailRes_isUsed) {
@@ -4570,7 +4431,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_servicedetailres(
 			&body->ServiceDetailRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinServiceDetailResType,
+			ett_v2gdin_struct_din_ServiceDetailResType,
 			"ServiceDetailRes");
 	}
 
@@ -4580,7 +4441,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_servicepaymentselectionreq(
 			&body->ServicePaymentSelectionReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinServicePaymentSelectionReqType,
+			ett_v2gdin_struct_din_ServicePaymentSelectionReqType,
 			"ServicePaymentSelectionReq");
 	}
 	if (body->ServicePaymentSelectionRes_isUsed) {
@@ -4589,7 +4450,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_servicepaymentselectionres(
 			&body->ServicePaymentSelectionRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinServicePaymentSelectionResType,
+			ett_v2gdin_struct_din_ServicePaymentSelectionResType,
 			"ServicePaymentSelectionRes");
 	}
 
@@ -4598,7 +4459,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_paymentdetailsreq(
 			&body->PaymentDetailsReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinPaymentDetailsReqType,
+			ett_v2gdin_struct_din_PaymentDetailsReqType,
 			"PaymentDetailsReq");
 	}
 	if (body->PaymentDetailsRes_isUsed) {
@@ -4606,7 +4467,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_paymentdetailsres(
 			&body->PaymentDetailsRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinPaymentDetailsResType,
+			ett_v2gdin_struct_din_PaymentDetailsResType,
 			"PaymentDetailsRes");
 	}
 
@@ -4616,7 +4477,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_contractauthenticationreq(
 			&body->ContractAuthenticationReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinContractAuthenticationReqType,
+			ett_v2gdin_struct_din_ContractAuthenticationReqType,
 			"ContractAuthenticationReq");
 	}
 	if (body->ContractAuthenticationRes_isUsed) {
@@ -4625,7 +4486,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_contractauthenticationres(
 			&body->ContractAuthenticationRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinContractAuthenticationResType,
+			ett_v2gdin_struct_din_ContractAuthenticationResType,
 			"ContractAuthenticationRes");
 	}
 
@@ -4635,7 +4496,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_chargeparameterdiscoveryreq(
 			&body->ChargeParameterDiscoveryReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinChargeParameterDiscoveryReqType,
+			ett_v2gdin_struct_din_ChargeParameterDiscoveryReqType,
 			"ChargeParameterDiscoveryReq");
 	}
 	if (body->ChargeParameterDiscoveryRes_isUsed) {
@@ -4644,7 +4505,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_chargeparameterdiscoveryres(
 			&body->ChargeParameterDiscoveryRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinChargeParameterDiscoveryResType,
+			ett_v2gdin_struct_din_ChargeParameterDiscoveryResType,
 			"ChargeParameterDiscoveryRes");
 	}
 
@@ -4653,7 +4514,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_powerdeliveryreq(
 			&body->PowerDeliveryReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinPowerDeliveryReqType,
+			ett_v2gdin_struct_din_PowerDeliveryReqType,
 			"PowerDeliveryReq");
 	}
 	if (body->PowerDeliveryRes_isUsed) {
@@ -4661,7 +4522,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_powerdeliveryres(
 			&body->PowerDeliveryRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinPowerDeliveryResType,
+			ett_v2gdin_struct_din_PowerDeliveryResType,
 			"PowerDeliveryRes");
 	}
 
@@ -4670,7 +4531,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_chargingstatusreq(
 			&body->ChargingStatusReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinChargingStatusReqType,
+			ett_v2gdin_struct_din_ChargingStatusReqType,
 			"ChargingStatusReq");
 	}
 	if (body->ChargingStatusRes_isUsed) {
@@ -4678,7 +4539,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_chargingstatusres(
 			&body->ChargingStatusRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinChargingStatusResType,
+			ett_v2gdin_struct_din_ChargingStatusResType,
 			"ChargingStatusRes");
 	}
 
@@ -4687,7 +4548,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_meteringreceiptreq(
 			&body->MeteringReceiptReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinMeteringReceiptReqType,
+			ett_v2gdin_struct_din_MeteringReceiptReqType,
 			"MeteringReceiptReq");
 	}
 	if (body->MeteringReceiptRes_isUsed) {
@@ -4695,7 +4556,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_meteringreceiptres(
 			&body->MeteringReceiptRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinMeteringReceiptResType,
+			ett_v2gdin_struct_din_MeteringReceiptResType,
 			"MeteringReceiptRes");
 	}
 
@@ -4704,7 +4565,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_sessionstop(
 			&body->SessionStopReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinSessionStopType,
+			ett_v2gdin_struct_din_SessionStopType,
 			"SessionStopReq");
 	}
 	if (body->SessionStopRes_isUsed) {
@@ -4712,7 +4573,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_sessionstopres(
 			&body->SessionStopRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinSessionStopResType,
+			ett_v2gdin_struct_din_SessionStopResType,
 			"SessionStopRes");
 	}
 
@@ -4721,7 +4582,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_certificateupdatereq(
 			&body->CertificateUpdateReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCertificateUpdateReqType,
+			ett_v2gdin_struct_din_CertificateUpdateReqType,
 			"CertificateUpdateReq");
 	}
 	if (body->CertificateUpdateRes_isUsed) {
@@ -4729,7 +4590,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_certificateupdateres(
 			&body->CertificateUpdateRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCertificateUpdateResType,
+			ett_v2gdin_struct_din_CertificateUpdateResType,
 			"CertificateUpdateRes");
 	}
 
@@ -4739,7 +4600,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_certificateinstallationreq(
 			&body->CertificateInstallationReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCertificateInstallationReqType,
+			ett_v2gdin_struct_din_CertificateInstallationReqType,
 			"CertificateInstallationReq");
 	}
 	if (body->CertificateInstallationRes_isUsed) {
@@ -4748,7 +4609,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_certificateinstallationres(
 			&body->CertificateInstallationRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCertificateInstallationResType,
+			ett_v2gdin_struct_din_CertificateInstallationResType,
 			"CertificateInstallationRes");
 	}
 
@@ -4757,7 +4618,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_cablecheckreq(
 			&body->CableCheckReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCableCheckReqType,
+			ett_v2gdin_struct_din_CableCheckReqType,
 			"CableCheckReq");
 	}
 	if (body->CableCheckRes_isUsed) {
@@ -4765,7 +4626,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_cablecheckres(
 			&body->CableCheckRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCableCheckResType,
+			ett_v2gdin_struct_din_CableCheckResType,
 			"CableCheckRes");
 	}
 
@@ -4774,7 +4635,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_prechargereq(
 			&body->PreChargeReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinPreChargeReqType,
+			ett_v2gdin_struct_din_PreChargeReqType,
 			"PreChargeReq");
 	}
 	if (body->PreChargeRes_isUsed) {
@@ -4782,7 +4643,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_prechargeres(
 			&body->PreChargeRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinPreChargeResType,
+			ett_v2gdin_struct_din_PreChargeResType,
 			"PreChargeRes");
 	}
 
@@ -4791,7 +4652,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_currentdemandreq(
 			&body->CurrentDemandReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCurrentDemandReqType,
+			ett_v2gdin_struct_din_CurrentDemandReqType,
 			"CurrentDemandReq");
 	}
 	if (body->CurrentDemandRes_isUsed) {
@@ -4799,7 +4660,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_currentdemandres(
 			&body->CurrentDemandRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinCurrentDemandResType,
+			ett_v2gdin_struct_din_CurrentDemandResType,
 			"CurrentDemandRes");
 	}
 
@@ -4808,7 +4669,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_weldingdetectionreq(
 			&body->WeldingDetectionReq,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinWeldingDetectionReqType,
+			ett_v2gdin_struct_din_WeldingDetectionReqType,
 			"WeldingDetectionReq");
 	}
 	if (body->WeldingDetectionRes_isUsed) {
@@ -4816,7 +4677,7 @@ dissect_v2gdin_body(const struct dinBodyType *body,
 		dissect_v2gdin_weldingdetectionres(
 			&body->WeldingDetectionRes,
 			tvb, pinfo, body_tree,
-			ett_v2gdin_struct_dinWeldingDetectionResType,
+			ett_v2gdin_struct_din_WeldingDetectionResType,
 			"WeldingDetectionRes");
 	}
 
@@ -4829,23 +4690,22 @@ dissect_v2gdin(tvbuff_t *tvb,
 	       packet_info *pinfo, proto_tree *tree _U_, void *data _U_)
 {
 	proto_tree *v2gdin_tree;
-	size_t pos;
-	bitstream_t stream;
+	size_t size;
+	exi_bitstream_t stream;
 	int errn;
-	struct dinEXIDocument *exidin;
+	struct din_exiDocument *exidin;
 
 	col_set_str(pinfo->cinfo, COL_PROTOCOL, "DIN");
 	/* Clear the info column */
 	col_clear(pinfo->cinfo, COL_INFO);
 
-	pos = 0;
-	stream.size = tvb_reported_length(tvb);
-	stream.pos = &pos;
-	stream.data = tvb_memdup(wmem_packet_scope(),
-				 tvb, 0, stream.size);
+	size = tvb_reported_length(tvb);
+	exi_bitstream_init(&stream,
+			   tvb_memdup(wmem_packet_scope(), tvb, 0, size),
+			   size, 0, NULL);
 
 	exidin = wmem_alloc(pinfo->pool, sizeof(*exidin));
-	errn = decode_dinExiDocument(&stream, exidin);
+	errn = decode_din_exiDocument(&stream, exidin);
 	if (errn != 0) {
 		wmem_free(pinfo->pool, exidin);
 		/* decode failed */
@@ -4857,15 +4717,13 @@ dissect_v2gdin(tvbuff_t *tvb,
 	 * - Header
 	 * - Body
 	 */
-	if (exidin->V2G_Message_isUsed) {
-		v2gdin_tree = proto_tree_add_subtree(tree,
-			tvb, 0, 0, ett_v2gdin, NULL, "V2G DIN Message");
+	v2gdin_tree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, ett_v2gdin, NULL, "V2G DIN Message");
 
-		dissect_v2gdin_header(&exidin->V2G_Message.Header,
-			tvb, pinfo, v2gdin_tree, ett_v2gdin_header, "Header");
-		dissect_v2gdin_body(&exidin->V2G_Message.Body,
-			tvb, pinfo, v2gdin_tree, ett_v2gdin_body, "Body");
-	}
+	dissect_v2gdin_header(&exidin->V2G_Message.Header,
+		tvb, pinfo, v2gdin_tree, ett_v2gdin_header, "Header");
+	dissect_v2gdin_body(&exidin->V2G_Message.Body,
+		tvb, pinfo, v2gdin_tree, ett_v2gdin_body, "Body");
 
 	wmem_free(pinfo->pool, exidin);
 	return tvb_captured_length(tvb);
@@ -4877,290 +4735,290 @@ proto_register_v2gdin(void)
 {
 
 	static hf_register_info hf[] = {
-		/* struct dinNotificationType */
-		{ &hf_v2gdin_struct_dinNotificationType_FaultCode,
+		/* struct din_NotificationType */
+		{ &hf_v2gdin_struct_din_NotificationType_FaultCode,
 		  { "FaultCode", "v2gdin.struct.notification.faultcode",
 		    FT_UINT16, BASE_DEC, VALS(v2gdin_fault_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinNotificationType_FaultMsg,
+		{ &hf_v2gdin_struct_din_NotificationType_FaultMsg,
 		  { "FaultMsg", "v2gdin.struct.notification.faultmsg",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSignatureType */
-		{ &hf_v2gdin_struct_dinSignatureType_Id,
+		/* struct din_SignatureType */
+		{ &hf_v2gdin_struct_din_SignatureType_Id,
 		  { "Id", "v2gdin.struct.signature.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSignedInfoType */
-		{ &hf_v2gdin_struct_dinSignedInfoType_Id,
+		/* struct din_SignedInfoType */
+		{ &hf_v2gdin_struct_din_SignedInfoType_Id,
 		  { "Id", "v2gdin.struct.signedinfo.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinKeyInfoType */
-		{ &hf_v2gdin_struct_dinKeyInfoType_Id,
+		/* struct din_KeyInfoType */
+		{ &hf_v2gdin_struct_din_KeyInfoType_Id,
 		  { "Id", "v2gdin.struct.keyinfo.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinKeyInfoType_KeyName,
+		{ &hf_v2gdin_struct_din_KeyInfoType_KeyName,
 		  { "KeyName", "v2gdin.struct.keyinfo.keyname",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinKeyInfoType_MgmtData,
+		{ &hf_v2gdin_struct_din_KeyInfoType_MgmtData,
 		  { "MgmtData", "v2gdin.struct.keyinfo.mgmtdata",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinKeyInfoType_ANY,
+		{ &hf_v2gdin_struct_din_KeyInfoType_ANY,
 		  { "ANY", "v2gdin.struct.keyinfo.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinKeyValueType */
-		{ &hf_v2gdin_struct_dinKeyValueType_ANY,
+		/* struct din_KeyValueType */
+		{ &hf_v2gdin_struct_din_KeyValueType_ANY,
 		  { "ANY", "v2gdin.struct.keyvalue.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinDSAKeyValueType */
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_P,
+		/* struct din_DSAKeyValueType */
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_P,
 		  { "P", "v2gdin.struct.dsakeyvalue.p",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_Q,
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_Q,
 		  { "Q", "v2gdin.struct.dsakeyvalue.q",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_G,
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_G,
 		  { "G", "v2gdin.struct.dsakeyvalue.g",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_Y,
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_Y,
 		  { "Y", "v2gdin.struct.dsakeyvalue.y",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_J,
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_J,
 		  { "J", "v2gdin.struct.dsakeyvalue.j",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_Seed,
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_Seed,
 		  { "Seed", "v2gdin.struct.dsakeyvalue.seed",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDSAKeyValueType_PgenCounter,
+		{ &hf_v2gdin_struct_din_DSAKeyValueType_PgenCounter,
 		  { "PgenCounter", "v2gdin.struct.dsakeyvalue.pgencounter",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinRSAKeyValueType */
-		{ &hf_v2gdin_struct_dinRSAKeyValueType_Modulus,
+		/* struct din_RSAKeyValueType */
+		{ &hf_v2gdin_struct_din_RSAKeyValueType_Modulus,
 		  { "Modulus", "v2gdin.struct.rsakeyvalue.modulus",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinRSAKeyValueType_Exponent,
+		{ &hf_v2gdin_struct_din_RSAKeyValueType_Exponent,
 		  { "Exponent", "v2gdin.struct.rsakeyvalue.exponent",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinX509DataType */
-		{ &hf_v2gdin_struct_dinX509DataType_X509SKI,
+		/* struct din_X509DataType */
+		{ &hf_v2gdin_struct_din_X509DataType_X509SKI,
 		  { "X509SKI", "v2gdin.struct.x509data.x509ski",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinX509DataType_X509SubjectName,
+		{ &hf_v2gdin_struct_din_X509DataType_X509SubjectName,
 		  { "X509SubjectName",
 		    "v2gdin.struct.x509data.x509subjectname",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinX509DataType_X509Certificate,
+		{ &hf_v2gdin_struct_din_X509DataType_X509Certificate,
 		  { "X509Certificate",
 		    "v2gdin.struct.x509data.x509certificate",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinX509DataType_X509CRL,
+		{ &hf_v2gdin_struct_din_X509DataType_X509CRL,
 		  { "X509CRL", "v2gdin.struct.x509data.x509crl",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinX509DataType_ANY,
+		{ &hf_v2gdin_struct_din_X509DataType_ANY,
 		  { "ANY", "v2gdin.struct.x509data.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinX509IssuerSerialType */
-		{ &hf_v2gdin_struct_dinX509IssuerSerialType_X509IssuerName,
+		/* struct din_X509IssuerSerialType */
+		{ &hf_v2gdin_struct_din_X509IssuerSerialType_X509IssuerName,
 		  { "X509IssuerName",
 		    "v2gdin.struct.x509issuerserial.x509issuername",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinX509IssuerSerialType_X509SerialNumber,
+		{ &hf_v2gdin_struct_din_X509IssuerSerialType_X509SerialNumber,
 		  { "X509SerialNumber",
 		    "v2gdin.struct.x509issuerserial.x509serialnumber",
 		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinPGPDataType */
-		{ &hf_v2gdin_struct_dinPGPDataType_PGPKeyID,
+		/* struct din_PGPDataType */
+		{ &hf_v2gdin_struct_din_PGPDataType_PGPKeyID,
 		  { "PGPKeyID", "v2gdin.struct.pgpdata.pgpkeyid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinPGPDataType_PGPKeyPacket,
+		{ &hf_v2gdin_struct_din_PGPDataType_PGPKeyPacket,
 		  { "PGPKeyPacket", "v2gdin.struct.pgpdata.pgpkeypacket",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinPGPDataType_ANY,
+		{ &hf_v2gdin_struct_din_PGPDataType_ANY,
 		  { "ANY", "v2gdin.struct.pgpdata.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSPKIDataType */
-		{ &hf_v2gdin_struct_dinSPKIDataType_SPKISexp,
+		/* struct din_SPKIDataType */
+		{ &hf_v2gdin_struct_din_SPKIDataType_SPKISexp,
 		  { "SPKISexp", "v2gdin.struct.spkidata.spkisexp",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSPKIDataType_ANY,
+		{ &hf_v2gdin_struct_din_SPKIDataType_ANY,
 		  { "ANY", "v2gdin.struct.spkidata.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinRetrievalMethodType */
-		{ &hf_v2gdin_struct_dinRetrievalMethodType_URI,
+		/* struct din_RetrievalMethodType */
+		{ &hf_v2gdin_struct_din_RetrievalMethodType_URI,
 		  { "URI", "v2gdin.struct.retrievalmethod.uri",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinRetrievalMethodType_Type,
+		{ &hf_v2gdin_struct_din_RetrievalMethodType_Type,
 		  { "Type", "v2gdin.struct.retrievalmethod.type",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSignatureValueType */
-		{ &hf_v2gdin_struct_dinSignatureValueType_Id,
+		/* struct din_SignatureValueType */
+		{ &hf_v2gdin_struct_din_SignatureValueType_Id,
 		  { "Id", "v2gdin.struct.signavturevalue.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSignatureValueType_CONTENT,
+		{ &hf_v2gdin_struct_din_SignatureValueType_CONTENT,
 		  { "CONTENT", "v2gdin.struct.signaturevalue.content",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinCanonicalizationMethodType */
-		{ &hf_v2gdin_struct_dinCanonicalizationMethodType_Algorithm,
+		/* struct din_CanonicalizationMethodType */
+		{ &hf_v2gdin_struct_din_CanonicalizationMethodType_Algorithm,
 		  { "Algorithm",
 		    "v2gdin.struct.canonicalizationmethod.algorithm",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCanonicalizationMethodType_ANY,
+		{ &hf_v2gdin_struct_din_CanonicalizationMethodType_ANY,
 		  { "ANY",
 		    "v2gdin.struct.canonicalizationmethod.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinDigestMethodType */
-		{ &hf_v2gdin_struct_dinDigestMethodType_Algorithm,
+		/* struct din_DigestMethodType */
+		{ &hf_v2gdin_struct_din_DigestMethodType_Algorithm,
 		  { "Algorithm", "v2gdin.struct.digestmethod.algorithm",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDigestMethodType_ANY,
+		{ &hf_v2gdin_struct_din_DigestMethodType_ANY,
 		  { "ANY", "v2gdin.struct.digestmethod.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSignatureMethodType */
-		{ &hf_v2gdin_struct_dinSignatureMethodType_Algorithm,
+		/* struct din_SignatureMethodType */
+		{ &hf_v2gdin_struct_din_SignatureMethodType_Algorithm,
 		  { "Algorithm", "v2gdin.struct.signaturemethod.algorithm",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSignatureMethodType_HMACOutputLength,
+		{ &hf_v2gdin_struct_din_SignatureMethodType_HMACOutputLength,
 		  { "HMACOutputLength",
 		    "v2gdin.struct.signaturemethod.hmacoutputlength",
 		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSignatureMethodType_ANY,
+		{ &hf_v2gdin_struct_din_SignatureMethodType_ANY,
 		  { "ANY", "v2gdin.struct.signaturemethod.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinTransformType */
-		{ &hf_v2gdin_struct_dinTransformType_Algorithm,
+		/* struct din_TransformType */
+		{ &hf_v2gdin_struct_din_TransformType_Algorithm,
 		  { "Algorithm", "v2gdin.struct.transform.algorithm",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinTransformType_ANY,
+		{ &hf_v2gdin_struct_din_TransformType_ANY,
 		  { "ANY", "v2gdin.struct.transform.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinTransformType_XPath,
+		{ &hf_v2gdin_struct_din_TransformType_XPath,
 		  { "XPath", "v2gdin.struct.transform.xpath",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinReferenceType */
-		{ &hf_v2gdin_struct_dinReferenceType_Id,
+		/* struct din_ReferenceType */
+		{ &hf_v2gdin_struct_din_ReferenceType_Id,
 		  { "Id", "v2gdin.struct.reference.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinReferenceType_URI,
+		{ &hf_v2gdin_struct_din_ReferenceType_URI,
 		  { "URI", "v2gdin.struct.reference.uri",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinReferenceType_Type,
+		{ &hf_v2gdin_struct_din_ReferenceType_Type,
 		  { "Type", "v2gdin.struct.reference.type",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinReferenceType_DigestValue,
+		{ &hf_v2gdin_struct_din_ReferenceType_DigestValue,
 		  { "DigestValue", "v2gdin.struct.reference.digestvalue",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinObjectType */
-		{ &hf_v2gdin_struct_dinObjectType_Id,
+		/* struct din_ObjectType */
+		{ &hf_v2gdin_struct_din_ObjectType_Id,
 		  { "Id", "v2gdin.struct.object.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinObjectType_MimeType,
+		{ &hf_v2gdin_struct_din_ObjectType_MimeType,
 		  { "MimeType", "v2gdin.struct.object.mimetype",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinObjectType_Encoding,
+		{ &hf_v2gdin_struct_din_ObjectType_Encoding,
 		  { "Encoding", "v2gdin.struct.object.encoding",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinObjectType_ANY,
+		{ &hf_v2gdin_struct_din_ObjectType_ANY,
 		  { "ANY", "v2gdin.struct.object.any",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinServiceTagType */
-		{ &hf_v2gdin_struct_dinServiceTagType_ServiceID,
+		/* struct din_ServiceTagType */
+		{ &hf_v2gdin_struct_din_ServiceTagType_ServiceID,
 		  { "ServiceID",
 		    "v2gdin.struct.servicetag.serviceid",
 		    FT_UINT16, BASE_HEX, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinServiceTagType_ServiceName,
+		{ &hf_v2gdin_struct_din_ServiceTagType_ServiceName,
 		  { "ServiceName",
 		    "v2gdin.struct.servicetag.servicename",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinServiceTagType_ServiceCategory,
+		{ &hf_v2gdin_struct_din_ServiceTagType_ServiceCategory,
 		  { "ServiceCategory",
 		    "v2gdin.struct.servicetag.servicecategory",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_service_category_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinServiceTagType_ServiceScope,
+		{ &hf_v2gdin_struct_din_ServiceTagType_ServiceScope,
 		  { "ServiceScope",
 		    "v2gdin.struct.servicetag.servicescope",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinServiceChargeType */
-		{ &hf_v2gdin_struct_dinServiceChargeType_FreeService,
+		/* struct din_ServiceChargeType */
+		{ &hf_v2gdin_struct_din_ServiceChargeType_FreeService,
 		  { "FreeService",
 		    "v2gdin.struct.servicecharge.freeservice",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinServiceChargeType_EnergyTransferType,
+		{ &hf_v2gdin_struct_din_ServiceChargeType_EnergyTransferType,
 		  { "EnergyTransferType",
 		    "v2gdin.struct.servicechargee.energytransfertype",
 		    FT_UINT32, BASE_DEC,
@@ -5168,361 +5026,361 @@ proto_register_v2gdin(void)
 		    0x0, NULL, HFILL }
 		},
 
-		/* struct dinServiceType */
-		{ &hf_v2gdin_struct_dinServiceType_FreeService,
+		/* struct din_ServiceType */
+		{ &hf_v2gdin_struct_din_ServiceType_FreeService,
 		  { "FreeService",
 		    "v2gdin.struct.service.freeservice",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSelectedServiceType */
-		{ &hf_v2gdin_struct_dinSelectedServiceType_ServiceID,
+		/* struct din_SelectedServiceType */
+		{ &hf_v2gdin_struct_din_SelectedServiceType_ServiceID,
 		  { "ServiceID", "v2gdin.struct.selectedservice.serviceid",
 		    FT_UINT16, BASE_HEX, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSelectedServiceType_ParameterSetID,
+		{ &hf_v2gdin_struct_din_SelectedServiceType_ParameterSetID,
 		  { "ParameterSetID",
 		    "v2gdin.struct.selectedservicetype.parametersetid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinParameterSetType */
-		{ &hf_v2gdin_struct_dinParameterSetType_ParameterSetID,
+		/* struct din_ParameterSetType */
+		{ &hf_v2gdin_struct_din_ParameterSetType_ParameterSetID,
 		  { "ParameterSetID",
 		    "v2gdin.struct.parameterset.parametersetid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinPhysicalValueType */
-		{ &hf_v2gdin_struct_dinPhysicalValueType_Multiplier,
+		/* struct din_PhysicalValueType */
+		{ &hf_v2gdin_struct_din_PhysicalValueType_Multiplier,
 		  { "Multiplier",
 		    "v2gdin.struct.physicalvalue.multiplier",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinPhysicalValueType_Unit,
+		{ &hf_v2gdin_struct_din_PhysicalValueType_Unit,
 		  { "Unit",
 		    "v2gdin.struct.physicalvalue.unit",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_unitsymbol_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinPhysicalValueType_Value,
+		{ &hf_v2gdin_struct_din_PhysicalValueType_Value,
 		  { "Value",
 		    "v2gdin.struct.physicalvalue.value",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinPaymentOptionsType */
-		{ &hf_v2gdin_struct_dinPaymentOptionsType_PaymentOption,
+		/* struct din_PaymentOptionsType */
+		{ &hf_v2gdin_struct_din_PaymentOptionsType_PaymentOption,
 		  { "PaymentOption",
 		    "v2gdin.struct.paymentoptions.paymentoption",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_payment_option_names),
 		    0x0, NULL, HFILL }
 		},
 
-		/* struct dinCertificateChainType */
-		{ &hf_v2gdin_struct_dinCertificateChainType_Certificate,
+		/* struct din_CertificateChainType */
+		{ &hf_v2gdin_struct_din_CertificateChainType_Certificate,
 		  { "Certificate",
 		    "v2gdin.struct.certificatechain.certificate",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSubCertificatesType */
-		{ &hf_v2gdin_struct_dinSubCertificatesType_Certificate,
+		/* struct din_SubCertificatesType */
+		{ &hf_v2gdin_struct_din_SubCertificatesType_Certificate,
 		  { "Certificate",
 		    "v2gdin.struct.subcertificates.certificate",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinListOfRootCertificateIDsType */
-		{ &hf_v2gdin_struct_dinListOfRootCertificateIDsType_RootCertificateID,
+		/* struct din_ListOfRootCertificateIDsType */
+		{ &hf_v2gdin_struct_din_ListOfRootCertificateIDsType_RootCertificateID,
 		  { "RootCertificateID",
 		    "v2gdin.struct.listofrootcertificateids.rootcertificateid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinAC_EVChargeParameterType */
-		{ &hf_v2gdin_struct_dinAC_EVChargeParameterType_DepartureTime,
+		/* struct din_AC_EVChargeParameterType */
+		{ &hf_v2gdin_struct_din_AC_EVChargeParameterType_DepartureTime,
 		  { "DepartureTime",
 		    "v2gdin.struct.ac_evchargeparameter.departuretime",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinAC_EVSEStatusType */
-		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_PowerSwitchClosed,
+		/* struct din_AC_EVSEStatusType */
+		{ &hf_v2gdin_struct_din_AC_EVSEStatusType_PowerSwitchClosed,
 		  { "PowerSwitchClosed",
 		    "v2gdin.struct.ac_evsestatus.powerswitchclosed",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_RCD,
+		{ &hf_v2gdin_struct_din_AC_EVSEStatusType_RCD,
 		  { "RCD", "v2gdin.struct.ac_evsestatus.rcd",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_NotificationMaxDelay,
+		{ &hf_v2gdin_struct_din_AC_EVSEStatusType_NotificationMaxDelay,
 		  { "NotificationMaxDelay",
 		    "v2gdin.struct.ac_evsestatus.notificationmaxdelay",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinAC_EVSEStatusType_EVSENotification,
+		{ &hf_v2gdin_struct_din_AC_EVSEStatusType_EVSENotification,
 		  { "EVSENotification",
 		    "v2gdinstruct.ac_evsestatus.evsenotification",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evsenotification_names),
 		    0x0, NULL, HFILL }
 		},
 
-		/* struct struct dinDC_EVStatusType */
-		{ &hf_v2gdin_struct_dinDC_EVStatusType_EVReady,
+		/* struct struct din_DC_EVStatusType */
+		{ &hf_v2gdin_struct_din_DC_EVStatusType_EVReady,
 		  { "EVReady",
 		    "v2gdin.struct.dc_evstatus.evready",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVStatusType_EVCabinConditioning,
+		{ &hf_v2gdin_struct_din_DC_EVStatusType_EVCabinConditioning,
 		  { "EVCabinConditioning",
 		    "v2gdin.struct.dc_evstatus.evcabinconditioning",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVStatusType_EVRESSConditioning,
+		{ &hf_v2gdin_struct_din_DC_EVStatusType_EVRESSConditioning,
 		  { "EVRESSConditioning",
 		    "v2gdin.struct.dc_evstatus.evressconditioning",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVStatusType_EVErrorCode,
+		{ &hf_v2gdin_struct_din_DC_EVStatusType_EVErrorCode,
 		  { "EVErrorCode",
 		    "v2gdin.struct.dc_evstatus.everrorcode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_dc_everrorcode_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVStatusType_EVRESSSOC,
+		{ &hf_v2gdin_struct_din_DC_EVStatusType_EVRESSSOC,
 		  { "EVRESSSOC",
 		    "v2gdin.struct.dc_evstatus.evresssoc",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinDC_EVChargeParameterType */
-		{ &hf_v2gdin_struct_dinDC_EVChargeParameterType_FullSOC,
+		/* struct din_DC_EVChargeParameterType */
+		{ &hf_v2gdin_struct_din_DC_EVChargeParameterType_FullSOC,
 		  { "FullSOC", "v2gdin.struct.dc_evchargeparameter.fullsoc",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVChargeParameterType_BulkSOC,
+		{ &hf_v2gdin_struct_din_DC_EVChargeParameterType_BulkSOC,
 		  { "BulkSOC", "v2gdin.struct.dc_evchargeparameter.bulksoc",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinDC_EVSEStatusType */
-		{ &hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEIsolationStatus,
+		/* struct din_DC_EVSEStatusType */
+		{ &hf_v2gdin_struct_din_DC_EVSEStatusType_EVSEIsolationStatus,
 		  { "EVSEIsolationStatus",
 		    "v2gdinstruct.dc_evsestatus.evseisolationstatus",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_isolation_level_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVSEStatusType_EVSEStatusCode,
+		{ &hf_v2gdin_struct_din_DC_EVSEStatusType_EVSEStatusCode,
 		  { "EVSEStatusCode",
 		    "v2gdinstruct.dc_evsestatus.evsestatuscode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_dc_evsestatuscode_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVSEStatusType_NotificationMaxDelay,
+		{ &hf_v2gdin_struct_din_DC_EVSEStatusType_NotificationMaxDelay,
 		  { "NotificationMaxDelay",
 		    "v2gdinstruct.dc_evsestatus.notificationmaxdelay",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVSEStatusType_EVSENotification,
+		{ &hf_v2gdin_struct_din_DC_EVSEStatusType_EVSENotification,
 		  { "EVSENotification",
 		    "v2gdinstruct.dc_evsestatus.evsenotification",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evsenotification_names),
 		    0x0, NULL, HFILL }
 		},
 
-		/* struct dinSAScheduleTupleType */
-		{ &hf_v2gdin_struct_dinSAScheduleTupleType_SAScheduleTupleID,
+		/* struct din_SAScheduleTupleType */
+		{ &hf_v2gdin_struct_din_SAScheduleTupleType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",
 		    "v2gdin.struct.sascheduletuple.sascheduletupleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinPMaxScheduleType */
-		{ &hf_v2gdin_struct_dinPMaxScheduleType_PMaxScheduleID,
+		/* struct din_PMaxScheduleType */
+		{ &hf_v2gdin_struct_din_PMaxScheduleType_PMaxScheduleID,
 		  { "PMaxScheduleID",
 		    "v2gdin.struct.pmaxschedule.pmaxscheduleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinPMaxScheduleEntryType */
-		{ &hf_v2gdin_struct_dinPMaxScheduleEntryType_PMax,
+		/* struct din_PMaxScheduleEntryType */
+		{ &hf_v2gdin_struct_din_PMaxScheduleEntryType_PMax,
 		  { "PMax", "v2gdin.struct.pmaxscheduleentry.pmax",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinRelativeTimeIntervalType */
-		{ &hf_v2gdin_struct_dinRelativeTimeIntervalType_start,
+		/* struct din_RelativeTimeIntervalType */
+		{ &hf_v2gdin_struct_din_RelativeTimeIntervalType_start,
 		  { "start", "v2gdin.struct.relativetimeinterval.start",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinRelativeTimeIntervalType_duration,
+		{ &hf_v2gdin_struct_din_RelativeTimeIntervalType_duration,
 		  { "duration", "v2gdin.struct.relativetimeinterval.duration",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinSalesTariffType */
-		{ &hf_v2gdin_struct_dinSalesTariffType_Id,
+		/* struct din_SalesTariffType */
+		{ &hf_v2gdin_struct_din_SalesTariffType_Id,
 		  { "Id", "v2gdin.struct.salestariff.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSalesTariffType_SalesTariffDescription,
+		{ &hf_v2gdin_struct_din_SalesTariffType_SalesTariffDescription,
 		  { "SalesTariffDescription",
 		    "v2gdin.struct.salestariff.salestariffdescription",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSalesTariffType_NumEPriceLevels,
+		{ &hf_v2gdin_struct_din_SalesTariffType_NumEPriceLevels,
 		  { "NumEPriceLevels",
 		    "v2gdin.struct.salestariff.numepricelevels",
 		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct hf_v2gdin_struct_dinSalesTariffEntryType */
-		{ &hf_v2gdin_struct_dinSalesTariffEntryType_EPriceLevel,
+		/* struct hf_v2gdin_struct_din_SalesTariffEntryType */
+		{ &hf_v2gdin_struct_din_SalesTariffEntryType_EPriceLevel,
 		  { "EPriceLevel", "v2gdin.struct.salestariffentry.epricelevel",
 		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinConsumptionCostType */
-		{ &hf_v2gdin_struct_dinConsumptionCostType_startValue,
+		/* struct din_ConsumptionCostType */
+		{ &hf_v2gdin_struct_din_ConsumptionCostType_startValue,
 		  { "startValue", "v2gdin.struct.consumptioncost.startvalue",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinCostType */
-		{ &hf_v2gdin_struct_dinCostType_costKind,
+		/* struct din_CostType */
+		{ &hf_v2gdin_struct_din_CostType_costKind,
 		  { "costKind", "v2gdin.struct.cost.costkind",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_cost_kind_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCostType_amount,
+		{ &hf_v2gdin_struct_din_CostType_amount,
 		  { "amount", "v2gdin.struct.cost.amount",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCostType_amountMultiplier,
+		{ &hf_v2gdin_struct_din_CostType_amountMultiplier,
 		  { "amountMultiplier", "v2gdin.struct.cost.amountmultiplier",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinChargingProfileType */
-		{ &hf_v2gdin_struct_dinChargingProfileType_SAScheduleTupleID,
+		/* struct din_ChargingProfileType */
+		{ &hf_v2gdin_struct_din_ChargingProfileType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",
 		    "v2gdin.struct.chargingprofile.sascheduletupleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryStart,
+		{ &hf_v2gdin_struct_din_ProfileEntryType_ChargingProfileEntryStart,
 		  { "ChargingProfileEntryStart",
 		    "v2gdin.struct.profileentry.chargingprofileentrystart",
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinProfileEntryType_ChargingProfileEntryMaxPower,
+		{ &hf_v2gdin_struct_din_ProfileEntryType_ChargingProfileEntryMaxPower,
 		  { "ChargingProfileEntryMaxPower",
 		    "v2gdin.struct.profileentry.chargingprofileentrymaxpower",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinDC_EVPowerDeliveryParameterType */
-		{ &hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_BulkChargingComplete,
+		/* struct din_DC_EVPowerDeliveryParameterType */
+		{ &hf_v2gdin_struct_din_DC_EVPowerDeliveryParameterType_BulkChargingComplete,
 		  { "BulkChargingComplete",
 		    "v2gdin.struct.dc_evpowerdeliveryparameter.bulkchargingcomplete",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinDC_EVPowerDeliveryParameterType_ChargingComplete,
+		{ &hf_v2gdin_struct_din_DC_EVPowerDeliveryParameterType_ChargingComplete,
 		  { "ChargingComplete",
 		    "v2gdin.struct.dc_evpowerdeliveryparameter.chargingcomplete",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinMeterInfoType */
-		{ &hf_v2gdin_struct_dinMeterInfoType_MeterID,
+		/* struct din_MeterInfoType */
+		{ &hf_v2gdin_struct_din_MeterInfoType_MeterID,
 		  { "MeterID", "v2gdin.struct.meterinfo.meterid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinMeterInfoType_SigMeterReading,
+		{ &hf_v2gdin_struct_din_MeterInfoType_SigMeterReading,
 		  { "SigMeterReading",
 		    "v2gdin.struct.meterinfo.sigmeterreading",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinMeterInfoType_MeterStatus,
+		{ &hf_v2gdin_struct_din_MeterInfoType_MeterStatus,
 		  { "MeterStatus", "v2gdin.struct.meterinfo.meterstatus",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinMeterInfoType_TMeter,
+		{ &hf_v2gdin_struct_din_MeterInfoType_TMeter,
 		  { "TMeter", "v2gdin.struct.meterinfo.tmeter",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct dinMessageHeaderType */
-		{ &hf_v2gdin_struct_dinMessageHeaderType_SessionID,
+		/* struct din_MessageHeaderType */
+		{ &hf_v2gdin_struct_din_MessageHeaderType_SessionID,
 		  { "SessionID", "v2gdin.struct.messageheader.sessionid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* SessionSetupReq */
-		{ &hf_v2gdin_struct_dinSessionSetupReqType_EVCCID,
+		{ &hf_v2gdin_struct_din_SessionSetupReqType_EVCCID,
 		  { "EVCCID", "v2gdin.body.sessionsetupreq.evccid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* SessionSetupRes */
-		{ &hf_v2gdin_struct_dinSessionSetupResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_SessionSetupResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.sessionsetupres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSessionSetupResType_EVSEID,
+		{ &hf_v2gdin_struct_din_SessionSetupResType_EVSEID,
 		  { "EVSEID", "v2gdin.body.sessionsetupres.evseid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinSessionSetupResType_DateTimeNow,
+		{ &hf_v2gdin_struct_din_SessionSetupResType_DateTimeNow,
 		  { "DateTimeNow", "v2gdin.body.sessionsetupres.datetimenow",
 		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* ServiceDiscoveryReq */
-		{ &hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceScope,
+		{ &hf_v2gdin_struct_din_ServiceDiscoveryReqType_ServiceScope,
 		  { "ServiceScope", "v2gdin.body.servicediscoveryreq.servicescope",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinServiceDiscoveryReqType_ServiceCategory,
+		{ &hf_v2gdin_struct_din_ServiceDiscoveryReqType_ServiceCategory,
 		  { "ServiceCategory", "v2gdin.body.servicediscoveryreq.servicecategory",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_service_category_names),
 		    0x0, NULL, HFILL }
 		},
 		/* ServiceDiscoveryRes */
-		{ &hf_v2gdin_struct_dinServiceDiscoveryResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_ServiceDiscoveryResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.servicediscoveryres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
 
 		/* ServiceDetailReq */
-		{ &hf_v2gdin_struct_dinServiceDetailReqType_ServiceID,
+		{ &hf_v2gdin_struct_din_ServiceDetailReqType_ServiceID,
 		  { "ServiceID",
 		    "v2gdin.body.servicedetailreq.serviceid",
 		    FT_UINT16, BASE_HEX, NULL, 0x0, NULL, HFILL }
 		},
 		/* ServiceDiscoveryRes */
-		{ &hf_v2gdin_struct_dinServiceDetailResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_ServiceDetailResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.servicedetailres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinServiceDetailResType_ServiceID,
+		{ &hf_v2gdin_struct_din_ServiceDetailResType_ServiceID,
 		  { "ServiceID",
 		    "v2gdin.body.servicedetailres.serviceid",
 		    FT_UINT16, BASE_HEX, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* ServicePaymentSelectionReq */
-		{ &hf_v2gdin_struct_dinServicePaymentSelectionReqType_SelectedPaymentOption,
+		{ &hf_v2gdin_struct_din_ServicePaymentSelectionReqType_SelectedPaymentOption,
 		  { "SelectedPaymentOption",
 		    "v2gdin.body.servicepaymentselectionreq.selectedpaymentoption",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_payment_option_names),
 		    0x0, NULL, HFILL }
 		},
 		/* ServicePaymentSelectionRes */
-		{ &hf_v2gdin_struct_dinServicePaymentSelectionResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_ServicePaymentSelectionResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.servicepaymentselectionres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -5530,45 +5388,45 @@ proto_register_v2gdin(void)
 		},
 
 		/* PaymentDetailsReq */
-		{ &hf_v2gdin_struct_dinPaymentDetailsReqType_ContractID,
+		{ &hf_v2gdin_struct_din_PaymentDetailsReqType_ContractID,
 		  { "ContractID", "v2gdin.body.paymentdetailsreq.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* PaymentDetailsRes */
-		{ &hf_v2gdin_struct_dinPaymentDetailsResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_PaymentDetailsResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.paymentdetailsres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinPaymentDetailsResType_GenChallenge,
+		{ &hf_v2gdin_struct_din_PaymentDetailsResType_GenChallenge,
 		  { "GenChallenge",
 		    "v2gdin.body.paymentdetailsres.genchallenge",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinPaymentDetailsResType_DateTimeNow,
+		{ &hf_v2gdin_struct_din_PaymentDetailsResType_DateTimeNow,
 		  { "DateTimeNow", "v2gdin.body.paymentdetailsress.datetimenow",
 		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* ContractAuthenticationReq */
-		{ &hf_v2gdin_struct_dinContractAuthenticationReqType_Id,
+		{ &hf_v2gdin_struct_din_ContractAuthenticationReqType_Id,
 		  { "Id", "v2gdin.body.paymentdetailsreq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinContractAuthenticationReqType_GenChallenge,
+		{ &hf_v2gdin_struct_din_ContractAuthenticationReqType_GenChallenge,
 		  { "GenChallenge",
 		    "v2gdin.body.paymentdetailsreq.genchallenge",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* ContractAuthenticationRes */
-		{ &hf_v2gdin_struct_dinContractAuthenticationResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_ContractAuthenticationResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.contractauthenticationres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinContractAuthenticationResType_EVSEProcessing,
+		{ &hf_v2gdin_struct_din_ContractAuthenticationResType_EVSEProcessing,
 		  { "EVSEProcessing",
 		    "v2gdin.body.contractauthenticationres.evseprocessing",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
@@ -5576,7 +5434,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* ChargeParameterDiscoveryReq */
-		{ &hf_v2gdin_struct_dinChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType,
+		{ &hf_v2gdin_struct_din_ChargeParameterDiscoveryReqType_EVRequestedEnergyTransferType,
 		  { "EVRequestedEnergyTransferType",
 		    "v2gdin.body.chargeparameterdiscoveryreq.evrequestenergytransfer",
 		    FT_UINT32, BASE_DEC,
@@ -5584,13 +5442,13 @@ proto_register_v2gdin(void)
 		    0x0, NULL, HFILL }
 		},
 		/* ChargeParameterDiscoveryRes */
-		{ &hf_v2gdin_struct_dinChargeParameterDiscoveryResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_ChargeParameterDiscoveryResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.chargeparametersdiscoveryres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinChargeParameterDiscoveryResType_EVSEProcessing,
+		{ &hf_v2gdin_struct_din_ChargeParameterDiscoveryResType_EVSEProcessing,
 		  { "EVSEProcessing",
 		    "v2gdin.body.chargeparametersdiscoveryres.evseprocessing",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
@@ -5598,13 +5456,13 @@ proto_register_v2gdin(void)
 		},
 
 		/* PowerDeliveryReq */
-		{ &hf_v2gdin_struct_dinPowerDeliveryReqType_ReadyToChargeState,
+		{ &hf_v2gdin_struct_din_PowerDeliveryReqType_ReadyToChargeState,
 		  { "_ReadyToChargeState",
 		    "v2gdin.body.powerdeliveryreq.readytochargestate",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* PowerDeliveryRes */
-		{ &hf_v2gdin_struct_dinPowerDeliveryResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_PowerDeliveryResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.powerdeliveryres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -5612,43 +5470,43 @@ proto_register_v2gdin(void)
 		},
 
 		/* ChargingStatusRes */
-		{ &hf_v2gdin_struct_dinChargingStatusResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_ChargingStatusResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.chargingstatusres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinChargingStatusResType_EVSEID,
+		{ &hf_v2gdin_struct_din_ChargingStatusResType_EVSEID,
 		  { "EVSEID", "v2gdin.body.chargingstatusres.evseid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinChargingStatusResType_SAScheduleTupleID,
+		{ &hf_v2gdin_struct_din_ChargingStatusResType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",
 		    "v2gdin.body.chargingstatusres.sascheduletupleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinChargingStatusResType_ReceiptRequired,
+		{ &hf_v2gdin_struct_din_ChargingStatusResType_ReceiptRequired,
 		  { "ReceiptRequired",
 		    "v2gdin.body.chargingstatusres.receiptrequired",
 		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* MeteringReceiptReq */
-		{ &hf_v2gdin_struct_dinMeteringReceiptReqType_Id,
+		{ &hf_v2gdin_struct_din_MeteringReceiptReqType_Id,
 		  { "Id", "v2gdin.body.meteringreceiptreq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinMeteringReceiptReqType_SessionID,
+		{ &hf_v2gdin_struct_din_MeteringReceiptReqType_SessionID,
 		  { "SessionID", "v2gdin.body.meteringreceiptreq.sessionid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinMeteringReceiptReqType_SAScheduleTupleID,
+		{ &hf_v2gdin_struct_din_MeteringReceiptReqType_SAScheduleTupleID,
 		  { "SAScheduleTupleID",
 		    "v2gdin.body.meteringreceiptreq.sascheduletupleid",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* MeteringReceiptRes */
-		{ &hf_v2gdin_struct_dinMeteringReceiptResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_MeteringReceiptResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.meteringreceiptres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -5656,7 +5514,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* SessionStopRes */
-		{ &hf_v2gdin_struct_dinSessionStopResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_SessionStopResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.sessionstopres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -5664,99 +5522,99 @@ proto_register_v2gdin(void)
 		},
 
 		/* CertificateUpdateReq */
-		{ &hf_v2gdin_struct_dinCertificateUpdateReqType_Id,
+		{ &hf_v2gdin_struct_din_CertificateUpdateReqType_Id,
 		  { "Id", "v2gdin.body.certificateupdatereq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateReqType_ContractID,
+		{ &hf_v2gdin_struct_din_CertificateUpdateReqType_ContractID,
 		  { "ContractID",
 		    "v2gdin.body.certificateupdatereq.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateReqType_DHParams,
+		{ &hf_v2gdin_struct_din_CertificateUpdateReqType_DHParams,
 		  { "DHParams", "v2gdin.body.certificateupdatereq.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* CertificateUpdateRes */
-		{ &hf_v2gdin_struct_dinCertificateUpdateResType_Id,
+		{ &hf_v2gdin_struct_din_CertificateUpdateResType_Id,
 		  { "Id", "v2gdin.body.certificateupdateres.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_CertificateUpdateResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.certificateupdateres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateResType_ContractSignatureEncryptedPrivateKey,
+		{ &hf_v2gdin_struct_din_CertificateUpdateResType_ContractSignatureEncryptedPrivateKey,
 		  { "ContractSignatureEncryptedPrivateKey",
 		    "v2gdin.body.certificateupdateres.contractsignatureencryptedprivatekey",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateResType_DHParams,
+		{ &hf_v2gdin_struct_din_CertificateUpdateResType_DHParams,
 		  { "DHParams",
 		    "v2gdin.body.certificateupdateres.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateResType_ContractID,
+		{ &hf_v2gdin_struct_din_CertificateUpdateResType_ContractID,
 		  { "ContractID", "v2gdin.body.certificateupdateres.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateUpdateResType_RetryCounter,
+		{ &hf_v2gdin_struct_din_CertificateUpdateResType_RetryCounter,
 		  { "RetryCounter",
 		    "v2gdin.body.certificateupdateres.retrycounts",
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* CertificateInstallationReq */
-		{ &hf_v2gdin_struct_dinCertificateInstallationReqType_Id,
+		{ &hf_v2gdin_struct_din_CertificateInstallationReqType_Id,
 		  { "Id", "v2gdin.body.certificateinstallationreq.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateInstallationReqType_OEMProvisioningCert,
+		{ &hf_v2gdin_struct_din_CertificateInstallationReqType_OEMProvisioningCert,
 		  { "OEMProvisioningCert",
 		    "v2gdin.body.certificateinstallationreq.oemprovisioningcert",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateInstallationReqType_DHParams,
+		{ &hf_v2gdin_struct_din_CertificateInstallationReqType_DHParams,
 		  { "DHParams", "v2gdin.body.certificateinstallationreq.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* CertificateInstallationRes */
-		{ &hf_v2gdin_struct_dinCertificateInstallationResType_Id,
+		{ &hf_v2gdin_struct_din_CertificateInstallationResType_Id,
 		  { "Id", "v2gdin.body.certificateinstallationres.id",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateInstallationResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_CertificateInstallationResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.certificateinstallationres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateInstallationResType_ContractSignatureEncryptedPrivateKey,
+		{ &hf_v2gdin_struct_din_CertificateInstallationResType_ContractSignatureEncryptedPrivateKey,
 		  { "ContractSignatureEncryptedPrivateKey",
 		    "v2gdin.body.certificateinstallationres.contractsignatureencryptedprivatekey",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateInstallationResType_DHParams,
+		{ &hf_v2gdin_struct_din_CertificateInstallationResType_DHParams,
 		  { "DHParams",
 		    "v2gdin.body.certificateinstallationres.dhparams",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCertificateInstallationResType_ContractID,
+		{ &hf_v2gdin_struct_din_CertificateInstallationResType_ContractID,
 		  { "ContractID",
 		    "v2gdin.body.certificateinstallationres.contractid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* CableCheckRes */
-		{ &hf_v2gdin_struct_dinCableCheckResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_CableCheckResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.cablecheckres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCableCheckResType_EVSEProcessing,
+		{ &hf_v2gdin_struct_din_CableCheckResType_EVSEProcessing,
 		  { "EVSEProcessing",
 		    "v2gdin.body.cablecheckres.evseprocessing",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_evse_processing_names),
@@ -5764,7 +5622,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* PreChargeRes */
-		{ &hf_v2gdin_struct_dinPreChargeResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_PreChargeResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.prechargeres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -5772,35 +5630,35 @@ proto_register_v2gdin(void)
 		},
 
 		/* CurrentDemandReq */
-		{ &hf_v2gdin_struct_dinCurrentDemandReqType_ChargingComplete,
+		{ &hf_v2gdin_struct_din_CurrentDemandReqType_ChargingComplete,
 		  { "ChargingComplete",
 		    "v2gdin.body.currentdemandreq.chargingcomplete",
 		    FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCurrentDemandReqType_BulkChargingComplete,
+		{ &hf_v2gdin_struct_din_CurrentDemandReqType_BulkChargingComplete,
 		  { "BulkChargingComplete",
 		    "v2gdin.body.currentdemandreq.bulkchargingcomplete",
 		    FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* CurrentDemandRes */
-		{ &hf_v2gdin_struct_dinCurrentDemandResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_CurrentDemandResType_ResponseCode,
 		  { "ResponseCode", "v2gdin.body.currentdemandres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCurrentDemandResType_EVSECurrentLimitAchieved,
+		{ &hf_v2gdin_struct_din_CurrentDemandResType_EVSECurrentLimitAchieved,
 		  { "EVSECurrentLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsecurrentlimitachieved",
 		    FT_INT32, BASE_DEC, 0,
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCurrentDemandResType_EVSEVoltageLimitAchieved,
+		{ &hf_v2gdin_struct_din_CurrentDemandResType_EVSEVoltageLimitAchieved,
 		  { "EVSEVoltageLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsevoltagelimitachieved",
 		    FT_INT32, BASE_DEC, 0,
 		    0x0, NULL, HFILL }
 		},
-		{ &hf_v2gdin_struct_dinCurrentDemandResType_EVSEPowerLimitAchieved,
+		{ &hf_v2gdin_struct_din_CurrentDemandResType_EVSEPowerLimitAchieved,
 		  { "EVSEPowerLimitAchieved",
 		    "v2gdin.body.currentdemandres.evsepowerlimitachieved",
 		    FT_INT32, BASE_DEC, 0,
@@ -5808,7 +5666,7 @@ proto_register_v2gdin(void)
 		},
 
 		/* WeldingDetectionRes */
-		{ &hf_v2gdin_struct_dinWeldingDetectionResType_ResponseCode,
+		{ &hf_v2gdin_struct_din_WeldingDetectionResType_ResponseCode,
 		  { "ResponseCode",
 		    "v2gdin.body.weldingdetectionres.responsecode",
 		    FT_UINT32, BASE_DEC, VALS(v2gdin_response_code_names),
@@ -5883,99 +5741,99 @@ proto_register_v2gdin(void)
 		&ett_v2gdin_array,
 		&ett_v2gdin_array_i,
 
-		&ett_v2gdin_struct_dinNotificationType,
-		&ett_v2gdin_struct_dinSignatureType,
-		&ett_v2gdin_struct_dinSignedInfoType,
-		&ett_v2gdin_struct_dinCanonicalizationMethodType,
-		&ett_v2gdin_struct_dinSignatureMethodType,
-		&ett_v2gdin_struct_dinReferenceType,
-		&ett_v2gdin_struct_dinTransformsType,
-		&ett_v2gdin_struct_dinTransformType,
-		&ett_v2gdin_struct_dinDigestMethodType,
-		&ett_v2gdin_struct_dinSignatureValueType,
-		&ett_v2gdin_struct_dinKeyInfoType,
-		&ett_v2gdin_struct_dinKeyValueType,
-		&ett_v2gdin_struct_dinDSAKeyValueType,
-		&ett_v2gdin_struct_dinRSAKeyValueType,
-		&ett_v2gdin_struct_dinRetrievalMethodType,
-		&ett_v2gdin_struct_dinX509IssuerSerialType,
-		&ett_v2gdin_struct_dinX509DataType,
-		&ett_v2gdin_struct_dinPGPDataType,
-		&ett_v2gdin_struct_dinSPKIDataType,
-		&ett_v2gdin_struct_dinObjectType,
-		&ett_v2gdin_struct_dinServiceParameterListType,
-		&ett_v2gdin_struct_dinServiceTagListType,
-		&ett_v2gdin_struct_dinServiceTagType,
-		&ett_v2gdin_struct_dinServiceChargeType,
-		&ett_v2gdin_struct_dinServiceType,
-		&ett_v2gdin_struct_dinSelectedServiceType,
-		&ett_v2gdin_struct_dinSelectedServiceListType,
-		&ett_v2gdin_struct_dinParameterSetType,
-		&ett_v2gdin_struct_dinParameterType,
-		&ett_v2gdin_struct_dinPhysicalValueType,
-		&ett_v2gdin_struct_dinPaymentOptionsType,
-		&ett_v2gdin_struct_dinCertificateChainType,
-		&ett_v2gdin_struct_dinSubCertificatesType,
-		&ett_v2gdin_struct_dinEVChargeParameterType,
-		&ett_v2gdin_struct_dinAC_EVChargeParameterType,
-		&ett_v2gdin_struct_dinDC_EVChargeParameterType,
-		&ett_v2gdin_struct_dinDC_EVStatusType,
-		&ett_v2gdin_struct_dinEVSEChargeParameterType,
-		&ett_v2gdin_struct_dinEVSEStatusType,
-		&ett_v2gdin_struct_dinAC_EVSEChargeParameterType,
-		&ett_v2gdin_struct_dinAC_EVSEStatusType,
-		&ett_v2gdin_struct_dinDC_EVSEChargeParameterType,
-		&ett_v2gdin_struct_dinDC_EVSEStatusType,
-		&ett_v2gdin_struct_dinSASchedulesType,
-		&ett_v2gdin_struct_dinSAScheduleListType,
-		&ett_v2gdin_struct_dinSAScheduleTupleType,
-		&ett_v2gdin_struct_dinPMaxScheduleType,
-		&ett_v2gdin_struct_dinPMaxScheduleEntryType,
-		&ett_v2gdin_struct_dinRelativeTimeIntervalType,
-		&ett_v2gdin_struct_dinIntervalType,
-		&ett_v2gdin_struct_dinSalesTariffType,
-		&ett_v2gdin_struct_dinSalesTariffEntryType,
-		&ett_v2gdin_struct_dinConsumptionCostType,
-		&ett_v2gdin_struct_dinCostType,
-		&ett_v2gdin_struct_dinChargingProfileType,
-		&ett_v2gdin_struct_dinEVPowerDeliveryParameterType,
-		&ett_v2gdin_struct_dinDC_EVPowerDeliveryParameterType,
-		&ett_v2gdin_struct_dinProfileEntryType,
+		&ett_v2gdin_struct_din_NotificationType,
+		&ett_v2gdin_struct_din_SignatureType,
+		&ett_v2gdin_struct_din_SignedInfoType,
+		&ett_v2gdin_struct_din_CanonicalizationMethodType,
+		&ett_v2gdin_struct_din_SignatureMethodType,
+		&ett_v2gdin_struct_din_ReferenceType,
+		&ett_v2gdin_struct_din_TransformsType,
+		&ett_v2gdin_struct_din_TransformType,
+		&ett_v2gdin_struct_din_DigestMethodType,
+		&ett_v2gdin_struct_din_SignatureValueType,
+		&ett_v2gdin_struct_din_KeyInfoType,
+		&ett_v2gdin_struct_din_KeyValueType,
+		&ett_v2gdin_struct_din_DSAKeyValueType,
+		&ett_v2gdin_struct_din_RSAKeyValueType,
+		&ett_v2gdin_struct_din_RetrievalMethodType,
+		&ett_v2gdin_struct_din_X509IssuerSerialType,
+		&ett_v2gdin_struct_din_X509DataType,
+		&ett_v2gdin_struct_din_PGPDataType,
+		&ett_v2gdin_struct_din_SPKIDataType,
+		&ett_v2gdin_struct_din_ObjectType,
+		&ett_v2gdin_struct_din_ServiceParameterListType,
+		&ett_v2gdin_struct_din_ServiceTagListType,
+		&ett_v2gdin_struct_din_ServiceTagType,
+		&ett_v2gdin_struct_din_ServiceChargeType,
+		&ett_v2gdin_struct_din_ServiceType,
+		&ett_v2gdin_struct_din_SelectedServiceType,
+		&ett_v2gdin_struct_din_SelectedServiceListType,
+		&ett_v2gdin_struct_din_ParameterSetType,
+		&ett_v2gdin_struct_din_ParameterType,
+		&ett_v2gdin_struct_din_PhysicalValueType,
+		&ett_v2gdin_struct_din_PaymentOptionsType,
+		&ett_v2gdin_struct_din_CertificateChainType,
+		&ett_v2gdin_struct_din_SubCertificatesType,
+		&ett_v2gdin_struct_din_EVChargeParameterType,
+		&ett_v2gdin_struct_din_AC_EVChargeParameterType,
+		&ett_v2gdin_struct_din_DC_EVChargeParameterType,
+		&ett_v2gdin_struct_din_DC_EVStatusType,
+		&ett_v2gdin_struct_din_EVSEChargeParameterType,
+		&ett_v2gdin_struct_din_EVSEStatusType,
+		&ett_v2gdin_struct_din_AC_EVSEChargeParameterType,
+		&ett_v2gdin_struct_din_AC_EVSEStatusType,
+		&ett_v2gdin_struct_din_DC_EVSEChargeParameterType,
+		&ett_v2gdin_struct_din_DC_EVSEStatusType,
+		&ett_v2gdin_struct_din_SASchedulesType,
+		&ett_v2gdin_struct_din_SAScheduleListType,
+		&ett_v2gdin_struct_din_SAScheduleTupleType,
+		&ett_v2gdin_struct_din_PMaxScheduleType,
+		&ett_v2gdin_struct_din_PMaxScheduleEntryType,
+		&ett_v2gdin_struct_din_RelativeTimeIntervalType,
+		&ett_v2gdin_struct_din_IntervalType,
+		&ett_v2gdin_struct_din_SalesTariffType,
+		&ett_v2gdin_struct_din_SalesTariffEntryType,
+		&ett_v2gdin_struct_din_ConsumptionCostType,
+		&ett_v2gdin_struct_din_CostType,
+		&ett_v2gdin_struct_din_ChargingProfileType,
+		&ett_v2gdin_struct_din_EVPowerDeliveryParameterType,
+		&ett_v2gdin_struct_din_DC_EVPowerDeliveryParameterType,
+		&ett_v2gdin_struct_din_ProfileEntryType,
 
-		&ett_v2gdin_struct_dinSessionSetupReqType,
-		&ett_v2gdin_struct_dinSessionSetupResType,
-		&ett_v2gdin_struct_dinServiceDiscoveryReqType,
-		&ett_v2gdin_struct_dinServiceDiscoveryResType,
-		&ett_v2gdin_struct_dinServiceDetailReqType,
-		&ett_v2gdin_struct_dinServiceDetailResType,
-		&ett_v2gdin_struct_dinServicePaymentSelectionReqType,
-		&ett_v2gdin_struct_dinServicePaymentSelectionResType,
-		&ett_v2gdin_struct_dinPaymentDetailsReqType,
-		&ett_v2gdin_struct_dinPaymentDetailsResType,
-		&ett_v2gdin_struct_dinContractAuthenticationReqType,
-		&ett_v2gdin_struct_dinContractAuthenticationResType,
-		&ett_v2gdin_struct_dinChargeParameterDiscoveryReqType,
-		&ett_v2gdin_struct_dinChargeParameterDiscoveryResType,
-		&ett_v2gdin_struct_dinPowerDeliveryReqType,
-		&ett_v2gdin_struct_dinPowerDeliveryResType,
-		&ett_v2gdin_struct_dinChargingStatusReqType,
-		&ett_v2gdin_struct_dinChargingStatusResType,
-		&ett_v2gdin_struct_dinMeteringReceiptReqType,
-		&ett_v2gdin_struct_dinMeteringReceiptResType,
-		&ett_v2gdin_struct_dinSessionStopType,
-		&ett_v2gdin_struct_dinSessionStopResType,
-		&ett_v2gdin_struct_dinCertificateUpdateReqType,
-		&ett_v2gdin_struct_dinCertificateUpdateResType,
-		&ett_v2gdin_struct_dinCertificateInstallationReqType,
-		&ett_v2gdin_struct_dinCertificateInstallationResType,
-		&ett_v2gdin_struct_dinCableCheckReqType,
-		&ett_v2gdin_struct_dinCableCheckResType,
-		&ett_v2gdin_struct_dinPreChargeReqType,
-		&ett_v2gdin_struct_dinPreChargeResType,
-		&ett_v2gdin_struct_dinCurrentDemandReqType,
-		&ett_v2gdin_struct_dinCurrentDemandResType,
-		&ett_v2gdin_struct_dinWeldingDetectionReqType,
-		&ett_v2gdin_struct_dinWeldingDetectionResType
+		&ett_v2gdin_struct_din_SessionSetupReqType,
+		&ett_v2gdin_struct_din_SessionSetupResType,
+		&ett_v2gdin_struct_din_ServiceDiscoveryReqType,
+		&ett_v2gdin_struct_din_ServiceDiscoveryResType,
+		&ett_v2gdin_struct_din_ServiceDetailReqType,
+		&ett_v2gdin_struct_din_ServiceDetailResType,
+		&ett_v2gdin_struct_din_ServicePaymentSelectionReqType,
+		&ett_v2gdin_struct_din_ServicePaymentSelectionResType,
+		&ett_v2gdin_struct_din_PaymentDetailsReqType,
+		&ett_v2gdin_struct_din_PaymentDetailsResType,
+		&ett_v2gdin_struct_din_ContractAuthenticationReqType,
+		&ett_v2gdin_struct_din_ContractAuthenticationResType,
+		&ett_v2gdin_struct_din_ChargeParameterDiscoveryReqType,
+		&ett_v2gdin_struct_din_ChargeParameterDiscoveryResType,
+		&ett_v2gdin_struct_din_PowerDeliveryReqType,
+		&ett_v2gdin_struct_din_PowerDeliveryResType,
+		&ett_v2gdin_struct_din_ChargingStatusReqType,
+		&ett_v2gdin_struct_din_ChargingStatusResType,
+		&ett_v2gdin_struct_din_MeteringReceiptReqType,
+		&ett_v2gdin_struct_din_MeteringReceiptResType,
+		&ett_v2gdin_struct_din_SessionStopType,
+		&ett_v2gdin_struct_din_SessionStopResType,
+		&ett_v2gdin_struct_din_CertificateUpdateReqType,
+		&ett_v2gdin_struct_din_CertificateUpdateResType,
+		&ett_v2gdin_struct_din_CertificateInstallationReqType,
+		&ett_v2gdin_struct_din_CertificateInstallationResType,
+		&ett_v2gdin_struct_din_CableCheckReqType,
+		&ett_v2gdin_struct_din_CableCheckResType,
+		&ett_v2gdin_struct_din_PreChargeReqType,
+		&ett_v2gdin_struct_din_PreChargeResType,
+		&ett_v2gdin_struct_din_CurrentDemandReqType,
+		&ett_v2gdin_struct_din_CurrentDemandResType,
+		&ett_v2gdin_struct_din_WeldingDetectionReqType,
+		&ett_v2gdin_struct_din_WeldingDetectionResType
 	};
 
 	proto_v2gdin = proto_register_protocol (

@@ -15,7 +15,7 @@
  * Compare the decode wide strings to an C string
  */
 static inline int
-exi_strncasecmp(const exi_string_character_t *s1, const char *s2, size_t n)
+exi_strncasecmp(const exi_character_t *s1, const char *s2, size_t n)
 {
 	size_t pos;
 
@@ -45,7 +45,7 @@ static inline void
 exi_add_characters(proto_tree *tree,
 		   int hfindex,
 		   tvbuff_t *tvb,
-		   const exi_string_character_t *characters,
+		   const exi_character_t *characters,
 		   unsigned int characterslen,
 		   size_t charactersmaxsize)
 {
@@ -68,7 +68,7 @@ exi_add_characters(proto_tree *tree,
 	}
 
 	for (i = 0, j = 0; i < characterslen; i++) {
-		unsigned long int c = characters[i];
+		int c = characters[i];
 
 		if (isascii(c) && isprint(c)) {
 			str[j++] = (char)c;
@@ -91,7 +91,7 @@ exi_add_characters(proto_tree *tree,
 					width = 4;
 				else
 					width = 6;
-				sprintf(str + j, "\\u{%0*lx}", width, c);
+				sprintf(str + j, "\\u{%0*x}", width, c);
 				break;
 			}
 			j += (unsigned int)strlen(str + j);
