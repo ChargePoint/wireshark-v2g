@@ -2,7 +2,7 @@
 # WireShark Dissectors to Support Debug/Development of the V2G
 # protocols (ISO 15118) standards.
 #
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.14)
 cmake_policy(SET CMP0048 NEW)
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
@@ -11,7 +11,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 endif()
 
 # NOTE: The wireshark plugin build assumes major.minor.patch.tweak
-project(wireshark-v2g VERSION 0.7.1.0)
+project(wireshark-v2g VERSION 0.8.0.0)
 
 # Set the default C/C++ standards
 set(CMAKE_C_STANDARD 11)
@@ -38,7 +38,6 @@ include(extern/dependencies.cmake)
 set(DISSECTOR_SRC
     src/packet-v2gexi.c
     src/packet-v2gdin.c
-    src/packet-v2giso1.c
     src/packet-v2giso2.c
 )
 
@@ -95,7 +94,11 @@ if(Wireshark_FOUND)
             FOLDER "Plugins"
     )
 
-    target_link_libraries(v2gexi epan openv2g ${GLIB2_LIBRARY})
+    target_link_libraries(v2gexi epan
+                          cb_v2g::DIN
+                          cb_v2g::ISO2
+                          cb_v2g::ISO20
+                          ${GLIB2_LIBRARY})
 
     install(TARGETS v2gexi
         LIBRARY DESTINATION "${Wireshark_PLUGIN_LIBDIR}/epan" NAMELINK_SKIP
@@ -130,7 +133,10 @@ else(Wireshark_FOUND)
     )
 
     add_wireshark_plugin_library(v2gexi epan)
-    target_link_libraries(v2gexi epan openv2g)
+    target_link_libraries(v2gexi epan
+                          cb_v2g::DIN
+                          cb_v2g::ISO2
+                          cb_v2g::ISO20)
     install_plugin(v2gexi epan)
     install(FILES dissector/v2g.lua
             DESTINATION ${PLUGIN_INSTALL_VERSION_LIBDIR}/epan NAMELINK_SKIP

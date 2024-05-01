@@ -1,0 +1,68 @@
+From 5095a4b17f53b9eec8bff4e3d821e6bf3a7a14d0 Mon Sep 17 00:00:00 2001
+From: Charles Hardin <charles.hardin@chargepoint.com>
+Date: Tue, 30 Apr 2024 18:27:51 -0700
+Subject: [PATCH 2/2] chore: add static and position independent code to the
+ libraries
+
+Need to link these libraries for modules and so they need to be
+PIC and object or archive.
+
+Signed-off-by: Charles Hardin <charles.hardin@chargepoint.com>
+---
+ lib/cbv2g/CMakeLists.txt | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/lib/cbv2g/CMakeLists.txt b/lib/cbv2g/CMakeLists.txt
+index 9ad8a39..d5edbfd 100644
+--- a/lib/cbv2g/CMakeLists.txt
++++ b/lib/cbv2g/CMakeLists.txt
+@@ -1,4 +1,5 @@
+-add_library(cb_exi_codec)
++add_library(cb_exi_codec STATIC)
++set_target_properties(cb_exi_codec PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ 
+ target_sources(cb_exi_codec
+     PRIVATE
+@@ -19,7 +20,8 @@ target_include_directories(cb_exi_codec
+ 
+ target_compile_features(cb_exi_codec PRIVATE c_std_99)
+ 
+-add_library(cb_din)
++add_library(cb_din STATIC)
++set_target_properties(cb_din PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cb_v2g::DIN ALIAS cb_din)
+ 
+ target_sources(cb_din
+@@ -45,7 +47,8 @@ target_link_libraries(cb_din
+ 
+ target_compile_features(cb_din PUBLIC c_std_99)
+ 
+-add_library(cb_iso2)
++add_library(cb_iso2 STATIC)
++set_target_properties(cb_iso2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cb_v2g::ISO2 ALIAS cb_iso2)
+ 
+ target_sources(cb_iso2
+@@ -71,7 +74,8 @@ target_link_libraries(cb_iso2
+ 
+ target_compile_features(cb_iso2 PUBLIC c_std_99)
+ 
+-add_library(cb_iso20)
++add_library(cb_iso20 STATIC)
++set_target_properties(cb_iso20 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cb_v2g::ISO20 ALIAS cb_iso20)
+ 
+ target_sources(cb_iso20
+@@ -109,7 +113,8 @@ target_link_libraries(cb_iso20
+ 
+ target_compile_features(cb_iso20 PUBLIC c_std_99)
+ 
+-add_library(cb_v2gtp)
++add_library(cb_v2gtp STATIC)
++set_target_properties(cb_v2gtp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cb_v2g::V2GTP ALIAS cb_v2gtp)
+ 
+ target_sources(cb_v2gtp
+-- 
+2.39.3 (Apple Git-146)
+

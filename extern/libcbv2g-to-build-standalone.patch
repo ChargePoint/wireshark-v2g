@@ -1,0 +1,30 @@
+From f6d339e288347073fc4cfad2433cb6672aa1882d Mon Sep 17 00:00:00 2001
+From: Charles Hardin <charles.hardin@chargepoint.com>
+Date: Tue, 30 Apr 2024 17:53:18 -0700
+Subject: [PATCH 1/1] chore: allow the libcbv2g to built outside of the everest
+ packages
+
+The library should be built independently of other everest components
+and so the cmake modules are not present.
+
+Signed-off-by: Charles Hardin <charles.hardin@chargepoint.com>
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10ebf24..4a08884 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@ project(cbv2g
+ 	LANGUAGES C CXX
+ )
+ 
+-find_package(everest-cmake 0.1 REQUIRED
++find_package(everest-cmake 0.1
+     PATHS ../everest-cmake
+ )
+ 
+-- 
+2.39.3 (Apple Git-146)
+

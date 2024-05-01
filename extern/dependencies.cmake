@@ -2,79 +2,19 @@
 include(FetchContent)
 
 #
-# Use the OpenV2G project as part of the dissector
+# Use the libcbv2g project as part of the dissector
 #
-set(openv2g_VERSION 0.9.5)
+set(libcbv2g_VERSION 0.1.0)
+set(LIBCBV2G_PATCH_COMMAND patch -p1)
 
-if(MSVC)
-    set(OPENV2G_PATCH_COMMAND patch --binary -p1)
-else(MSVC)
-    set(OPENV2G_PATCH_COMMAND patch -p1)
-endif(MSVC)
-
-FetchContent_Declare(openv2g
-    URL https://sourceforge.net/projects/openv2g/files/release/OpenV2G_${openv2g_VERSION}/OpenV2G_${openv2g_VERSION}.zip/download
-    URL_HASH SHA1=c9486c0393346717dafc4df7f2b97c5426f22c43
-    PATCH_COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-guard-deploy-defines.patch
-          COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-fix-windows-build.patch
-          COMMAND ${OPENV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/openv2g-increase-decode-limits.patch
+FetchContent_Declare(libcbv2g
+    GIT_REPOSITORY https://github.com/EVerest/libcbv2g.git
+    GIT_TAG v0.1.0
+    GIT_SHALLOW ON
+    PATCH_COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-to-build-standalone.patch
+          COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-add-static-and-position-independent-code.patch
+    CMAKE_ARGS -DCB_V2G_BUILD_TESTS:BOOL=OFF
 )
 
-FetchContent_MakeAvailable(openv2g)
-FetchContent_GetProperties(openv2g)
-
-add_library(openv2g STATIC
-    ${openv2g_SOURCE_DIR}/src/appHandshake/appHandEXIDatatypes.c
-    ${openv2g_SOURCE_DIR}/src/appHandshake/appHandEXIDatatypesDecoder.c
-    ${openv2g_SOURCE_DIR}/src/appHandshake/appHandEXIDatatypesEncoder.c
-
-    ${openv2g_SOURCE_DIR}/src/codec/BitInputStream.c
-    ${openv2g_SOURCE_DIR}/src/codec/BitOutputStream.c
-    ${openv2g_SOURCE_DIR}/src/codec/ByteStream.c
-    ${openv2g_SOURCE_DIR}/src/codec/DecoderChannel.c
-    ${openv2g_SOURCE_DIR}/src/codec/EXIHeaderDecoder.c
-    ${openv2g_SOURCE_DIR}/src/codec/EXIHeaderEncoder.c
-    ${openv2g_SOURCE_DIR}/src/codec/EncoderChannel.c
-    ${openv2g_SOURCE_DIR}/src/codec/MethodsBag.c
-
-    ${openv2g_SOURCE_DIR}/src/din/dinEXIDatatypes.c
-    ${openv2g_SOURCE_DIR}/src/din/dinEXIDatatypesDecoder.c
-    ${openv2g_SOURCE_DIR}/src/din/dinEXIDatatypesEncoder.c
-
-    ${openv2g_SOURCE_DIR}/src/iso1/iso1EXIDatatypes.c
-    ${openv2g_SOURCE_DIR}/src/iso1/iso1EXIDatatypesDecoder.c
-    ${openv2g_SOURCE_DIR}/src/iso1/iso1EXIDatatypesEncoder.c
-
-    ${openv2g_SOURCE_DIR}/src/iso2/iso2EXIDatatypes.c
-    ${openv2g_SOURCE_DIR}/src/iso2/iso2EXIDatatypesDecoder.c
-    ${openv2g_SOURCE_DIR}/src/iso2/iso2EXIDatatypesEncoder.c
-
-    ${openv2g_SOURCE_DIR}/src/xmldsig/xmldsigEXIDatatypes.c
-    ${openv2g_SOURCE_DIR}/src/xmldsig/xmldsigEXIDatatypesDecoder.c
-    ${openv2g_SOURCE_DIR}/src/xmldsig/xmldsigEXIDatatypesEncoder.c
-
-    # transport (unused)
-    #${openv2g_SOURCE_DIR}/src/transport/v2gtp.c
-)
-set_target_properties(openv2g PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-target_compile_definitions(openv2g
-    PUBLIC
-        DEPLOY_DIN_CODEC=1
-        DEPLOY_ISO1_CODEC=1
-        DEPLOY_ISO2_CODEC=1
-        DEPLOY_XMLDSIG_CODEC=1
-)
-
-target_include_directories(openv2g
-    PUBLIC
-        ${openv2g_SOURCE_DIR}/src
-        ${openv2g_SOURCE_DIR}/src/appHandshare
-        ${openv2g_SOURCE_DIR}/src/codec
-        ${openv2g_SOURCE_DIR}/src/din
-        ${openv2g_SOURCE_DIR}/src/iso1
-        ${openv2g_SOURCE_DIR}/src/iso2
-        ${openv2g_SOURCE_DIR}/src/xmldsig
-
-        #${openv2g_SOURCE_DIR}/src/transport
-)
+FetchContent_MakeAvailable(libcbv2g)
+FetchContent_GetProperties(libcbv2g)

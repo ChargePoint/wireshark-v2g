@@ -14,11 +14,9 @@
 
 void proto_register_v2gdin(void);
 void proto_register_v2gexi(void);
-void proto_register_v2giso1(void);
 void proto_register_v2giso2(void);
 void proto_reg_handoff_v2gdin(void);
 void proto_reg_handoff_v2gexi(void);
-void proto_reg_handoff_v2giso1(void);
 void proto_reg_handoff_v2giso2(void);
 
 WS_DLL_PUBLIC_DEF const gchar plugin_version[] = VERSION;
@@ -39,11 +37,6 @@ void plugin_register(void)
     plug_v2gexi.register_protoinfo = proto_register_v2gexi;
     plug_v2gexi.register_handoff = proto_reg_handoff_v2gexi;
     proto_register_plugin(&plug_v2gexi);
-    static proto_plugin plug_v2giso1;
-
-    plug_v2giso1.register_protoinfo = proto_register_v2giso1;
-    plug_v2giso1.register_handoff = proto_reg_handoff_v2giso1;
-    proto_register_plugin(&plug_v2giso1);
     static proto_plugin plug_v2giso2;
 
     plug_v2giso2.register_protoinfo = proto_register_v2giso2;
