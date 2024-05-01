@@ -39,6 +39,7 @@ set(DISSECTOR_SRC
     src/packet-v2gexi.c
     src/packet-v2gdin.c
     src/packet-v2giso2.c
+    src/packet-v2giso20.c
 )
 
 set_source_files_properties(${DISSECTOR_SRC}
