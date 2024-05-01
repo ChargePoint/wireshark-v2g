@@ -81,13 +81,17 @@ local SDP = {
 
 local V2GTP_EXIDISSECTOR_DEFAULT = 0
 local V2GTP_EXIDISSECTOR_DIN = 1
-local V2GTP_EXIDISSECTOR_ISO1 = 2
-local V2GTP_EXIDISSECTOR_ISO2 = 3
+local V2GTP_EXIDISSECTOR_ISO2 = 2
+local V2GTP_EXIDISSECTOR_ISO20 = 3
+local V2GTP_EXIDISSECTOR_ISO20AC = 4
+local V2GTP_EXIDISSECTOR_ISO20DC = 5
 
 local v2gtp_exidissector_tab = {
     {1, "Default", V2GTP_EXIDISSECTOR_DEFAULT},
-    {2, "DIN", V2GTP_EXIDISSECTOR_DIN}, {3, "ISO1", V2GTP_EXIDISSECTOR_ISO1},
-    {4, "ISO2", V2GTP_EXIDISSECTOR_ISO2}
+    {2, "DIN", V2GTP_EXIDISSECTOR_DIN}, {3, "ISO2", V2GTP_EXIDISSECTOR_ISO2},
+    {4, "ISO20", V2GTP_EXIDISSECTOR_ISO20},
+    {5, "ISO20AC", V2GTP_EXIDISSECTOR_ISO20AC},
+    {6, "ISO20DC", V2GTP_EXIDISSECTOR_ISO20DC}
 }
 
 v2gtp_protocol.prefs.exidissector = Pref.enum("EXI Dissector", -- label
@@ -114,20 +118,29 @@ function get_sdp_payload_type(type)
     local type_name = "UNKNOWN"
 
     local types = {
+        [0x8001] = "EXI ENCODED",
+        [0x8002] = "Part20Mainstream",
+        [0x8003] = "Part20ACMainstream",
+        [0x8004] = "Part20DCMainstream",
+        [0x8005] = "Part20ACDPMainstream",
+        [0x8006] = "Part20WPTMainstream",
+        [0x8101] = "ScheduleRenegotiation",
+        [0x8102] = "MeteringConfirmation",
+        [0x8103] = "ACDPSystemStatus",
+        [0x8104] = "ParkingStatus",
         [0x9000] = "SDP REQUEST",
         [0x9001] = "SDP RESPONSE",
+        [0x9002] = "SDP REQUEST WIRELESS",
+        [0X9003] = "SDP RESPONSE WIRELESS",
         [0x9004] = "SDP EMSP REQUEST",
-        [0x9005] = "SDP EMSP RESPONSE",
-        [0x8001] = "EXI ENCODED",
-        [0x9002] = "RESERVED",
-        [0x9003] = "RESERVED"
+        [0x9005] = "SDP EMSP RESPONSE"
     }
 
     if set_contains(types, type) then return types[type] end
 
     if type < 0x8000 then
         type_name = "RESERVED"
-    elseif type >= 0x8002 and type <= 0x8FFF then
+    elseif type >= 0x8007 and type <= 0x8FFF then
         type_name = "RESERVED"
     elseif type >= 0x9006 and type <= 0x9FFF then
         type_name = "RESERVED"
@@ -464,16 +477,34 @@ function dissect_v2gtp(buffer, pinfo, tree)
         if v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_DIN then
             Dissector.get("v2gdin"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
                                          pinfo, tree)
-        elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO1 then
-            Dissector.get("v2giso1"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
-                                          pinfo, tree)
         elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO2 then
             Dissector.get("v2giso2"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
                                           pinfo, tree)
+        elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO20 then
+            Dissector.get("v2giso20"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
+                                           pinfo, tree)
+        elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO20AC then
+            Dissector.get("v2giso20_ac"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
+                                              pinfo, tree)
+        elseif v2gtp_protocol.prefs.exidissector == V2GTP_EXIDISSECTOR_ISO20DC then
+            Dissector.get("v2giso20_dc"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
+                                              pinfo, tree)
         else
             Dissector.get("v2gexi"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
                                          pinfo, tree)
         end
+
+    elseif payload_type_name == "Part20Mainstream" then
+        Dissector.get("v2giso20"):call(buffer(V2GTP_HEADER_LENGTH):tvb(), pinfo,
+                                       tree)
+
+    elseif payload_type_name == "Part20ACMainstream" then
+        Dissector.get("v2giso20_ac"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
+                                          pinfo, tree)
+
+    elseif payload_type_name == "Part20DCMainstream" then
+        Dissector.get("v2giso20_dc"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
+                                          pinfo, tree)
     end
 end
 
