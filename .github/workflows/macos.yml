@@ -15,12 +15,11 @@ on:
 
 env:
    WIRESHARK_BRANCH: release-4.2
-   WIRESHARK_QT_VERSION: 5.15.3
 
 jobs:
    intree:
       name: Build in-tree plugin
-      runs-on: macos-11.0
+      runs-on: macos-latest
       steps:
          - name: Checkout Wireshark
            run: |
@@ -35,14 +34,16 @@ jobs:
            run: |
               git apply plugins/epan/v2g/extern/wireshark-${{ env.WIRESHARK_BRANCH }}.patch
 
-         - name: Set up Python 3.8
+         - name: Set up Python 3.11
            uses: actions/setup-python@v4
            with:
-              python-version: 3.8
+              python-version: 3.11
          - name: Install brew deps
            run: ./tools/macos-setup-brew.sh --install-optional --install-doc-deps --install-dmg-deps --install-test-deps
            env:
              HOMEBREW_NO_AUTO_UPDATE: 1
+         - name: Install dmgbuild
+           run: pip3 install dmgbuild
          - name: Build in-tree
            run: |
               mkdir build
