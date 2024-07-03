@@ -88,6 +88,14 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder vagrant_root, "/home/vagrant/wireshark-v2g"
 
   # Providers
+  config.vm.provider :parallels do |prl, override|
+    prl.update_guest_tools = true
+    prl.memory = VM_MEMORY
+    prl.cpus = VM_CORES
+
+    override.vagrant.plugins = [ "vagrant-parallels" ]
+  end
+
   config.vm.provider :virtualbox do |vb, override|
     vb.memory = VM_MEMORY
     vb.cpus = VM_CORES
@@ -113,7 +121,7 @@ Vagrant.configure(2) do |config|
       name: "bootstrap-source",
       privileged: true,
       inline: $bootstrap_source,
-      env: {"WIRESHARK_BRANCH" => "release-4.0",
+      env: {"WIRESHARK_BRANCH" => "release-4.2",
             "PLUGIN_DIR" => "/home/vagrant/wireshark-v2g/"}
   end
 end
