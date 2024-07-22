@@ -13,33 +13,18 @@ project provides a reference for protocol decode and analysis.
 * Wireshark's Development documentation: https://wiki.wireshark.org/Development
 * OpenV2G documentation: http://openv2g.sourceforge.net
 
-## Quickstart
-
-Select the approviate archive for the host machine that is being used
-* linux-x86_64
-* macos-x86_64
-* win64
-
-Follow the instructions to install the prebuilt release images into
-Wireshark based on the platform.
-
-After the files are copied, restart Wireshark and these v2g plugins
-should now be listed in the __About Wirekshark__ screen on the Plugins
-tab. In the case of tshark, a command line option using `tshark -G plugins`
-will list what has been loaded.
-
 ### Linux and MacOS
 
-The personal plugin folder is `~/.local/lib/wireshark/plugins` and so
-the v2g.lua and v2gexi.so files from the asset should be extracted and
-placed in this directory.
+Copy the `v2g.lua` and `v2gexi.so` files to the Wireshark personal plugin folder:
+`~/.local/lib/wireshark/plugins/<version-major>.<version-minor>/epan`.
+Note that plugin location is specific to your installed Wireshark version.
 
 For Linux
-- copy v2g.lua to `~/.local/lib/wireshark/plugins`
+- copy v2g.lua to `~/.local/lib/wireshark/plugins/4.2/epan`
 - copy v2gexi.so to `~/.local/lib/wireshark/plugins/4.2/epan`
 
 For Mac
-- copy v2g.lua to `~/.local/lib/wireshark/plugins`
+- copy v2g.lua to `~/.local/lib/wireshark/plugins/4.2/epan`
 - copy v2gexi.so to `~/.local/lib/wireshark/plugins/4-2/epan`
 
 ### Windows
@@ -48,7 +33,7 @@ The personal plugin forlder for Windows is `%APPDATA%/Wireshark/plugins`
 and this can have a bit of a different layout to ensure the dll will
 load on windows.
 
-- copy the v2g.lua to `%APPDATA%/Wireshark/plugins`
+- copy the v2g.lua to `%APPDATA%/Wireshark/plugins/4.2/epan`
 - copy the v2gexi.dll to `%APPDATA%/Wireshark/plugins/4.2/epan`
 
 __NOTE__: The global plugin folder can also be used in the "Wireshark"
@@ -78,6 +63,15 @@ mkdir wireshark-v2g/build && cd wireshark-v2g/build
 cmake ..
 make
 sudo make install
+```
+
+Alternatively, to build for Ubuntu 22.04 using a Docker build environment:
+
+```
+cd wireshark-v2g
+make
+cp v2gexi.so ~/.local/lib/wireshark/plugins/4.2/epan/
+cp dissector/v2g.lua ~/.local/lib/wireshark/plugins/4.2/epan/
 ```
 
 #### source plugin
