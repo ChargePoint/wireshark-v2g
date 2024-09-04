@@ -130,13 +130,13 @@ end
 function get_esdp_version(value)
     local version = "RESERVED"
     if value == 0x0001 then version = "Extended SDP Version 1" end
-    
+
     return version
 end
 
 function get_esdp_port_type(type)
     local port_type = "UNKNOWN"
-    
+
     local types = {
     [0x0000] = "Signal Not Available",
     [0x0001] = "NACS (SAE J3400)",
@@ -152,11 +152,11 @@ function get_esdp_port_type(type)
     [0x000B] = "Type-2 Plug (SAE J3068)",
     [0x000C] = "ChaoJi",
     }
-    
+
     if set_contains(types, type) then return types[type] end
-    
+
     if type > 0x000C then port_type = "Reserved" end
-    
+
     return port_type
 end
 
@@ -213,7 +213,7 @@ function dissect_all_tlvs_in_packet(buffer, pinfo, subtree, offset)
         local tlv_value = buffer(offset + 4, tlv_length):string()
 		
 		dissect_tlv(buffer, offset, subtree)
-               
+
         offset = offset + 4 + tlv_length  -- Move to the next TLV
     end
 end
@@ -256,7 +256,7 @@ function dissect_v2gtp(buffer, pinfo, tree)
             pinfo.cols.info:set('Extended SDP Request' .. security_display)
             local subtree = tree:add(v2gtp_protocol, buffer(8):range(), "Extended SDP Request")
             subtree:add(SDP["request_esdp_version"], buffer(8,2)):append_text("  (" .. get_esdp_version(buffer(8,2):uint()) .. ")")
-            subtree:add(SDP["request_esdp_reserved"], buffer(10,2))    
+            subtree:add(SDP["request_esdp_reserved"], buffer(10,2))
             subtree:add(SDP["request_security"], buffer(12,1)):append_text("  (" .. get_sdp_security(buffer(12,1):uint()) .. ")")
             subtree:add(SDP["request_transport_proto"], buffer(13,1)):append_text("  (" .. get_sdp_transport_name(buffer(13,1):uint()) .. ")")
             subtree:add(SDP["request_chargeport_inlet_type"], buffer(14,2)):append_text("  (" .. get_esdp_port_type(buffer(14,2):uint()) ..")")
@@ -273,7 +273,7 @@ function dissect_v2gtp(buffer, pinfo, tree)
 	end			
 			
     end
-            
+
     elseif payload_type_name == "SDP RESPONSE" then
         if sdp_pay_len == 20 then -- standard SDP
             local security_display = get_sdp_security(buffer(26,1):uint()) == "TLS: YES" and " (Secure)" or " (Non-Secure)"
@@ -286,7 +286,7 @@ function dissect_v2gtp(buffer, pinfo, tree)
             subtree:add(SDP["response_secc_port"], buffer(24,2))
             subtree:add(SDP["response_security"], buffer(26,1)):append_text("  (" .. get_sdp_security(buffer(26,1):uint()) .. ")")
             subtree:add(SDP["response_transport_proto"], buffer(27,1)):append_text("  (" .. get_sdp_transport_name(buffer(27,1):uint()) .. ")")
-            
+
             -- we don't know what port we're using at the start, add our
             -- dissector to the supported tls dissector (if you have session
             -- keys you can decrypt packets with this)
@@ -306,15 +306,15 @@ function dissect_v2gtp(buffer, pinfo, tree)
             local subtree = tree:add(v2gtp_protocol, buffer(), "Extended SDP Response")
             local port = buffer(30,2):uint()
             local security = buffer(32,1):uint()
-            
+
             subtree:add(SDP["response_esdp_version"], buffer(8,2)):append_text("  (" .. get_esdp_version(buffer(8,2):uint()) .. ")")
-            subtree:add(SDP["response_esdp_reserved"], buffer(10,2))    
+            subtree:add(SDP["response_esdp_reserved"], buffer(10,2))
             subtree:add(SDP["response_secc_ip_addr"], buffer(12,16))
             subtree:add(SDP["response_secc_port"], buffer(28,2))
             subtree:add(SDP["response_security"], buffer(30,1)):append_text("  (" .. get_sdp_security(buffer(30,1):uint()) .. ")")
             subtree:add(SDP["response_transport_proto"], buffer(31,1)):append_text("  (" .. get_sdp_transport_name(buffer(31,1):uint()) .. ")")
             subtree:add(SDP["response_charge_handle_type"], buffer(32,2)):append_text("  (" .. get_esdp_port_type(buffer(32,2):uint()) ..")")
-            
+
 	    -- TLV section
 	    if buffer:len() >= 35 then
 	        local tlv_subtree = tree:add(v2gtp_protocol, buffer(34):range(), "Extended SDP Response TLV Fields")
@@ -323,7 +323,7 @@ function dissect_v2gtp(buffer, pinfo, tree)
 	    else
 	        tree:add("No Extended SDP Response TLV Fields Present")
 	    end			
-            
+
             -- same as above for regular SDP, add dissector to supported TLS dissector
             if buffer(30,1):uint() == 0 then
                 -- TCP
@@ -336,7 +336,7 @@ function dissect_v2gtp(buffer, pinfo, tree)
                 end
             end
         end
-            
+
     elseif payload_type_name == "SDP EMSP REQUEST" then
         pinfo.cols.info:set('SDP with EMSP Request')
         local subtree = tree:add(v2gtp_protocol, buffer(), "SDP EMSP Request")
