@@ -3242,7 +3242,7 @@ static void
 dissect_v2giso20_document(
 	const struct iso20_exiDocument *doc,
 	tvbuff_t *tvb,
-	packet_info *pinfo _U_,
+	packet_info *pinfo,
 	proto_tree *tree,
 	gint idx,
 	const char *subtree_name)
