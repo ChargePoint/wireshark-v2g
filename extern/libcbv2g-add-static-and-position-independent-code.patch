@@ -1,68 +1,68 @@
-From 5095a4b17f53b9eec8bff4e3d821e6bf3a7a14d0 Mon Sep 17 00:00:00 2001
-From: Charles Hardin <charles.hardin@chargepoint.com>
-Date: Tue, 30 Apr 2024 18:27:51 -0700
-Subject: [PATCH 2/2] chore: add static and position independent code to the
+From 282634e35c915a42afb0d903aa8720bc405a61b7 Mon Sep 17 00:00:00 2001
+From: Charles Hardin <ckhardin@gmail.com>
+Date: Mon, 16 Sep 2024 13:29:09 -0700
+Subject: [PATCH 1/1] chore: add static and position independent code to the
  libraries
 
 Need to link these libraries for modules and so they need to be
 PIC and object or archive.
 
-Signed-off-by: Charles Hardin <charles.hardin@chargepoint.com>
+Signed-off-by: Charles Hardin <ckhardin@gmail.com>
 ---
  lib/cbv2g/CMakeLists.txt | 15 ++++++++++-----
  1 file changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/lib/cbv2g/CMakeLists.txt b/lib/cbv2g/CMakeLists.txt
-index 9ad8a39..d5edbfd 100644
+index cec1838..37b2e32 100644
 --- a/lib/cbv2g/CMakeLists.txt
 +++ b/lib/cbv2g/CMakeLists.txt
 @@ -1,4 +1,5 @@
--add_library(cb_exi_codec)
-+add_library(cb_exi_codec STATIC)
-+set_target_properties(cb_exi_codec PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-add_library(cbv2g_exi_codec)
++add_library(cbv2g_exi_codec STATIC)
++set_target_properties(cbv2g_exi_codec PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cbv2g::exi_codec ALIAS cbv2g_exi_codec)
+ set_property(TARGET cbv2g_exi_codec PROPERTY EXPORT_NAME exi_codec)
  
- target_sources(cb_exi_codec
-     PRIVATE
-@@ -19,7 +20,8 @@ target_include_directories(cb_exi_codec
+@@ -21,7 +22,8 @@ target_include_directories(cbv2g_exi_codec
  
- target_compile_features(cb_exi_codec PRIVATE c_std_99)
+ target_compile_features(cbv2g_exi_codec PRIVATE c_std_99)
  
--add_library(cb_din)
-+add_library(cb_din STATIC)
-+set_target_properties(cb_din PROPERTIES POSITION_INDEPENDENT_CODE ON)
- add_library(cb_v2g::DIN ALIAS cb_din)
+-add_library(cbv2g_din)
++add_library(cbv2g_din STATIC)
++set_target_properties(cbv2g_din PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cbv2g::din ALIAS cbv2g_din)
+ set_property(TARGET cbv2g_din PROPERTY EXPORT_NAME din)
  
- target_sources(cb_din
-@@ -45,7 +47,8 @@ target_link_libraries(cb_din
+@@ -48,7 +50,8 @@ target_link_libraries(cbv2g_din
  
- target_compile_features(cb_din PUBLIC c_std_99)
+ target_compile_features(cbv2g_din PUBLIC c_std_99)
  
--add_library(cb_iso2)
-+add_library(cb_iso2 STATIC)
-+set_target_properties(cb_iso2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
- add_library(cb_v2g::ISO2 ALIAS cb_iso2)
+-add_library(cbv2g_iso2)
++add_library(cbv2g_iso2 STATIC)
++set_target_properties(cbv2g_iso2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cbv2g::iso2 ALIAS cbv2g_iso2)
+ set_property(TARGET cbv2g_iso2 PROPERTY EXPORT_NAME iso2)
  
- target_sources(cb_iso2
-@@ -71,7 +74,8 @@ target_link_libraries(cb_iso2
+@@ -75,7 +78,8 @@ target_link_libraries(cbv2g_iso2
  
- target_compile_features(cb_iso2 PUBLIC c_std_99)
+ target_compile_features(cbv2g_iso2 PUBLIC c_std_99)
  
--add_library(cb_iso20)
-+add_library(cb_iso20 STATIC)
-+set_target_properties(cb_iso20 PROPERTIES POSITION_INDEPENDENT_CODE ON)
- add_library(cb_v2g::ISO20 ALIAS cb_iso20)
+-add_library(cbv2g_iso20)
++add_library(cbv2g_iso20 STATIC)
++set_target_properties(cbv2g_iso20 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cbv2g::iso20 ALIAS cbv2g_iso20)
+ set_property(TARGET cbv2g_iso20 PROPERTY EXPORT_NAME iso20)
  
- target_sources(cb_iso20
-@@ -109,7 +113,8 @@ target_link_libraries(cb_iso20
+@@ -114,7 +118,8 @@ target_link_libraries(cbv2g_iso20
  
- target_compile_features(cb_iso20 PUBLIC c_std_99)
+ target_compile_features(cbv2g_iso20 PUBLIC c_std_99)
  
--add_library(cb_v2gtp)
-+add_library(cb_v2gtp STATIC)
-+set_target_properties(cb_v2gtp PROPERTIES POSITION_INDEPENDENT_CODE ON)
- add_library(cb_v2g::V2GTP ALIAS cb_v2gtp)
+-add_library(cbv2g_tp)
++add_library(cbv2g_tp STATIC)
++set_target_properties(cbv2g_tp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ add_library(cbv2g::tp ALIAS cbv2g_tp)
+ set_property(TARGET cbv2g_tp PROPERTY EXPORT_NAME tp)
  
- target_sources(cb_v2gtp
 -- 
-2.39.3 (Apple Git-146)
+2.32.0 (Apple Git-132)
 
