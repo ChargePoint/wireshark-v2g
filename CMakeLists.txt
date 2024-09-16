@@ -98,9 +98,9 @@ if(Wireshark_FOUND)
     )
 
     target_link_libraries(v2gexi epan
-                          cb_v2g::DIN
-                          cb_v2g::ISO2
-                          cb_v2g::ISO20
+                          cbv2g::din
+                          cbv2g::iso2
+                          cbv2g::iso20
                           ${GLIB2_LIBRARY})
 
     install(TARGETS v2gexi
@@ -137,9 +137,9 @@ else(Wireshark_FOUND)
 
     add_wireshark_plugin_library(v2gexi epan)
     target_link_libraries(v2gexi epan
-                          cb_v2g::DIN
-                          cb_v2g::ISO2
-                          cb_v2g::ISO20)
+                          cbv2g::din
+                          cbv2g::iso2
+                          cbv2g::iso20)
     install_plugin(v2gexi epan)
     install(FILES dissector/v2g.lua
             DESTINATION ${PLUGIN_INSTALL_VERSION_LIBDIR}/epan NAMELINK_SKIP

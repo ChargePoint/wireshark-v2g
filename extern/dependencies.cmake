@@ -4,12 +4,12 @@ include(FetchContent)
 #
 # Use the libcbv2g project as part of the dissector
 #
-set(libcbv2g_VERSION 0.1.0)
+set(libcbv2g_VERSION 0.2.0)
 set(LIBCBV2G_PATCH_COMMAND patch -p1)
 
 FetchContent_Declare(libcbv2g
     GIT_REPOSITORY https://github.com/EVerest/libcbv2g.git
-    GIT_TAG v0.1.0
+    GIT_TAG v${libcbv2g_VERSION}
     GIT_SHALLOW ON
     PATCH_COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-to-build-standalone.patch
           COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-add-static-and-position-independent-code.patch
