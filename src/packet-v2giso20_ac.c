@@ -38,16 +38,454 @@ static gint ett_v2giso20_ac_array = -1;
 static gint ett_v2giso20_ac_array_i = -1;
 static gint ett_v2giso20_ac_asn1 = -1;
 
+static gint ett_struct_iso20_ac_AC_ChargeParameterDiscoveryReqType = -1;
+static gint ett_struct_iso20_ac_AC_ChargeParameterDiscoveryResType = -1;
+static gint ett_struct_iso20_ac_AC_ChargeLoopReqType = -1;
+static gint ett_struct_iso20_ac_AC_ChargeLoopResType = -1;
+static gint ett_struct_iso20_ac_AC_CPDReqEnergyTransferModeType = -1;
+static gint ett_struct_iso20_ac_AC_CPDResEnergyTransferModeType = -1;
+static gint ett_struct_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType = -1;
+static gint ett_struct_iso20_ac_BPT_AC_CPDResEnergyTransferModeType = -1;
+static gint ett_struct_iso20_ac_Scheduled_AC_CLReqControlModeType = -1;
+static gint ett_struct_iso20_ac_Scheduled_AC_CLResControlModeType = -1;
+static gint ett_struct_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType = -1;
+static gint ett_struct_iso20_ac_BPT_Scheduled_AC_CLResControlModeType = -1;
+static gint ett_struct_iso20_ac_Dynamic_AC_CLReqControlModeType = -1;
+static gint ett_struct_iso20_ac_Dynamic_AC_CLResControlModeType = -1;
+static gint ett_struct_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType = -1;
+static gint ett_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType = -1;
+static gint ett_struct_iso20_ac_CLReqControlModeType = -1;
+static gint ett_struct_iso20_ac_CLResControlModeType = -1;
+
 
 static void
-dissect_v2giso20_ac_document(
-	const struct iso20_ac_exiDocument *doc _U_,
+dissect_iso20_ac_AC_ChargeParameterDiscoveryReqType(
+	const struct iso20_ac_AC_ChargeParameterDiscoveryReqType *req _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_AC_ChargeParameterDiscoveryResType(
+	const struct iso20_ac_AC_ChargeParameterDiscoveryResType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_AC_ChargeLoopReqType(
+	const struct iso20_ac_AC_ChargeLoopReqType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_AC_ChargeLoopResType(
+	const struct iso20_ac_AC_ChargeLoopResType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_AC_CPDReqEnergyTransferModeType(
+	const struct iso20_ac_AC_CPDReqEnergyTransferModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_AC_CPDResEnergyTransferModeType(
+	const struct iso20_ac_AC_CPDResEnergyTransferModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
+	const struct iso20_ac_BPT_AC_CPDReqEnergyTransferModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
+	const struct iso20_ac_BPT_AC_CPDResEnergyTransferModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_Scheduled_AC_CLReqControlModeType(
+	const struct iso20_ac_Scheduled_AC_CLReqControlModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_Scheduled_AC_CLResControlModeType(
+	const struct iso20_ac_Scheduled_AC_CLResControlModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType(
+	const struct iso20_ac_BPT_Scheduled_AC_CLReqControlModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_BPT_Scheduled_AC_CLResControlModeType(
+	const struct iso20_ac_BPT_Scheduled_AC_CLResControlModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
+	const struct iso20_ac_Dynamic_AC_CLReqControlModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_Dynamic_AC_CLResControlModeType(
+	const struct iso20_ac_Dynamic_AC_CLResControlModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
+	const struct iso20_ac_BPT_Dynamic_AC_CLReqControlModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_BPT_Dynamic_AC_CLResControlModeType(
+	const struct iso20_ac_BPT_Dynamic_AC_CLResControlModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_iso20_ac_CLReqControlModeType(
+	const struct iso20_ac_CLReqControlModeType *req _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_ac_CLResControlModeType(
+	const struct iso20_ac_CLResControlModeType *res _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+
+static void
+dissect_v2giso20_ac_document(
+	const struct iso20_ac_exiDocument *doc,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (doc->AC_ChargeParameterDiscoveryReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"AC_ChargeParameterDiscoveryReq");
+		dissect_iso20_ac_AC_ChargeParameterDiscoveryReqType(
+			&doc->AC_ChargeParameterDiscoveryReq,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_AC_ChargeParameterDiscoveryReqType,
+			"AC_ChargeParameterDiscoveryReq");
+	}
+	if (doc->AC_ChargeParameterDiscoveryRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"AC_ChargeParameterDiscoveryRes");
+		dissect_iso20_ac_AC_ChargeParameterDiscoveryResType(
+			&doc->AC_ChargeParameterDiscoveryRes,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_AC_ChargeParameterDiscoveryResType,
+			"AC_ChargeParameterDiscoveryRes");
+	}
+
+	if (doc->AC_ChargeLoopReq_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"AC_ChargeLoopReq");
+		dissect_iso20_ac_AC_ChargeLoopReqType(
+			&doc->AC_ChargeLoopReq,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_AC_ChargeLoopReqType,
+			"AC_ChargeLoopReq");
+	}
+	if (doc->AC_ChargeLoopRes_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"AC_ChargeLoopRes");
+		dissect_iso20_ac_AC_ChargeLoopResType(
+			&doc->AC_ChargeLoopRes,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_AC_ChargeLoopResType,
+			"AC_ChargeLoopRes");
+	}
+
+	if (doc->AC_CPDReqEnergyTransferMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"AC_CPDReqEnergyTransferMode");
+		dissect_iso20_ac_AC_CPDReqEnergyTransferModeType(
+			&doc->AC_CPDReqEnergyTransferMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_AC_CPDReqEnergyTransferModeType,
+			"AC_CPDReqEnergyTransferMode");
+	}
+	if (doc->AC_CPDResEnergyTransferMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"AC_CPDResEnergyTransferMode");
+		dissect_iso20_ac_AC_CPDResEnergyTransferModeType(
+			&doc->AC_CPDResEnergyTransferMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_AC_CPDResEnergyTransferModeType,
+			"AC_CPDResEnergyTransferMode");
+	}
+
+	if (doc->BPT_AC_CPDReqEnergyTransferMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"BPT_AC_CPDReqEnergyTransferMode");
+		dissect_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
+			&doc->BPT_AC_CPDReqEnergyTransferMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType,
+			"BPT_AC_CPDReqEnergyTransferMode");
+	}
+	if (doc->BPT_AC_CPDResEnergyTransferMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"BPT_AC_CPDResEnergyTransferMode");
+		dissect_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
+			&doc->BPT_AC_CPDResEnergyTransferMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_BPT_AC_CPDResEnergyTransferModeType,
+			"BPT_AC_CPDResEnergyTransferMode");
+	}
+
+	if (doc->Scheduled_AC_CLReqControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"Scheduled_AC_CLReqControlMode");
+		dissect_iso20_ac_Scheduled_AC_CLReqControlModeType(
+			&doc->Scheduled_AC_CLReqControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_Scheduled_AC_CLReqControlModeType,
+			"Scheduled_AC_CLReqControlMode");
+	}
+	if (doc->Scheduled_AC_CLResControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"Scheduled_AC_CLResControlMode");
+		dissect_iso20_ac_Scheduled_AC_CLResControlModeType(
+			&doc->Scheduled_AC_CLResControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_Scheduled_AC_CLResControlModeType,
+			"Scheduled_AC_CLResControlMode");
+	}
+
+	if (doc->BPT_Scheduled_AC_CLReqControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"BPT_Scheduled_AC_CLReqControlMode");
+		dissect_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType(
+			&doc->BPT_Scheduled_AC_CLReqControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType,
+			"BPT_Scheduled_AC_CLReqControlMode");
+	}
+	if (doc->BPT_Scheduled_AC_CLResControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"BPT_Scheduled_AC_CLResControlMode");
+		dissect_iso20_ac_BPT_Scheduled_AC_CLResControlModeType(
+			&doc->BPT_Scheduled_AC_CLResControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_BPT_Scheduled_AC_CLResControlModeType,
+			"BPT_Scheduled_AC_CLResControlMode");
+	}
+
+	if (doc->Dynamic_AC_CLReqControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"Dynamic_AC_CLReqControlMode");
+		dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
+			&doc->Dynamic_AC_CLReqControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_Dynamic_AC_CLReqControlModeType,
+			"Dynamic_AC_CLReqControlMode");
+	}
+	if (doc->Dynamic_AC_CLResControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"Dynamic_AC_CLResControlMode");
+		dissect_iso20_ac_Dynamic_AC_CLResControlModeType(
+			&doc->Dynamic_AC_CLResControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_Dynamic_AC_CLResControlModeType,
+			"Dynamic_AC_CLResControlMode");
+	}
+
+	if (doc->BPT_Dynamic_AC_CLReqControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"BPT_Dynamic_AC_CLReqControlMode");
+		dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
+			&doc->BPT_Dynamic_AC_CLReqControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType,
+			"BPT_Dynamic_AC_CLReqControlMode");
+	}
+	if (doc->BPT_Dynamic_AC_CLResControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"BPT_Dynamic_AC_CLResControlMode");
+		dissect_iso20_ac_BPT_Dynamic_AC_CLResControlModeType(
+			&doc->BPT_Dynamic_AC_CLResControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType,
+			"BPT_Dynamic_AC_CLResControlMode");
+	}
+
+	if (doc->CLReqControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"CLReqControlMode");
+		dissect_iso20_ac_CLReqControlModeType(
+			&doc->CLReqControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_CLReqControlModeType,
+			"CLReqControlMode");
+	}
+	if (doc->CLResControlMode_isUsed) {
+		col_append_str(pinfo->cinfo, COL_INFO,
+			"CLResControlMode");
+		dissect_iso20_ac_CLResControlModeType(
+			&doc->CLResControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_CLResControlModeType,
+			"CLResControlMode");
+	}
+
 	return;
 }
 
@@ -106,6 +544,25 @@ proto_register_v2giso20_ac(void)
 		&ett_v2giso20_ac_array,
 		&ett_v2giso20_ac_array_i,
 		&ett_v2giso20_ac_asn1,
+
+		&ett_struct_iso20_ac_AC_ChargeParameterDiscoveryReqType,
+		&ett_struct_iso20_ac_AC_ChargeParameterDiscoveryResType,
+		&ett_struct_iso20_ac_AC_ChargeLoopReqType,
+		&ett_struct_iso20_ac_AC_ChargeLoopResType,
+		&ett_struct_iso20_ac_AC_CPDReqEnergyTransferModeType,
+		&ett_struct_iso20_ac_AC_CPDResEnergyTransferModeType,
+		&ett_struct_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType,
+		&ett_struct_iso20_ac_BPT_AC_CPDResEnergyTransferModeType,
+		&ett_struct_iso20_ac_Scheduled_AC_CLReqControlModeType,
+		&ett_struct_iso20_ac_Scheduled_AC_CLResControlModeType,
+		&ett_struct_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType,
+		&ett_struct_iso20_ac_BPT_Scheduled_AC_CLResControlModeType,
+		&ett_struct_iso20_ac_Dynamic_AC_CLReqControlModeType,
+		&ett_struct_iso20_ac_Dynamic_AC_CLResControlModeType,
+		&ett_struct_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType,
+		&ett_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType,
+		&ett_struct_iso20_ac_CLReqControlModeType,
+		&ett_struct_iso20_ac_CLResControlModeType,
 	};
 
 	proto_v2giso20_ac = proto_register_protocol(
