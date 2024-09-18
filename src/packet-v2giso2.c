@@ -5062,7 +5062,7 @@ proto_register_v2giso2(void)
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2giso2_struct_iso2_ObjectType_Encoding,
-		  { "Encoding", "v2giso2.struct.object.encoiso2g",
+		  { "Encoding", "v2giso2.struct.object.encoding",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_v2giso2_struct_iso2_ObjectType_ANY,
