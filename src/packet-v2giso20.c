@@ -143,9 +143,20 @@ static int hf_struct_iso20_ScheduleExchangeResType_ResponseCode = -1;
 static int hf_struct_iso20_ScheduleExchangeResType_EVSEProcessing = -1;
 static int hf_struct_iso20_ScheduleExchangeResType_GoToPause = -1;
 
+/* PowerDelivery */
+static int hf_struct_iso20_PowerDeliveryReqType_EVProcessing = -1;
+static int hf_struct_iso20_PowerDeliveryReqType_ChargeProgress = -1;
+static int hf_struct_iso20_PowerDeliveryReqType_BPT_ChannelSelection = -1;
+static int hf_struct_iso20_PowerDeliveryResType_ResponseCode = -1;
+static int hf_struct_iso20_PowerDeliveryResType_EVSEProcessing = -1;
+
 /* TBD */
 static int hf_struct_iso20_EVSEStatusType_NotificationMaxDelay = -1;
 static int hf_struct_iso20_EVSEStatusType_EVSENotification = -1;
+
+static int hf_struct_iso20_DetailedTaxType_TaxRuleID = -1;
+
+static int hf_struct_iso20_ReceiptType_TimeAnchor = -1;
 
 static int hf_struct_iso20_MeterInfoType_MeterID = -1;
 static int hf_struct_iso20_MeterInfoType_ChargedEnergyReadingWh = -1;
@@ -192,6 +203,10 @@ static int hf_struct_iso20_VehicleCheckInResType_ParkingSpace = -1;
 static int hf_struct_iso20_VehicleCheckInResType_DeviceLocation = -1;
 static int hf_struct_iso20_VehicleCheckInResType_TargetDistance = -1;
 
+static int hf_struct_iso20_PowerScheduleEntryType_Duration = -1;
+
+static int hf_struct_iso20_EVPowerScheduleEntryType_Duration = -1;
+
 static int hf_struct_iso20_EVPowerProfileType_TimeAnchor = -1;
 
 static int hf_struct_iso20_PowerDemandResType_ResponseCode = -1;
@@ -221,28 +236,10 @@ static int hf_struct_iso20_MeteringReceiptReqType_SessionID = -1;
 static int hf_struct_iso20_MeteringReceiptReqType_SAScheduleTupleID = -1;
 static int hf_struct_iso20_MeteringReceiptResType_ResponseCode = -1;
 
-static int hf_struct_iso20_PowerDeliveryReqType_EVProcessing = -1;
-static int hf_struct_iso20_PowerDeliveryReqType_ChargeProgress = -1;
-static int hf_struct_iso20_PowerDeliveryReqType_BPT_ChannelSelection = -1;
-static int hf_struct_iso20_PowerDeliveryResType_ResponseCode = -1;
-static int hf_struct_iso20_PowerDeliveryResType_EVSEProcessing = -1;
-
 static int hf_struct_iso20_ChargeParameterDiscoveryReqType_MaxSupportingPoints = -1;
 static int hf_struct_iso20_ChargeParameterDiscoveryResType_ResponseCode = -1;
 static int hf_struct_iso20_ChargeParameterDiscoveryResType_EVSEProcessing = -1;
 
-
-/* Specifically track voltage and current for graphing */
-static int hf_v2giso20_ev_target_voltage = -1;
-static int hf_v2giso20_ev_target_current = -1;
-static int hf_v2giso20_ev_maximum_voltage = -1;
-static int hf_v2giso20_ev_maximum_current = -1;
-static int hf_v2giso20_ev_maximum_power = -1;
-static int hf_v2giso20_evse_present_voltage = -1;
-static int hf_v2giso20_evse_present_current = -1;
-static int hf_v2giso20_evse_maximum_voltage = -1;
-static int hf_v2giso20_evse_maximum_current = -1;
-static int hf_v2giso20_evse_maximum_power = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2giso20 = -1;
@@ -316,6 +313,9 @@ static gint ett_struct_iso20_EVPowerProfileEntryListType = -1;
 static gint ett_struct_iso20_PowerScheduleEntryListType = -1;
 static gint ett_struct_iso20_EVSEStatusType = -1;
 static gint ett_struct_iso20_RationalNumberType = -1;
+static gint ett_struct_iso20_DetailedCostType = -1;
+static gint ett_struct_iso20_DetailedTaxType = -1;
+static gint ett_struct_iso20_ReceiptType = -1;
 static gint ett_struct_iso20_MeterInfoType = -1;
 static gint ett_struct_iso20_TargetPositionType = -1;
 static gint ett_struct_iso20_ParameterType = -1;
@@ -342,6 +342,10 @@ static gint ett_struct_iso20_Dynamic_SEReqControlModeType = -1;
 static gint ett_struct_iso20_Scheduled_SEReqControlModeType = -1;
 static gint ett_struct_iso20_Dynamic_SEResControlModeType = -1;
 static gint ett_struct_iso20_Scheduled_SEResControlModeType = -1;
+static gint ett_struct_iso20_Dynamic_EVPPTControlModeType = -1;
+static gint ett_struct_iso20_Scheduled_EVPPTControlModeType = -1;
+static gint ett_struct_iso20_Dynamic_SMDTControlModeType = -1;
+static gint ett_struct_iso20_Scheduled_SMDTControlModeType = -1;
 
 
 static const value_string v2giso20_enum_iso20_responseCodeType_names[] = {
@@ -567,24 +571,6 @@ static void dissect_iso20_ObjectType(
 	const struct iso20_ObjectType *node,
 	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
 	gint idx, const char *subtree_name);
-#ifdef notyet
-static void dissect_iso20_ManifestType(
-	const struct iso20_ManifestType *node,
-	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
-	gint idx, const char *subtree_name);
-#endif
-#ifdef notyet
-static void dissect_iso20_SignaturePropertiesType(
-	const struct iso20_SignaturePropertiesType *node,
-	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
-	gint idx, const char *subtree_name);
-#endif
-#ifdef notyet
-static void dissect_iso20_SignaturePropertyType(
-	const struct iso20_SignaturePropertyType *node,
-	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
-	gint idx, const char *subtree_name);
-#endif
 static void dissect_iso20_DSAKeyValueType(
 	const struct iso20_DSAKeyValueType *node,
 	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
@@ -1354,51 +1340,6 @@ dissect_iso20_ObjectType(
 	return;
 }
 
-#ifdef notyet
-static void
-dissect_iso20_ManifestType(
-	const struct iso20_ManifestType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
-{
-	/* TODO */
-	return;
-}
-#endif
-
-#ifdef notyet
-static void
-dissect_iso20_SignaturePropertiesType(
-	const struct iso20_SignaturePropertiesType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
-{
-	/* TODO */
-	return;
-}
-#endif
-
-#ifdef notyet
-static void
-dissect_iso20_SignaturePropertyType(
-	const struct iso20_SignaturePropertyType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
-{
-	/* TODO */
-	return;
-}
-#endif
-
 static void
 dissect_iso20_DSAKeyValueType(
 	const struct iso20_DSAKeyValueType *node,
@@ -1572,23 +1513,86 @@ dissect_iso20_X509IssuerSerialType(
 
 
 /* other node dissectors - each node is represented by a struct */
+static void dissect_iso20_RationalNumberType(
+	const struct iso20_RationalNumberType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_DetailedCostType(
+	const struct iso20_DetailedCostType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_DetailedTaxType(
+	const struct iso20_DetailedTaxType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_ReceiptType(
+        const struct iso20_ReceiptType *node,
+        tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+        gint idx, const char *subtree_name);
+static void dissect_iso20_Dynamic_EVPPTControlModeType(
+	const struct iso20_Dynamic_EVPPTControlModeType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_Scheduled_EVPPTControlModeType(
+	const struct iso20_Scheduled_EVPPTControlModeType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_Dynamic_SMDTControlModeType(
+	const struct iso20_Dynamic_SMDTControlModeType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_Scheduled_SMDTControlModeType(
+	const struct iso20_Scheduled_SMDTControlModeType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+
+
 static void
-dissect_v2giso20_powerscheduleentrylist(
-	const struct iso20_PowerScheduleEntryType *powerscheduleentry _U_,
-	tvbuff_t *tvb _U_,
+dissect_iso20_PowerScheduleEntryType(
+	const struct iso20_PowerScheduleEntryType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_PowerScheduleEntryType_Duration,
+		tvb, 0, 0, node->Duration);
+	proto_item_set_generated(it);
+
+	dissect_iso20_RationalNumberType(&node->Power,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"Power");
+
+	if (node->Power_L2_isUsed) {
+		dissect_iso20_RationalNumberType(&node->Power_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"Power_L2");
+	}
+
+	if (node->Power_L3_isUsed) {
+		dissect_iso20_RationalNumberType(&node->Power_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"Power_L3");
+	}
+
 	return;
 }
 
 
 static void
-dissect_v2giso20_evpowerprofileentrylist(
-	const struct iso20_EVPowerProfileEntryListType
-	    *evpowerprofileentrylist,
+dissect_iso20_EVPowerProfileEntryListType(
+	const struct iso20_EVPowerProfileEntryListType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1604,12 +1608,12 @@ dissect_v2giso20_evpowerprofileentrylist(
 
 	evpowerprofileentry_tree = proto_tree_add_subtree(subtree,
 		tvb, 0, 0, ett_v2giso20_array, NULL, "EVPowerProfileEntry");
-	for (i = 0; i < evpowerprofileentrylist->EVPowerProfileEntry.arrayLen; i++) {
+	for (i = 0; i < node->EVPowerProfileEntry.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
 		snprintf(index, sizeof(index), "[%u]", i);
-		dissect_v2giso20_powerscheduleentrylist(
-			&evpowerprofileentrylist->EVPowerProfileEntry.array[i],
+		dissect_iso20_PowerScheduleEntryType(
+			&node->EVPowerProfileEntry.array[i],
 			tvb, pinfo, evpowerprofileentry_tree,
 			ett_struct_iso20_PowerScheduleEntryListType,
 			index);
@@ -1620,8 +1624,8 @@ dissect_v2giso20_evpowerprofileentrylist(
 
 
 static void
-dissect_v2giso20_evpowerprofile(
-	const struct iso20_EVPowerProfileType *evpowerprofile,
+dissect_iso20_EVPowerProfileType(
+	const struct iso20_EVPowerProfileType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1636,17 +1640,27 @@ dissect_v2giso20_evpowerprofile(
 
 	it = proto_tree_add_uint64(subtree,
 		hf_struct_iso20_EVPowerProfileType_TimeAnchor,
-		tvb, 0, 0, evpowerprofile->TimeAnchor);
+		tvb, 0, 0, node->TimeAnchor);
 	proto_item_set_generated(it);
 
-	if (evpowerprofile->Dynamic_EVPPTControlMode_isUsed) {
+	if (node->Dynamic_EVPPTControlMode_isUsed) {
+		dissect_iso20_Dynamic_EVPPTControlModeType(
+			&node->Dynamic_EVPPTControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_Dynamic_EVPPTControlModeType,
+			"Dynamic_EVPPTControlMode");
 	}
 
-	if (evpowerprofile->Scheduled_EVPPTControlMode_isUsed) {
+	if (node->Scheduled_EVPPTControlMode_isUsed) {
+		dissect_iso20_Scheduled_EVPPTControlModeType(
+			&node->Scheduled_EVPPTControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_Scheduled_EVPPTControlModeType,
+			"Scheduled_EVPPTControlMode");
 	}
 
-	dissect_v2giso20_evpowerprofileentrylist(
-		&evpowerprofile->EVPowerProfileEntries,
+	dissect_iso20_EVPowerProfileEntryListType(
+		&node->EVPowerProfileEntries,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_EVPowerProfileEntryListType,
 		"EVPowerProfileEntries");
@@ -1656,8 +1670,8 @@ dissect_v2giso20_evpowerprofile(
 
 
 static void
-dissect_v2giso20_evsestatus(
-	const struct iso20_EVSEStatusType *evsestatus,
+dissect_iso20_EVSEStatusType(
+	const struct iso20_EVSEStatusType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1672,41 +1686,16 @@ dissect_v2giso20_evsestatus(
 
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_EVSEStatusType_NotificationMaxDelay,
-		tvb, 0, 0, evsestatus->NotificationMaxDelay);
+		tvb, 0, 0, node->NotificationMaxDelay);
 	proto_item_set_generated(it);
 
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_EVSEStatusType_EVSENotification,
-		tvb, 0, 0, evsestatus->EVSENotification);
+		tvb, 0, 0, node->EVSENotification);
 	proto_item_set_generated(it);
 
 	return;
 }
-
-#ifdef notyet
-static inline double
-v2giso20_rationalnumber_to_double(
-	const struct iso20_RationalNumberType *rationalnumber)
-{
-	double value;
-	int32_t exponent;
-
-	value = (double)rationalnumber->Value;
-	exponent = rationalnumber->Exponent;
-	if (exponent > 0) {
-		for (; exponent != 0; exponent--) {
-			value *= 10.0;
-		}
-	}
-	if (exponent < 0) {
-		for (; exponent != 0; exponent++) {
-			value /= 10.0;
-		}
-	}
-
-	return value;
-}
-#endif
 
 static void
 dissect_iso20_RationalNumberType(
@@ -1738,8 +1727,8 @@ dissect_iso20_RationalNumberType(
 
 
 static void
-dissect_v2giso20_meterinfo(
-	const struct iso20_MeterInfoType *meterinfo,
+dissect_iso20_MeterInfoType(
+	const struct iso20_MeterInfoType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1755,56 +1744,56 @@ dissect_v2giso20_meterinfo(
 	exi_add_characters(subtree,
 		hf_struct_iso20_MeterInfoType_MeterID,
 		tvb,
-		meterinfo->MeterID.characters,
-		meterinfo->MeterID.charactersLen,
-		sizeof(meterinfo->MeterID.characters));
+		node->MeterID.characters,
+		node->MeterID.charactersLen,
+		sizeof(node->MeterID.characters));
 
 	it = proto_tree_add_uint64(subtree,
 		hf_struct_iso20_MeterInfoType_ChargedEnergyReadingWh,
-		tvb, 0, 0, meterinfo->ChargedEnergyReadingWh);
+		tvb, 0, 0, node->ChargedEnergyReadingWh);
 	proto_item_set_generated(it);
 
-	if (meterinfo->BPT_DischargedEnergyReadingWh_isUsed) {
+	if (node->BPT_DischargedEnergyReadingWh_isUsed) {
 		it = proto_tree_add_uint64(subtree,
 			hf_struct_iso20_MeterInfoType_BPT_DischargedEnergyReadingWh,
-			tvb, 0, 0, meterinfo->BPT_DischargedEnergyReadingWh);
+			tvb, 0, 0, node->BPT_DischargedEnergyReadingWh);
 		proto_item_set_generated(it);
 	}
 
-	if (meterinfo->CapacitiveEnergyReadingVARh_isUsed) {
+	if (node->CapacitiveEnergyReadingVARh_isUsed) {
 		it = proto_tree_add_uint64(subtree,
 			hf_struct_iso20_MeterInfoType_CapacitiveEnergyReadingVARh,
-			tvb, 0, 0, meterinfo->CapacitiveEnergyReadingVARh);
+			tvb, 0, 0, node->CapacitiveEnergyReadingVARh);
 		proto_item_set_generated(it);
 	}
 
-	if (meterinfo->BPT_InductiveEnergyReadingVARh_isUsed) {
+	if (node->BPT_InductiveEnergyReadingVARh_isUsed) {
 		it = proto_tree_add_uint64(subtree,
 			hf_struct_iso20_MeterInfoType_BPT_InductiveEnergyReadingVARh,
-			tvb, 0, 0, meterinfo->BPT_InductiveEnergyReadingVARh);
+			tvb, 0, 0, node->BPT_InductiveEnergyReadingVARh);
 		proto_item_set_generated(it);
 	}
 
-	if (meterinfo->MeterSignature_isUsed) {
+	if (node->MeterSignature_isUsed) {
 		exi_add_bytes(subtree,
 			hf_struct_iso20_MeterInfoType_MeterSignature,
 			tvb,
-			meterinfo->MeterSignature.bytes,
-			meterinfo->MeterSignature.bytesLen,
-			sizeof(meterinfo->MeterSignature.bytes));
+			node->MeterSignature.bytes,
+			node->MeterSignature.bytesLen,
+			sizeof(node->MeterSignature.bytes));
 	}
 
-	if (meterinfo->MeterStatus_isUsed) {
+	if (node->MeterStatus_isUsed) {
 		it = proto_tree_add_int(subtree,
 			hf_struct_iso20_MeterInfoType_MeterStatus,
-			tvb, 0, 0, meterinfo->MeterStatus);
+			tvb, 0, 0, node->MeterStatus);
 		proto_item_set_generated(it);
 	}
 
-	if (meterinfo->MeterTimestamp_isUsed) {
+	if (node->MeterTimestamp_isUsed) {
 		it = proto_tree_add_int64(subtree,
 			hf_struct_iso20_MeterInfoType_MeterTimestamp,
-			tvb, 0, 0, meterinfo->MeterTimestamp);
+			tvb, 0, 0, node->MeterTimestamp);
 		proto_item_set_generated(it);
 	}
 
@@ -1813,8 +1802,8 @@ dissect_v2giso20_meterinfo(
 
 
 static void
-dissect_v2giso20_signedmeteringdata(
-	const struct  iso20_SignedMeteringDataType *signedmeteringdata,
+dissect_iso20_SignedMeteringDataType(
+	const struct  iso20_SignedMeteringDataType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -1829,23 +1818,45 @@ dissect_v2giso20_signedmeteringdata(
 	exi_add_characters(subtree,
 		hf_struct_iso20_SignedMeteringDataType_Id,
 		tvb,
-		signedmeteringdata->Id.characters,
-		signedmeteringdata->Id.charactersLen,
-		sizeof(signedmeteringdata->Id.characters));
+		node->Id.characters,
+		node->Id.charactersLen,
+		sizeof(node->Id.characters));
 
 	exi_add_bytes(subtree,
 		hf_struct_iso20_SignedMeteringDataType_SessionID,
 		tvb,
-		signedmeteringdata->SessionID.bytes,
-		signedmeteringdata->SessionID.bytesLen,
-		sizeof(signedmeteringdata->SessionID.bytes));
+		node->SessionID.bytes,
+		node->SessionID.bytesLen,
+		sizeof(node->SessionID.bytes));
 
-	dissect_v2giso20_meterinfo(&signedmeteringdata->MeterInfo,
+	dissect_iso20_MeterInfoType(&node->MeterInfo,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_MeterInfoType,
 		"MeterInfo");
 
-	/* TODO */
+	if (node->Receipt_isUsed) {
+		dissect_iso20_ReceiptType(
+			&node->Receipt,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ReceiptType,
+			"Receipt");
+	}
+
+	if (node->Dynamic_SMDTControlMode_isUsed) {
+		dissect_iso20_Dynamic_SMDTControlModeType(
+			&node->Dynamic_SMDTControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_Dynamic_SMDTControlModeType,
+			"Dynamic_SMDTControlMode");
+	}
+
+	if (node->Scheduled_SMDTControlMode_isUsed) {
+		dissect_iso20_Scheduled_SMDTControlModeType(
+			&node->Scheduled_SMDTControlMode,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_Scheduled_SMDTControlModeType,
+			"Scheduled_SMDTControlMode");
+	}
 
 	return;
 }
@@ -1954,9 +1965,8 @@ dissect_iso20_ParameterSetType(
 }
 
 static void
-dissect_v2giso20_listofrootcertificateids(
-	const struct iso20_ListOfRootCertificateIDsType
-		*listofrootcertificateids,
+dissect_iso20_ListOfRootCertificateIDsType(
+	const struct iso20_ListOfRootCertificateIDsType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -1972,12 +1982,12 @@ dissect_v2giso20_listofrootcertificateids(
 
 	rootcertificateid_tree = proto_tree_add_subtree(subtree,
 		tvb, 0, 0, ett_v2giso20_array, NULL, "RootCertificateID");
-	for (i = 0; i < listofrootcertificateids->RootCertificateID.arrayLen; i++) {
+	for (i = 0; i < node->RootCertificateID.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
 		snprintf(index, sizeof(index), "[%u]", i);
 		dissect_iso20_X509IssuerSerialType(
-			&listofrootcertificateids->RootCertificateID.array[i],
+			&node->RootCertificateID.array[i],
 			tvb, pinfo, rootcertificateid_tree,
 			ett_struct_iso20_X509IssuerSerialType,
 			index);
@@ -2038,8 +2048,8 @@ dissect_iso20_SubCertificatesType(
 
 
 static void
-dissect_v2giso20_certificatechain(
-	const struct iso20_CertificateChainType *certificatechain,
+dissect_iso20_CertificateChainType(
+	const struct iso20_CertificateChainType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2055,17 +2065,17 @@ dissect_v2giso20_certificatechain(
 		exi_add_bytes(subtree,
 			hf_struct_iso20_CertificateChainType_Certificate,
 			tvb,
-			certificatechain->Certificate.bytes,
-			certificatechain->Certificate.bytesLen,
-			sizeof(certificatechain->Certificate.bytes));
+			node->Certificate.bytes,
+			node->Certificate.bytesLen,
+			sizeof(node->Certificate.bytes));
 	} else {
 		tvbuff_t *child;
 		proto_tree *asn1_tree;
 
 		child = tvb_new_child_real_data(tvb,
-			certificatechain->Certificate.bytes,
-			sizeof(certificatechain->Certificate.bytes),
-			certificatechain->Certificate.bytesLen);
+			node->Certificate.bytes,
+			sizeof(node->Certificate.bytes),
+			node->Certificate.bytesLen);
 
 		asn1_tree = proto_tree_add_subtree(subtree,
 			child, 0, tvb_reported_length(child),
@@ -2073,9 +2083,9 @@ dissect_v2giso20_certificatechain(
 		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
 	}
 
-	if (certificatechain->SubCertificates_isUsed) {
+	if (node->SubCertificates_isUsed) {
 		dissect_iso20_SubCertificatesType(
-			&certificatechain->SubCertificates,
+			&node->SubCertificates,
 			tvb, pinfo, subtree,
 			ett_struct_iso20_SubCertificatesType,
 			"SubCertificates");
@@ -2132,8 +2142,8 @@ dissect_iso20_ContractCertificateChainType(
 
 
 static void
-dissect_v2giso20_signedcertificatechain(
-	const struct iso20_SignedCertificateChainType *signedcertificatechain,
+dissect_iso20_SignedCertificateChainType(
+	const struct iso20_SignedCertificateChainType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo,
 	proto_tree *tree,
@@ -2148,25 +2158,25 @@ dissect_v2giso20_signedcertificatechain(
 	exi_add_characters(subtree,
 		hf_struct_iso20_SignedCertificateChainType_Id,
 		tvb,
-		signedcertificatechain->Id.characters,
-		signedcertificatechain->Id.charactersLen,
-		sizeof(signedcertificatechain->Id.characters));
+		node->Id.characters,
+		node->Id.charactersLen,
+		sizeof(node->Id.characters));
 
 	if (v2gber_handle == NULL) {
 		exi_add_bytes(subtree,
 			hf_struct_iso20_SignedCertificateChainType_Certificate,
 			tvb,
-			signedcertificatechain->Certificate.bytes,
-			signedcertificatechain->Certificate.bytesLen,
-			sizeof(signedcertificatechain->Certificate.bytes));
+			node->Certificate.bytes,
+			node->Certificate.bytesLen,
+			sizeof(node->Certificate.bytes));
 	} else {
 		tvbuff_t *child;
 		proto_tree *asn1_tree;
 
 		child = tvb_new_child_real_data(tvb,
-			signedcertificatechain->Certificate.bytes,
-			sizeof(signedcertificatechain->Certificate.bytes),
-			signedcertificatechain->Certificate.bytesLen);
+			node->Certificate.bytes,
+			sizeof(node->Certificate.bytes),
+			node->Certificate.bytesLen);
 
 		asn1_tree = proto_tree_add_subtree(subtree,
 			child, 0, tvb_reported_length(child),
@@ -2174,9 +2184,9 @@ dissect_v2giso20_signedcertificatechain(
 		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
 	}
 
-	if (signedcertificatechain->SubCertificates_isUsed) {
+	if (node->SubCertificates_isUsed) {
 		dissect_iso20_SubCertificatesType(
-			&signedcertificatechain->SubCertificates,
+			&node->SubCertificates,
 			tvb, pinfo, subtree,
 			ett_struct_iso20_SubCertificatesType,
 			"SubCertificates");
@@ -2185,24 +2195,23 @@ dissect_v2giso20_signedcertificatechain(
 	return;
 }
 
-
 static void
-dissect_v2giso20_signedinstallationdata(
-	const struct iso20_SignedInstallationDataType
-	    *signedinstallationdata _U_,
+dissect_iso20_SignedInstallationDataType(
+	const struct iso20_SignedInstallationDataType *node _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
+	/* TODO */
 	return;
 }
 
 
 static void
-dissect_v2giso20_emaidlist(
-	const struct iso20_EMAIDListType *emaidlist,
+dissect_iso20_EMAIDListType(
+	const struct iso20_EMAIDListType *node,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -2219,7 +2228,7 @@ dissect_v2giso20_emaidlist(
 
 	emaid_tree = proto_tree_add_subtree(subtree,
 		tvb, 0, 0, ett_v2giso20_array, NULL, "EMAID");
-	for (i = 0; i < emaidlist->EMAID.arrayLen; i++) {
+	for (i = 0; i < node->EMAID.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
 		snprintf(index, sizeof(index), "[%u]", i);
@@ -2230,9 +2239,9 @@ dissect_v2giso20_emaidlist(
 		exi_add_characters(emaid_i_tree,
 			hf_struct_iso20_EMAIDListType_EMAID,
 			tvb,
-			emaidlist->EMAID.array[i].characters,
-			emaidlist->EMAID.array[i].charactersLen,
-			sizeof(emaidlist->EMAID.array[i].characters));
+			node->EMAID.array[i].characters,
+			node->EMAID.array[i].charactersLen,
+			sizeof(node->EMAID.array[i].characters));
 	}
 
 	return;
@@ -2567,6 +2576,125 @@ dissect_iso20_ServiceListType(
 }
 
 static void
+dissect_iso20_DetailedCostType(
+	const struct iso20_DetailedCostType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_RationalNumberType(
+		&node->Amount,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"Amount");
+
+	dissect_iso20_RationalNumberType(
+		&node->CostPerUnit,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"CostPerUnit");
+
+	return;
+}
+
+static void
+dissect_iso20_DetailedTaxType(
+	const struct iso20_DetailedTaxType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_DetailedTaxType_TaxRuleID,
+		tvb, 0, 0, node->TaxRuleID);
+	proto_item_set_generated(it);
+
+	dissect_iso20_RationalNumberType(
+		&node->Amount,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"Amount");
+
+	return;
+}
+
+static void
+dissect_iso20_ReceiptType(
+	const struct iso20_ReceiptType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_item *it;
+	proto_tree *taxcosts_tree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_ReceiptType_TimeAnchor,
+		tvb, 0, 0, node->TimeAnchor);
+	proto_item_set_generated(it);
+
+	if (node->EnergyCosts_isUsed) {
+		dissect_iso20_DetailedCostType(&node->EnergyCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_DetailedCostType,
+			"EnergyCosts");
+	}
+	if (node->OccupancyCosts_isUsed) {
+		dissect_iso20_DetailedCostType(&node->OccupancyCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_DetailedCostType,
+			"OccupancyCosts");
+	}
+	if (node->AdditionalServicesCosts_isUsed) {
+		dissect_iso20_DetailedCostType(&node->AdditionalServicesCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_DetailedCostType,
+			"AdditionalServicesCosts");
+	}
+	if (node->OverstayCosts_isUsed) {
+		dissect_iso20_DetailedCostType(&node->OverstayCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_DetailedCostType,
+			"OverstayCosts");
+	}
+
+	taxcosts_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso20_array, NULL, "TaxCosts");
+	for (i = 0; i < node->TaxCosts.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_iso20_DetailedTaxType(&node->TaxCosts.array[i],
+			tvb, pinfo, taxcosts_tree,
+			ett_struct_iso20_DetailedTaxType, index);
+	}
+
+	return;
+}
+
+static void
 dissect_iso20_Dynamic_SEReqControlModeType(
 	const struct iso20_Dynamic_SEReqControlModeType *node _U_,
 	tvbuff_t *tvb _U_,
@@ -2608,6 +2736,58 @@ dissect_iso20_Dynamic_SEResControlModeType(
 static void
 dissect_iso20_Scheduled_SEResControlModeType(
 	const struct iso20_Scheduled_SEResControlModeType *node _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_Dynamic_EVPPTControlModeType(
+	const struct iso20_Dynamic_EVPPTControlModeType *node _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_Scheduled_EVPPTControlModeType(
+	const struct iso20_Scheduled_EVPPTControlModeType *node _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_Dynamic_SMDTControlModeType(
+	const struct iso20_Dynamic_SMDTControlModeType *node _U_,
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
+{
+	/* TODO */
+	return;
+}
+
+static void
+dissect_iso20_Scheduled_SMDTControlModeType(
+	const struct iso20_Scheduled_SMDTControlModeType *node _U_,
 	tvbuff_t *tvb _U_,
 	packet_info *pinfo _U_,
 	proto_tree *tree _U_,
@@ -3177,7 +3357,7 @@ dissect_iso20_PowerDeliveryReqType(
 	proto_item_set_generated(it);
 
 	if (powerdeliveryreq->EVPowerProfile_isUsed) {
-		dissect_v2giso20_evpowerprofile(
+		dissect_iso20_EVPowerProfileType(
 			&powerdeliveryreq->EVPowerProfile,
 			tvb, pinfo, subtree,
 			ett_struct_iso20_EVPowerProfileType,
@@ -3215,7 +3395,7 @@ dissect_iso20_PowerDeliveryResType(
 	proto_item_set_generated(it);
 
 	if (powerdeliveryres->EVSEStatus_isUsed) {
-		dissect_v2giso20_evsestatus(
+		dissect_iso20_EVSEStatusType(
 			&powerdeliveryres->EVSEStatus,
 			tvb, pinfo, subtree,
 			ett_struct_iso20_EVSEStatusType,
@@ -3228,8 +3408,7 @@ dissect_iso20_PowerDeliveryResType(
 
 static void
 dissect_iso20_MeteringConfirmationReqType(
-	const struct iso20_MeteringConfirmationReqType
-	    *meteringconfirmationreq,
+	const struct iso20_MeteringConfirmationReqType *req,
 	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
 	proto_tree *tree,
@@ -3241,12 +3420,12 @@ dissect_iso20_MeteringConfirmationReqType(
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
 
-	dissect_iso20_MessageHeaderType(&meteringconfirmationreq->Header,
+	dissect_iso20_MessageHeaderType(&req->Header,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_MessageHeaderType, "Header");
 
-	dissect_v2giso20_signedmeteringdata(
-		&meteringconfirmationreq->SignedMeteringData,
+	dissect_iso20_SignedMeteringDataType(
+		&req->SignedMeteringData,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_SignedMeteringDataType,
 		"SignedMeteringData");
@@ -3361,13 +3540,13 @@ dissect_iso20_CertificateInstallationReqType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_MessageHeaderType, "Header");
 
-	dissect_v2giso20_signedcertificatechain(
+	dissect_iso20_SignedCertificateChainType(
 		&certificateinstallationreq->OEMProvisioningCertificateChain,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_SignedCertificateChainType,
 		"OEMProvisioningCertificateChain");
 
-	dissect_v2giso20_listofrootcertificateids(
+	dissect_iso20_ListOfRootCertificateIDsType(
 		&certificateinstallationreq->ListOfRootCertificateIDs,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ListOfRootCertificateIDsType,
@@ -3379,7 +3558,7 @@ dissect_iso20_CertificateInstallationReqType(
 	proto_item_set_generated(it);
 
 	if (certificateinstallationreq->PrioritizedEMAIDs_isUsed) {
-		dissect_v2giso20_emaidlist(
+		dissect_iso20_EMAIDListType(
 			&certificateinstallationreq->PrioritizedEMAIDs,
 			tvb, pinfo, subtree,
 			ett_struct_iso20_EMAIDListType,
@@ -3419,13 +3598,13 @@ dissect_iso20_CertificateInstallationResType(
 		tvb, 0, 0, certificateinstallationres->EVSEProcessing);
 	proto_item_set_generated(it);
 
-	dissect_v2giso20_certificatechain(
+	dissect_iso20_CertificateChainType(
 		&certificateinstallationres->CPSCertificateChain,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_CertificateChainType,
 		"CPSCertificateChain");
 
-	dissect_v2giso20_signedinstallationdata(
+	dissect_iso20_SignedInstallationDataType(
 		&certificateinstallationres->SignedInstallationData,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_SignedInstallationDataType,
@@ -4372,6 +4551,20 @@ proto_register_v2giso20(void)
 		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
+		/* struct iso20_PowerScheduleEntryType */
+		{ &hf_struct_iso20_PowerScheduleEntryType_Duration,
+		  { "Duration",
+		    "v2giso20.struct.powerscheduleentry.duration",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_EVPowerScheduleEntryType */
+		{ &hf_struct_iso20_EVPowerScheduleEntryType_Duration,
+		  { "Duration",
+		    "v2giso20.struct.evpowerscheduleentry.duration",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
 		/* struct iso20_ServiceSelectionReqType */
 		/* struct iso20_ServiceSelectionResType */
 		{ &hf_struct_iso20_ServiceSelectionResType_ResponseCode,
@@ -4379,6 +4572,44 @@ proto_register_v2giso20(void)
 		    "v2giso20.struct.serviceselectionres.responsecode",
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_enum_iso20_responseCodeType_names),
+		    0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_PowerDeliveryReqType */
+		{ &hf_struct_iso20_PowerDeliveryReqType_EVProcessing,
+		  { "EVProcessing",
+		    "v2giso20.struct.powerdeliveryreq.evoperation",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_processingType_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_PowerDeliveryReqType_ChargeProgress,
+		  { "ChargeProgress",
+		    "v2giso20.struct.powerdeliveryreq.chargeprogress",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_chargeProgressType_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_PowerDeliveryReqType_BPT_ChannelSelection,
+		  { "BPT_ChannelSelection",
+		    "v2giso20.struct.powerdeliveryreq.bpt_channelselection",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_channelSelectionType_names),
+		    0x0, NULL, HFILL }
+		},
+		/* struct iso20_PowerDeliveryResType */
+		{ &hf_struct_iso20_PowerDeliveryResType_ResponseCode,
+		  { "ResponseCode",
+		    "v2giso20.struct.powerdeliveryres.responsecode",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_responseCodeType_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_PowerDeliveryResType_EVSEProcessing,
+		  { "EVSEProcessing",
+		    "v2giso20.struct.powerdeliveryres.evseprocessing",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_processingType_names),
 		    0x0, NULL, HFILL }
 		},
 
@@ -4395,6 +4626,20 @@ proto_register_v2giso20(void)
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_enum_iso20_evseNotificationType_names),
 		    0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_DetailedTaxType */
+		{ &hf_struct_iso20_DetailedTaxType_TaxRuleID,
+		  { "TaxRuleID",
+		    "v2giso20.struct.detailedtax.taxruleid",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_ReceiptType */
+		{ &hf_struct_iso20_ReceiptType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.receipt.timeanchor",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_MeasurementDataListType */
@@ -4592,7 +4837,8 @@ proto_register_v2giso20(void)
 
 		/* struct iso20_CertificateInstallationReqType */
 		{ &hf_struct_iso20_CertificateInstallationReqType_MaximumContractCertificateChains,
-		  { "MaximumContractCertificateChains", "v2giso20.struct.certificateinstallationreq.maximumcontractcertificatechains",
+		  { "MaximumContractCertificateChains",
+		    "v2giso20.struct.certificateinstallationreq.maximumcontractcertificatechains",
 		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* struct iso20_CertificateInstallationResType */
@@ -4627,7 +4873,8 @@ proto_register_v2giso20(void)
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_MeteringReceiptReqType_SessionID,
-		  { "SessionID", "v2giso20.struct.meteringreceiptreq.sessionid",
+		  { "SessionID",
+		    "v2giso20.struct.meteringreceiptreq.sessionid",
 		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_MeteringReceiptReqType_SAScheduleTupleID,
@@ -4641,44 +4888,6 @@ proto_register_v2giso20(void)
 		    "v2giso20.struct.meteringreceiptres.responsecode",
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_enum_iso20_responseCodeType_names),
-		    0x0, NULL, HFILL }
-		},
-
-		/* struct iso20_PowerDeliveryReqType */
-		{ &hf_struct_iso20_PowerDeliveryReqType_EVProcessing,
-		  { "EVProcessing",
-		    "v2giso20.struct.powerdeliveryreq.evoperation",
-		    FT_UINT16, BASE_DEC,
-		    VALS(v2giso20_enum_iso20_processingType_names),
-		    0x0, NULL, HFILL }
-		},
-		{ &hf_struct_iso20_PowerDeliveryReqType_ChargeProgress,
-		  { "ChargeProgress",
-		    "v2giso20.struct.powerdeliveryreq.chargeprogress",
-		    FT_UINT16, BASE_DEC,
-		    VALS(v2giso20_enum_iso20_chargeProgressType_names),
-		    0x0, NULL, HFILL }
-		},
-		{ &hf_struct_iso20_PowerDeliveryReqType_BPT_ChannelSelection,
-		  { "BPT_ChannelSelection",
-		    "v2giso20.struct.powerdeliveryreq.bpt_channelselection",
-		    FT_UINT16, BASE_DEC,
-		    VALS(v2giso20_enum_iso20_channelSelectionType_names),
-		    0x0, NULL, HFILL }
-		},
-		/* struct iso20_PowerDeliveryResType */
-		{ &hf_struct_iso20_PowerDeliveryResType_ResponseCode,
-		  { "ResponseCode",
-		    "v2giso20.struct.powerdeliveryres.responsecode",
-		    FT_UINT16, BASE_DEC,
-		    VALS(v2giso20_enum_iso20_responseCodeType_names),
-		    0x0, NULL, HFILL }
-		},
-		{ &hf_struct_iso20_PowerDeliveryResType_EVSEProcessing,
-		  { "EVSEProcessing",
-		    "v2giso20.struct.powerdeliveryres.evseprocessing",
-		    FT_UINT16, BASE_DEC,
-		    VALS(v2giso20_enum_iso20_processingType_names),
 		    0x0, NULL, HFILL }
 		},
 
@@ -4703,56 +4912,6 @@ proto_register_v2giso20(void)
 		    VALS(v2giso20_enum_iso20_processingType_names),
 		    0x0, NULL, HFILL }
 		},
-
-		/* Derived values for graphing */
-		{ &hf_v2giso20_ev_target_voltage,
-		  { "EV Target Voltage (derived)", "v2giso20.ev.target.voltage",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_ev_target_current,
-		  { "EV Target Current (derived)", "v2giso20.ev.target.current",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_ev_maximum_voltage,
-		  { "EV Maximum Voltage (derived)",
-		    "v2giso20.ev.maximum.voltage",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_ev_maximum_current,
-		  { "EV Maximum Current (derived)",
-		    "v2giso20.ev.maximum.current",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_ev_maximum_power,
-		  { "EV Maximum Power (derived)",
-		    "v2giso20.ev.maximum.power",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_evse_present_voltage,
-		  { "EVSE Present Voltage (derived)",
-		    "v2giso20.evse.present.voltage",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_evse_present_current,
-		  { "EVSE Present Current (derived)",
-		    "v2giso20.evse.present.current",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_evse_maximum_voltage,
-		  { "EVSE Maximum Voltage (derived)",
-		    "v2giso20.evse.maximum.voltage",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_evse_maximum_current,
-		  { "EVSE Maximum Current (derived)",
-		    "v2giso20.evse.maximum.current",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		},
-		{ &hf_v2giso20_evse_maximum_power,
-		  { "EVSE Maximum Power (derived)",
-		    "v2giso20.evse.maximum.power",
-		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
-		}
 	};
 
 	static gint *ett[] = {
@@ -4820,6 +4979,9 @@ proto_register_v2giso20(void)
 
 		&ett_struct_iso20_EVSEStatusType,
 		&ett_struct_iso20_RationalNumberType,
+		&ett_struct_iso20_DetailedCostType,
+		&ett_struct_iso20_DetailedTaxType,
+		&ett_struct_iso20_ReceiptType,
 		&ett_struct_iso20_MeterInfoType,
 		&ett_struct_iso20_TargetPositionType,
 		&ett_struct_iso20_ParameterType,
@@ -4844,6 +5006,10 @@ proto_register_v2giso20(void)
 		&ett_struct_iso20_Scheduled_SEReqControlModeType,
 		&ett_struct_iso20_Dynamic_SEResControlModeType,
 		&ett_struct_iso20_Scheduled_SEResControlModeType,
+		&ett_struct_iso20_Dynamic_EVPPTControlModeType,
+		&ett_struct_iso20_Scheduled_EVPPTControlModeType,
+		&ett_struct_iso20_Dynamic_SMDTControlModeType,
+		&ett_struct_iso20_Scheduled_SMDTControlModeType,
 	};
 
 	proto_v2giso20 = proto_register_protocol(
