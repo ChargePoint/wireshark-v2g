@@ -105,6 +105,13 @@ static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEVoltageLimitAchieved = -1
 static int hf_struct_iso20_dc_DC_WeldingDetectionReqType_EVProcessing = -1;
 static int hf_struct_iso20_dc_DC_WeldingDetectionResType_ResponseCode = -1;
 
+/* other */
+static int hf_struct_iso20_dc_RationalNumberType_Exponent = -1;
+static int hf_struct_iso20_dc_RationalNumberType_Value = -1;
+
+static int hf_struct_iso20_dc_DC_CPDReqEnergyTransferModeType_TargetSOC = -1;
+
+static int hf_struct_iso20_dc_BPT_DC_CPDReqEnergyTransferModeType_TargetSOC = -1;
 
 /* Initialize the subtree pointers */
 static gint ett_v2giso20_dc = -1;
@@ -1111,51 +1118,6 @@ dissect_iso20_dc_ObjectType(
 	return;
 }
 
-#ifdef notyet
-static void
-dissect_iso20_dc_ManifestType(
-	const struct iso20_dc_ManifestType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
-{
-	/* TODO */
-	return;
-}
-#endif
-
-#ifdef notyet
-static void
-dissect_iso20_dc_SignaturePropertiesType(
-	const struct iso20_dc_SignaturePropertiesType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
-{
-	/* TODO */
-	return;
-}
-#endif
-
-#ifdef notyet
-static void
-dissect_iso20_dc_SignaturePropertyType(
-	const struct iso20_dc_SignaturePropertyType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
-{
-	/* TODO */
-	return;
-}
-#endif
-
 static void
 dissect_iso20_dc_DSAKeyValueType(
 	const struct iso20_dc_DSAKeyValueType *node,
@@ -1331,242 +1293,559 @@ dissect_iso20_dc_X509IssuerSerialType(
 /* other node dissectors - each node is represented by a struct */
 static void dissect_iso20_dc_DC_CPDReqEnergyTransferModeType(
 	const struct iso20_dc_DC_CPDReqEnergyTransferModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_DC_CPDResEnergyTransferModeType(
 	const struct iso20_dc_DC_CPDResEnergyTransferModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_BPT_DC_CPDReqEnergyTransferModeType(
 	const struct iso20_dc_BPT_DC_CPDReqEnergyTransferModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_BPT_DC_CPDResEnergyTransferModeType(
 	const struct iso20_dc_BPT_DC_CPDResEnergyTransferModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_Scheduled_DC_CLReqControlModeType(
 	const struct iso20_dc_Scheduled_DC_CLReqControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_Scheduled_DC_CLResControlModeType(
 	const struct iso20_dc_Scheduled_DC_CLResControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_BPT_Scheduled_DC_CLReqControlModeType(
 	const struct iso20_dc_BPT_Scheduled_DC_CLReqControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_BPT_Scheduled_DC_CLResControlModeType(
 	const struct iso20_dc_BPT_Scheduled_DC_CLResControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_Dynamic_DC_CLReqControlModeType(
 	const struct iso20_dc_Dynamic_DC_CLReqControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_Dynamic_DC_CLResControlModeType(
 	const struct iso20_dc_Dynamic_DC_CLResControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_BPT_Dynamic_DC_CLReqControlModeType(
 	const struct iso20_dc_BPT_Dynamic_DC_CLReqControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_BPT_Dynamic_DC_CLResControlModeType(
 	const struct iso20_dc_BPT_Dynamic_DC_CLResControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_CLReqControlModeType(
 	const struct iso20_dc_CLReqControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_dc_CLResControlModeType(
 	const struct iso20_dc_CLResControlModeType *node,
-        tvbuff_t *tvb, packet_info *pinfo _U_, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_dc_RationalNumberType(
+	const struct iso20_dc_RationalNumberType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 
 
 static void
 dissect_iso20_dc_DC_CPDReqEnergyTransferModeType(
 	const struct iso20_dc_DC_CPDReqEnergyTransferModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumVoltage");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumVoltage");
+
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_DC_CPDReqEnergyTransferModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	return;
 }
 
 static void
 dissect_iso20_dc_DC_CPDResEnergyTransferModeType(
-	const struct iso20_dc_DC_CPDResEnergyTransferModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	const struct iso20_dc_DC_CPDResEnergyTransferModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-        /* TODO */
-        return;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumVoltage");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumVoltage");
+
+	if (node->EVSEPowerRampLimitation_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVSEPowerRampLimitation,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVSEPowerRampLimitation");
+	}
+
+	return;
 }
 
 static void
 dissect_iso20_dc_BPT_DC_CPDReqEnergyTransferModeType(
-	const struct iso20_dc_BPT_DC_CPDReqEnergyTransferModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	const struct iso20_dc_BPT_DC_CPDReqEnergyTransferModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-        /* TODO */
-        return;
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumVoltage");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumVoltage");
+
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_BPT_DC_CPDReqEnergyTransferModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumDischargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumDischargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMaximumDischargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVMinimumDischargeCurrent");
+
+	return;
 }
 
 static void
 dissect_iso20_dc_BPT_DC_CPDResEnergyTransferModeType(
-	const struct iso20_dc_BPT_DC_CPDResEnergyTransferModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	const struct iso20_dc_BPT_DC_CPDResEnergyTransferModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-        /* TODO */
-        return;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumChargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumChargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumVoltage");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumVoltage");
+
+	if (node->EVSEPowerRampLimitation_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVSEPowerRampLimitation,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVSEPowerRampLimitation");
+	}
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumDischargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumDischargePower");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMaximumDischargeCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVSEMinimumDischargeCurrent");
+
+	return;
 }
 
 static void
 dissect_iso20_dc_Scheduled_DC_CLReqControlModeType(
-	const struct iso20_dc_Scheduled_DC_CLReqControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	const struct iso20_dc_Scheduled_DC_CLReqControlModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-        /* TODO */
-        return;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->EVTargetEnergyRequest_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVTargetEnergyRequest");
+	}
+	if (node->EVMaximumEnergyRequest_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMaximumEnergyRequest");
+	}
+	if (node->EVMaximumEnergyRequest_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMaximumEnergyRequest");
+	}
+
+	dissect_iso20_dc_RationalNumberType(&node->EVTargetCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVTargetCurrent");
+
+	dissect_iso20_dc_RationalNumberType(&node->EVTargetVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType,
+		"EVTargetVoltage");
+
+	if (node->EVMaximumChargePower_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMaximumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMaximumChargePower");
+	}
+	if (node->EVMinimumChargePower_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMinimumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMinimumChargePower");
+	}
+	if (node->EVMaximumChargeCurrent_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMaximumChargeCurrent,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMaximumChargeCurrent");
+	}
+	if (node->EVMaximumVoltage_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMaximumVoltage,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMaximumVoltage");
+	}
+	if (node->EVMinimumVoltage_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVMinimumVoltage,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVMinimumVoltage");
+	}
+
+	return;
 }
 
 static void
 dissect_iso20_dc_Scheduled_DC_CLResControlModeType(
 	const struct iso20_dc_Scheduled_DC_CLResControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->EVSEMaximumChargePower_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVSEMaximumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVSEMaximumChargePower");
+	}
+	if (node->EVSEMinimumChargePower_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVSEMinimumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVSEMinimumChargePower");
+	}
+	if (node->EVSEMaximumChargeCurrent_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVSEMaximumChargeCurrent,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVSEMaximumChargeCurrent");
+	}
+	if (node->EVSEMaximumVoltage_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->EVSEMaximumVoltage,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"EVSEMaximumVoltage");
+	}
+
+	return;
 }
 
 static void
 dissect_iso20_dc_BPT_Scheduled_DC_CLReqControlModeType(
 	const struct iso20_dc_BPT_Scheduled_DC_CLReqControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_BPT_Scheduled_DC_CLResControlModeType(
 	const struct iso20_dc_BPT_Scheduled_DC_CLResControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_Dynamic_DC_CLReqControlModeType(
 	const struct iso20_dc_Dynamic_DC_CLReqControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_Dynamic_DC_CLResControlModeType(
 	const struct iso20_dc_Dynamic_DC_CLResControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_BPT_Dynamic_DC_CLReqControlModeType(
 	const struct iso20_dc_BPT_Dynamic_DC_CLReqControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_BPT_Dynamic_DC_CLResControlModeType(
 	const struct iso20_dc_BPT_Dynamic_DC_CLResControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_CLReqControlModeType(
 	const struct iso20_dc_CLReqControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
 dissect_iso20_dc_CLResControlModeType(
 	const struct iso20_dc_CLResControlModeType *node _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
-        /* TODO */
-        return;
+	/* TODO */
+	return;
 }
 
 static void
@@ -1623,14 +1902,29 @@ dissect_iso20_dc_ReceiptType(
 
 static void
 dissect_iso20_dc_RationalNumberType(
-	const struct iso20_dc_RationalNumberType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_dc_RationalNumberType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_dc_RationalNumberType_Exponent,
+		tvb, 0, 0, node->Exponent);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_dc_RationalNumberType_Value,
+		tvb, 0, 0, node->Value);
+	proto_item_set_generated(it);
+
 	return;
 }
 
@@ -1639,11 +1933,11 @@ dissect_iso20_dc_RationalNumberType(
 static void
 dissect_iso20_dc_DC_ChargeParameterDiscoveryReqType(
 	const struct iso20_dc_DC_ChargeParameterDiscoveryReqType *req,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 
@@ -1669,17 +1963,17 @@ dissect_iso20_dc_DC_ChargeParameterDiscoveryReqType(
 			"DC_CPDReqEnergyTransferMode");
 	}
 
-        return;
+	return;
 }
 
 static void
 dissect_iso20_dc_DC_ChargeParameterDiscoveryResType(
 	const struct iso20_dc_DC_ChargeParameterDiscoveryResType *res,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -1711,18 +2005,18 @@ dissect_iso20_dc_DC_ChargeParameterDiscoveryResType(
 			"DC_CPDResEnergyTransferMode");
 	}
 
-        return;
+	return;
 }
 
 
 static void
 dissect_iso20_dc_DC_CableCheckReqType(
 	const struct iso20_dc_DC_CableCheckReqType *req,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 
@@ -1733,17 +2027,17 @@ dissect_iso20_dc_DC_CableCheckReqType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_dc_MessageHeaderType, "Header");
 
-        return;
+	return;
 }
 
 static void
 dissect_iso20_dc_DC_CableCheckResType(
 	const struct iso20_dc_DC_CableCheckResType *res,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -1765,18 +2059,18 @@ dissect_iso20_dc_DC_CableCheckResType(
 		tvb, 0, 0, res->EVSEProcessing);
 	proto_item_set_generated(it);
 
-        return;
+	return;
 }
 
 
 static void
 dissect_iso20_dc_DC_PreChargeReqType(
 	const struct iso20_dc_DC_PreChargeReqType *req,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -1805,17 +2099,17 @@ dissect_iso20_dc_DC_PreChargeReqType(
 		ett_struct_iso20_dc_RationalNumberType,
 		"EVTargetVoltage");
 
-        return;
+	return;
 }
 
 static void
 dissect_iso20_dc_DC_PreChargeResType(
 	const struct iso20_dc_DC_PreChargeResType *res,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -1837,18 +2131,18 @@ dissect_iso20_dc_DC_PreChargeResType(
 		ett_struct_iso20_dc_RationalNumberType,
 		"EVSEPresentVoltage");
 
-        return;
+	return;
 }
 
 
 static void
 dissect_iso20_dc_DC_ChargeLoopReqType(
 	const struct iso20_dc_DC_ChargeLoopReqType *req,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -1915,17 +2209,17 @@ dissect_iso20_dc_DC_ChargeLoopReqType(
 			"Scheduled_DC_CLReqControlMode");
 	}
 
-        return;
+	return;
 }
 
 static void
 dissect_iso20_dc_DC_ChargeLoopResType(
 	const struct iso20_dc_DC_ChargeLoopResType *res _U_,
-        tvbuff_t *tvb _U_,
-        packet_info *pinfo _U_,
-        proto_tree *tree _U_,
-        gint idx _U_,
-        const char *subtree_name _U_)
+	tvbuff_t *tvb _U_,
+	packet_info *pinfo _U_,
+	proto_tree *tree _U_,
+	gint idx _U_,
+	const char *subtree_name _U_)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -2024,18 +2318,18 @@ dissect_iso20_dc_DC_ChargeLoopResType(
 			"Scheduled_DC_CLResControlMode");
 	}
 
-        return;
+	return;
 }
 
 
 static void
 dissect_iso20_dc_DC_WeldingDetectionReqType(
 	const struct iso20_dc_DC_WeldingDetectionReqType *req,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -2052,17 +2346,17 @@ dissect_iso20_dc_DC_WeldingDetectionReqType(
 		tvb, 0, 0, req->EVProcessing);
 	proto_item_set_generated(it);
 
-        return;
+	return;
 }
 
 static void
 dissect_iso20_dc_DC_WeldingDetectionResType(
 	const struct iso20_dc_DC_WeldingDetectionResType *res,
-        tvbuff_t *tvb,
-        packet_info *pinfo,
-        proto_tree *tree,
-        gint idx,
-        const char *subtree_name)
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -2085,7 +2379,7 @@ dissect_iso20_dc_DC_WeldingDetectionResType(
 		ett_struct_iso20_dc_RationalNumberType,
 		"EVSEPresentVoltage");
 
-        return;
+	return;
 }
 
 
@@ -2534,8 +2828,8 @@ proto_register_v2giso20_dc(void)
 		  { "EVProcessing",
 		    "v2giso20.dc.struct.dc_prechargereq.evprocessing",
 		    FT_UINT16, BASE_DEC,
-                    VALS(v2giso20_dc_enum_iso20_dc_processingType_names),
-                    0x0, NULL, HFILL }
+		    VALS(v2giso20_dc_enum_iso20_dc_processingType_names),
+		    0x0, NULL, HFILL }
 		},
 		/* struct iso20_dc_DC_PreChargeResType */
 		{ &hf_struct_iso20_dc_DC_PreChargeResType_ResponseCode,
@@ -2581,8 +2875,8 @@ proto_register_v2giso20_dc(void)
 		  { "EVProcessing",
 		    "v2giso20.dc.struct.dc_weldingdetectionreq.evprocessing",
 		    FT_UINT16, BASE_DEC,
-                    VALS(v2giso20_dc_enum_iso20_dc_processingType_names),
-                    0x0, NULL, HFILL }
+		    VALS(v2giso20_dc_enum_iso20_dc_processingType_names),
+		    0x0, NULL, HFILL }
 		},
 		/* struct iso20_dc_DC_WeldingDetectionResType */
 		{ &hf_struct_iso20_dc_DC_WeldingDetectionResType_ResponseCode,
@@ -2591,6 +2885,30 @@ proto_register_v2giso20_dc(void)
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_dc_enum_iso20_dc_responseCodeType_names),
 		    0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_DC_CPDReqEnergyTransferModeType */
+		{ &hf_struct_iso20_dc_DC_CPDReqEnergyTransferModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.dc.struct.dc_cpdreqenergytransfermode.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_BPT_DC_CPDReqEnergyTransferModeType */
+		{ &hf_struct_iso20_dc_BPT_DC_CPDReqEnergyTransferModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.dc.struct.bpt_dc_cpdreqenergytransfermode.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_RationalNumberType */
+		{ &hf_struct_iso20_dc_RationalNumberType_Exponent,
+		  { "Exponent", "v2giso20.struct.dc_rationalnumber.exponent",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_RationalNumberType_Value,
+		  { "Value", "v2giso20.struct.dc_rationalnumber.value",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 	};
 
