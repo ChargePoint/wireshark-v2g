@@ -2743,12 +2743,14 @@ dissect_v2giso2_salestariff(
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
 
-	exi_add_characters(subtree,
-		hf_v2giso2_struct_iso2_SalesTariffType_Id,
-		tvb,
-		salestariff->Id.characters,
-		salestariff->Id.charactersLen,
-		sizeof(salestariff->Id.characters));
+	if (salestariff->Id_isUsed) {
+		exi_add_characters(subtree,
+			hf_v2giso2_struct_iso2_SalesTariffType_Id,
+			tvb,
+			salestariff->Id.characters,
+			salestariff->Id.charactersLen,
+			sizeof(salestariff->Id.characters));
+	}
 
 	if (salestariff->SalesTariffDescription_isUsed) {
 		exi_add_characters(subtree,
@@ -2759,10 +2761,12 @@ dissect_v2giso2_salestariff(
 			sizeof(salestariff->SalesTariffDescription.characters));
 	}
 
-	it = proto_tree_add_uint(subtree,
-		hf_v2giso2_struct_iso2_SalesTariffType_NumEPriceLevels,
-		tvb, 0, 0, salestariff->NumEPriceLevels);
-	proto_item_set_generated(it);
+	if (salestariff->NumEPriceLevels_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_v2giso2_struct_iso2_SalesTariffType_NumEPriceLevels,
+			tvb, 0, 0, salestariff->NumEPriceLevels);
+		proto_item_set_generated(it);
+	}
 
 	salestariffentry_tree = proto_tree_add_subtree(subtree,
 		tvb, 0, 0, ett_v2giso2_array, NULL, "SalesTariffEntry");
