@@ -137,11 +137,70 @@ static int hf_struct_iso20_RationalNumberType_Value = -1;
 /* ServiceSelection */
 static int hf_struct_iso20_ServiceSelectionResType_ResponseCode = -1;
 
-/* ScheduleExchange */
+/* ScheduleExchangeReq */
 static int hf_struct_iso20_ScheduleExchangeReqType_MaximumSupportingPoints = -1;
+/* ScheduleExchangeReq - Dynamic_SEReqControlModeType */
+static int hf_struct_iso20_Dynamic_SEReqControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_Dynamic_SEReqControlModeType_MinimumSOC = -1;
+static int hf_struct_iso20_Dynamic_SEReqControlModeType_TargetSOC = -1;
+/* ScheduleExchangeReq - Scheduled_SEReqControlModeType */
+static int hf_struct_iso20_Scheduled_SEReqControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_EVPowerScheduleType_TimeAnchor = -1;
+static int hf_struct_iso20_EVPowerScheduleEntryType_Duration = -1;
+static int hf_struct_iso20_EVAbsolutePriceScheduleType_TimeAnchor = -1;
+static int hf_struct_iso20_EVAbsolutePriceScheduleType_Currency = -1;
+static int hf_struct_iso20_EVAbsolutePriceScheduleType_PriceAlgorithm = -1;
+static int hf_struct_iso20_EVPriceRuleStackType_Duration = -1;
+
+/* ScheduleExchangeRes - Dynamic_SEResControlModeType */
 static int hf_struct_iso20_ScheduleExchangeResType_ResponseCode = -1;
 static int hf_struct_iso20_ScheduleExchangeResType_EVSEProcessing = -1;
 static int hf_struct_iso20_ScheduleExchangeResType_GoToPause = -1;
+static int hf_struct_iso20_Dynamic_SEResControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_Dynamic_SEResControlModeType_MinimumSOC = -1;
+static int hf_struct_iso20_Dynamic_SEResControlModeType_TargetSOC = -1;
+
+static int hf_struct_iso20_AbsolutePriceScheduleType_Id = -1;
+static int hf_struct_iso20_AbsolutePriceScheduleType_TimeAnchor = -1;
+static int hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleID = -1;
+static int hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleDescription = -1;
+static int hf_struct_iso20_AbsolutePriceScheduleType_Currency = -1;
+static int hf_struct_iso20_AbsolutePriceScheduleType_Language = -1;
+static int hf_struct_iso20_AbsolutePriceScheduleType_PriceAlgorithm = -1;
+
+static int hf_struct_iso20_TaxRuleType_TaxRuleID = -1;
+static int hf_struct_iso20_TaxRuleType_TaxRuleName = -1;
+static int hf_struct_iso20_TaxRuleType_TaxIncludedInPrice = -1;
+static int hf_struct_iso20_TaxRuleType_AppliesToEnergyFee = -1;
+static int hf_struct_iso20_TaxRuleType_AppliesToParkingFee = -1;
+static int hf_struct_iso20_TaxRuleType_AppliesToOverstayFee = -1;
+static int hf_struct_iso20_TaxRuleType_AppliesMinimumMaximumCost = -1;
+
+static int hf_struct_iso20_PriceRuleStackType_Duration = -1;
+static int hf_struct_iso20_PriceRuleType_ParkingFeePeriod = -1;
+static int hf_struct_iso20_PriceRuleType_CarbonDioxideEmission = -1;
+static int hf_struct_iso20_PriceRuleType_RenewableGenerationPercentage = -1;
+
+static int hf_struct_iso20_OverstayRuleListType_OverstayTimeThreshold = -1;
+static int hf_struct_iso20_OverstayRuleType_OverstayRuleDescription = -1;
+static int hf_struct_iso20_OverstayRuleType_StartTime = -1;
+static int hf_struct_iso20_OverstayRuleType_OverstayFeePeriod = -1;
+
+static int hf_struct_iso20_AdditionalServiceType_ServiceName = -1;
+
+static int hf_struct_iso20_PriceLevelScheduleType_Id = -1;
+static int hf_struct_iso20_PriceLevelScheduleType_TimeAnchor = -1;
+static int hf_struct_iso20_PriceLevelScheduleType_PriceScheduleID = -1;
+static int hf_struct_iso20_PriceLevelScheduleType_PriceScheduleDescription = -1;
+static int hf_struct_iso20_PriceLevelScheduleType_NumberOfPriceLevels = -1;
+static int hf_struct_iso20_PriceLevelScheduleEntryType_Duration = -1;
+static int hf_struct_iso20_PriceLevelScheduleEntryType_PriceLevel = -1;
+
+/* ScheduleExchangeRes - Scheduled_SEResControlModeType */
+static int hf_struct_iso20_ScheduleTupleType_ScheduleTupleID = -1;
+static int hf_struct_iso20_PowerScheduleType_TimeAnchor = -1;
+
+
 
 /* PowerDelivery */
 static int hf_struct_iso20_PowerDeliveryReqType_EVProcessing = -1;
@@ -149,6 +208,10 @@ static int hf_struct_iso20_PowerDeliveryReqType_ChargeProgress = -1;
 static int hf_struct_iso20_PowerDeliveryReqType_BPT_ChannelSelection = -1;
 static int hf_struct_iso20_PowerDeliveryResType_ResponseCode = -1;
 static int hf_struct_iso20_PowerDeliveryResType_EVSEProcessing = -1;
+
+static int hf_struct_iso20_Scheduled_EVPPTControlModeType_SelectedScheduleTupleID = -1;
+static int hf_struct_iso20_Scheduled_EVPPTControlModeType_PowerToleranceAcceptance = -1;
+
 
 /* TBD */
 static int hf_struct_iso20_EVSEStatusType_NotificationMaxDelay = -1;
@@ -204,8 +267,6 @@ static int hf_struct_iso20_VehicleCheckInResType_DeviceLocation = -1;
 static int hf_struct_iso20_VehicleCheckInResType_TargetDistance = -1;
 
 static int hf_struct_iso20_PowerScheduleEntryType_Duration = -1;
-
-static int hf_struct_iso20_EVPowerScheduleEntryType_Duration = -1;
 
 static int hf_struct_iso20_EVPowerProfileType_TimeAnchor = -1;
 
@@ -346,6 +407,34 @@ static gint ett_struct_iso20_Dynamic_EVPPTControlModeType = -1;
 static gint ett_struct_iso20_Scheduled_EVPPTControlModeType = -1;
 static gint ett_struct_iso20_Dynamic_SMDTControlModeType = -1;
 static gint ett_struct_iso20_Scheduled_SMDTControlModeType = -1;
+/* ScheduleExchangeReq - Dynamic_SEReqControlModeType */
+static gint ett_struct_iso20_EVEnergyOfferType = -1;
+static gint ett_struct_iso20_EVPowerScheduleType = -1;
+static gint ett_struct_iso20_EVPowerScheduleEntryListType = -1;
+static gint ett_struct_iso20_EEVPowerScheduleEntryType = -1;
+static gint ett_struct_iso20_EVAbsolutePriceScheduleType = -1;
+static gint ett_struct_iso20_EVPriceRuleStackListType = -1;
+static gint ett_struct_iso20_EVPriceRuleStackType = -1;
+static gint ett_struct_iso20_EVPriceRuleType = -1;
+/* ScheduleExchangeRes - Dynamic_SEResControlModeType */
+static gint ett_struct_iso20_AbsolutePriceScheduleType = -1;
+static gint ett_struct_iso20_TaxRuleListType = -1;
+static gint ett_struct_iso20_TaxRuleType = -1;
+static gint ett_struct_iso20_PriceRuleStackListType = -1;
+static gint ett_struct_iso20_PriceRuleStackType = -1;
+static gint ett_struct_iso20_PriceRuleType = -1;
+static gint ett_struct_iso20_OverstayRuleListType = -1;
+static gint ett_struct_iso20_OverstayRuleType = -1;
+static gint ett_struct_iso20_AdditionalServiceListType = -1;
+static gint ett_struct_iso20_AdditionalServiceType = -1;
+static gint ett_struct_iso20_PriceLevelScheduleType = -1;
+static gint ett_struct_iso20_PriceLevelScheduleEntryListType = -1;
+static gint ett_struct_iso20_PriceLevelScheduleEntryType = -1;
+/* ScheduleExchangeRes - Scheduled_SEResControlModeType */
+static gint ett_struct_iso20_ScheduleTupleType = -1;
+static gint ett_struct_iso20_ChargingScheduleType = -1;
+static gint ett_struct_iso20_PowerScheduleType = -1;
+static gint ett_struct_iso20_PowerScheduleEntryType = -1;
 
 
 static const value_string v2giso20_enum_iso20_responseCodeType_names[] = {
@@ -502,6 +591,12 @@ static const value_string v2giso20_enum_iso20_chargeProgressType_names[] = {
 	{ iso20_chargeProgressType_Standby, "Standby" },
 	{ iso20_chargeProgressType_ScheduleRenegotiation,
 	  "ScheduleRenegotiation" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_enum_iso20_powerToleranceAcceptanceType_names[] = {
+	{ iso20_powerToleranceAcceptanceType_PowerToleranceNotConfirmed, "PowerToleranceNotConfirmed" },
+	{ iso20_powerToleranceAcceptanceType_PowerToleranceConfirmed, "PowerToleranceConfirmed" },
 	{ 0, NULL }
 };
 
@@ -2694,55 +2789,1161 @@ dissect_iso20_ReceiptType(
 	return;
 }
 
+/* ScheduleExchangeReq - Dynamic_SEReqControlModeType */
 static void
 dissect_iso20_Dynamic_SEReqControlModeType(
-	const struct iso20_Dynamic_SEReqControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	const struct iso20_Dynamic_SEReqControlModeType *dynamic_sereqcontrolmode,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_Dynamic_SEReqControlModeType_DepartureTime,
+		tvb, 0, 0, dynamic_sereqcontrolmode->DepartureTime);
+	proto_item_set_generated(it);
+
+	if (dynamic_sereqcontrolmode->MinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Dynamic_SEReqControlModeType_MinimumSOC,
+			tvb, 0, 0, dynamic_sereqcontrolmode->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (dynamic_sereqcontrolmode->TargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Dynamic_SEReqControlModeType_TargetSOC,
+			tvb, 0, 0, dynamic_sereqcontrolmode->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_RationalNumberType(&dynamic_sereqcontrolmode->EVTargetEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"EVTargetEnergyRequest");
+
+	dissect_iso20_RationalNumberType(&dynamic_sereqcontrolmode->EVMaximumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"EVMaximumEnergyRequest");
+
+	dissect_iso20_RationalNumberType(&dynamic_sereqcontrolmode->EVMinimumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"EVMinimumEnergyRequest");
+
+	if (dynamic_sereqcontrolmode->EVMaximumV2XEnergyRequest_isUsed) {
+		dissect_iso20_RationalNumberType(&dynamic_sereqcontrolmode->EVMaximumV2XEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"EVMaximumV2XEnergyRequest");
+	}
+
+	if (dynamic_sereqcontrolmode->EVMinimumV2XEnergyRequest_isUsed) {
+		dissect_iso20_RationalNumberType(&dynamic_sereqcontrolmode->EVMinimumV2XEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"EVMinimumV2XEnergyRequest");
+	}
+
+	return;
+}
+
+/* ScheduleExchangeReq - Scheduled_SEReqControlModeType */
+static void
+dissect_iso20_EVPowerScheduleEntryType(
+	const struct iso20_EVPowerScheduleEntryType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_EVPowerScheduleEntryType_Duration,
+		tvb, 0, 0, node->Duration);
+	proto_item_set_generated(it);
+	
+	dissect_iso20_RationalNumberType(&node->Power,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"Power");
+
+	return;
+}
+
+static void
+dissect_iso20_EVPowerScheduleEntryListType(
+	const struct iso20_EVPowerScheduleEntryListType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	for (i = 0; i < node->EVPowerScheduleEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_EVPowerScheduleEntryType(&node->EVPowerScheduleEntry.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_EEVPowerScheduleEntryType,
+			index);
+	}
+	
+	return;
+}
+
+
+static void
+dissect_iso20_EVPowerScheduleType(
+	const struct iso20_EVPowerScheduleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_EVPowerScheduleType_TimeAnchor,
+		tvb, 0, 0, node->TimeAnchor);
+	proto_item_set_generated(it);
+
+
+	dissect_iso20_EVPowerScheduleEntryListType(&node->EVPowerScheduleEntries,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_EVPowerScheduleEntryListType,
+		"EVPowerScheduleEntries");
+	
+	return;
+}
+
+static void
+dissect_iso20_EVPriceRuleType(
+	const struct iso20_EVPriceRuleType *ev_pricerule,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_iso20_RationalNumberType(&ev_pricerule->EnergyFee,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"EnergyFee");
+	
+	dissect_iso20_RationalNumberType(&ev_pricerule->PowerRangeStart,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"PowerRangeStart");
+
+	return;
+}
+
+static void
+dissect_iso20_EVPriceRuleStackType(
+	const struct iso20_EVPriceRuleStackType *ev_pricerulestack,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_EVPriceRuleStackType_Duration,
+		tvb, 0, 0, ev_pricerulestack->Duration);
+	proto_item_set_generated(it);
+
+	for (i = 0; i < ev_pricerulestack->EVPriceRule.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_EVPriceRuleType(&ev_pricerulestack->EVPriceRule.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_EVPriceRuleType,
+			index);
+	}
+	
+	return;
+}
+
+static void
+dissect_iso20_EVPriceRuleStackListType(
+	const struct iso20_EVPriceRuleStackListType *ev_pricerulestacklist,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	for (i = 0; i < ev_pricerulestacklist->EVPriceRuleStack.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_EVPriceRuleStackType(&ev_pricerulestacklist->EVPriceRuleStack.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_EVPriceRuleStackType,
+			index);
+	}
+	
+	return;
+}
+
+static void
+dissect_iso20_EVAbsolutePriceScheduleType(
+	const struct iso20_EVAbsolutePriceScheduleType *ev_absolutepriceschedule,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_EVAbsolutePriceScheduleType_TimeAnchor,
+		tvb, 0, 0, ev_absolutepriceschedule->TimeAnchor);
+	proto_item_set_generated(it);
+
+	exi_add_characters(subtree,
+		hf_struct_iso20_EVAbsolutePriceScheduleType_Currency,
+		tvb,
+		ev_absolutepriceschedule->Currency.characters,
+		ev_absolutepriceschedule->Currency.charactersLen,
+		sizeof(ev_absolutepriceschedule->Currency.characters));
+	
+	exi_add_characters(subtree,
+		hf_struct_iso20_EVAbsolutePriceScheduleType_PriceAlgorithm,
+		tvb,
+		ev_absolutepriceschedule->PriceAlgorithm.characters,
+		ev_absolutepriceschedule->PriceAlgorithm.charactersLen,
+		sizeof(ev_absolutepriceschedule->PriceAlgorithm.characters));
+	
+	dissect_iso20_EVPriceRuleStackListType(&ev_absolutepriceschedule->EVPriceRuleStacks,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_EVPriceRuleStackListType,
+		"EVPriceRuleStacks");
+	
+	return;
+}
+
+static void
+dissect_iso20_EVEnergyOfferType(
+	const struct iso20_EVEnergyOfferType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	dissect_iso20_EVPowerScheduleType(&node->EVPowerSchedule,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_EVPowerScheduleType,
+		"EVPowerSchedule");
+	
+	dissect_iso20_EVAbsolutePriceScheduleType(&node->EVAbsolutePriceSchedule,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_EVAbsolutePriceScheduleType,
+		"EVAbsolutePriceSchedule");
+	
 	return;
 }
 
 static void
 dissect_iso20_Scheduled_SEReqControlModeType(
-	const struct iso20_Scheduled_SEReqControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	const struct iso20_Scheduled_SEReqControlModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Scheduled_SEReqControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+
+	if (node->EVTargetEnergyRequest_isUsed) {
+		dissect_iso20_RationalNumberType(&node->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"EVTargetEnergyRequest");
+	}
+
+	if (node->EVMaximumEnergyRequest_isUsed) {
+		dissect_iso20_RationalNumberType(&node->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"EVMaximumEnergyRequest");
+	}
+
+	if (node->EVMinimumEnergyRequest_isUsed) {
+		dissect_iso20_RationalNumberType(&node->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"EVMinimumEnergyRequest");
+	}
+
+	if (node->EVEnergyOffer_isUsed) {
+		dissect_iso20_EVEnergyOfferType(&node->EVEnergyOffer,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_EVEnergyOfferType,
+			"EVEnergyOffer");
+	}
+
+	return;
+}
+
+/* ScheduleExchangeRes - Dynamic_SEResControlModeType */
+static void
+dissect_iso20_TaxRuleType(
+	const struct iso20_TaxRuleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_TaxRuleType_TaxRuleID,
+		tvb, 0, 0, node->TaxRuleID);
+	proto_item_set_generated(it);
+
+	if (node->TaxRuleName_isUsed) {
+		exi_add_characters(subtree,
+			hf_struct_iso20_TaxRuleType_TaxRuleName,
+			tvb,
+			node->TaxRuleName.characters,
+			node->TaxRuleName.charactersLen,
+			sizeof(node->TaxRuleName.characters));
+	}
+
+	dissect_iso20_RationalNumberType(&node->TaxRate,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"TaxRate");
+
+	if (node->TaxIncludedInPrice_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_TaxRuleType_TaxIncludedInPrice,
+			tvb, 0, 0, node->TaxIncludedInPrice);
+		proto_item_set_generated(it);
+	}
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_TaxRuleType_AppliesToEnergyFee,
+		tvb, 0, 0, node->AppliesToEnergyFee);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_TaxRuleType_AppliesToParkingFee,
+		tvb, 0, 0, node->AppliesToParkingFee);
+	proto_item_set_generated(it);
+	
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_TaxRuleType_AppliesToOverstayFee,
+		tvb, 0, 0, node->AppliesToOverstayFee);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_TaxRuleType_AppliesMinimumMaximumCost,
+		tvb, 0, 0, node->AppliesMinimumMaximumCost);
+	proto_item_set_generated(it);	
+
+	return;
+}
+
+
+static void
+dissect_iso20_TaxRuleListType(
+	const struct iso20_TaxRuleListType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	for (i = 0; i < node->TaxRule.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_TaxRuleType(&node->TaxRule.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_TaxRuleType,
+			index);
+	}
+
 	return;
 }
 
 static void
-dissect_iso20_Dynamic_SEResControlModeType(
-	const struct iso20_Dynamic_SEResControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+dissect_iso20_PriceRuleType(
+	const struct iso20_PriceRuleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_iso20_RationalNumberType(&node->EnergyFee,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"EnergyFee");
+	
+	if (node->ParkingFee_isUsed) {
+		dissect_iso20_RationalNumberType(&node->ParkingFee,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"ParkingFee");
+	}
+
+	if (node->ParkingFeePeriod_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_PriceRuleType_ParkingFeePeriod,
+			tvb, 0, 0, node->ParkingFeePeriod);
+		proto_item_set_generated(it);
+	}
+
+	if (node->CarbonDioxideEmission_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_PriceRuleType_CarbonDioxideEmission,
+			tvb, 0, 0, node->CarbonDioxideEmission);
+		proto_item_set_generated(it);
+	}
+
+	if (node->RenewableGenerationPercentage_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_PriceRuleType_RenewableGenerationPercentage,
+			tvb, 0, 0, node->RenewableGenerationPercentage);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_RationalNumberType(&node->PowerRangeStart,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"PowerRangeStart");
+
+	return;
+}
+
+static void
+dissect_iso20_PriceRuleStackType(
+	const struct iso20_PriceRuleStackType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_PriceRuleStackType_Duration,
+		tvb, 0, 0, node->Duration);
+	proto_item_set_generated(it);
+
+	for (i = 0; i < node->PriceRule.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_PriceRuleType(&node->PriceRule.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_PriceRuleType,
+			index);
+	}	
+
+	return;
+}
+
+static void
+dissect_iso20_PriceRuleStackListType(
+	const struct iso20_PriceRuleStackListType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	for (i = 0; i < node->PriceRuleStack.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_PriceRuleStackType(&node->PriceRuleStack.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_PriceRuleStackType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_OverstayRuleType(
+	const struct iso20_OverstayRuleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	if (node->OverstayRuleDescription_isUsed) {
+		exi_add_characters(subtree,
+			hf_struct_iso20_OverstayRuleType_OverstayRuleDescription,
+			tvb,
+			node->OverstayRuleDescription.characters,
+			node->OverstayRuleDescription.charactersLen,
+			sizeof(node->OverstayRuleDescription.characters));
+	}
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_OverstayRuleType_StartTime,
+		tvb, 0, 0, node->StartTime);
+	proto_item_set_generated(it);
+
+	dissect_iso20_RationalNumberType(&node->OverstayFee,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"OverstayFee");
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_OverstayRuleType_OverstayFeePeriod,
+		tvb, 0, 0, node->OverstayFeePeriod);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_iso20_OverstayRuleListType(
+	const struct iso20_OverstayRuleListType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	if (node->OverstayTimeThreshold_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_OverstayRuleListType_OverstayTimeThreshold,
+			tvb, 0, 0, node->OverstayTimeThreshold);
+		proto_item_set_generated(it);
+	}
+
+	if (node->OverstayPowerThreshold_isUsed) {
+		dissect_iso20_RationalNumberType(&node->OverstayPowerThreshold,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"OverstayPowerThreshold");
+	}
+
+	for (i = 0; i < node->OverstayRule.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_OverstayRuleType(&node->OverstayRule.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_OverstayRuleType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_AdditionalServiceType(
+	const struct iso20_AdditionalServiceType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_struct_iso20_AdditionalServiceType_ServiceName,
+		tvb,
+		node->ServiceName.characters,
+		node->ServiceName.charactersLen,
+		sizeof(node->ServiceName.characters));
+
+	dissect_iso20_RationalNumberType(&node->ServiceFee,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_RationalNumberType,
+		"ServiceFee");
+
+	return;
+}
+
+static void
+dissect_iso20_AdditionalServiceListType(
+	const struct iso20_AdditionalServiceListType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	for (i = 0; i < node->AdditionalService.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_AdditionalServiceType(&node->AdditionalService.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_AdditionalServiceType,
+			index);
+	}
+	
+	return;
+}
+
+static void
+dissect_iso20_AbsolutePriceScheduleType(
+	const struct iso20_AbsolutePriceScheduleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	if (node->Id_isUsed) {
+		exi_add_characters(subtree,
+			hf_struct_iso20_AbsolutePriceScheduleType_Id,
+			tvb,
+			node->Id.characters,
+			node->Id.charactersLen,
+			sizeof(node->Id.characters));
+	}
+
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_AbsolutePriceScheduleType_TimeAnchor,
+		tvb, 0, 0, node->TimeAnchor);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleID,
+		tvb, 0, 0, node->PriceScheduleID);
+	proto_item_set_generated(it);
+	
+	if (node->PriceScheduleDescription_isUsed) {
+		exi_add_characters(subtree,
+			hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleDescription,
+			tvb,
+			node->PriceScheduleDescription.characters,
+			node->PriceScheduleDescription.charactersLen,
+			sizeof(node->PriceScheduleDescription.characters));
+	}
+	
+	exi_add_characters(subtree,
+		hf_struct_iso20_AbsolutePriceScheduleType_Currency,
+		tvb,
+		node->Currency.characters,
+		node->Currency.charactersLen,
+		sizeof(node->Currency.characters));
+	
+	exi_add_characters(subtree,
+		hf_struct_iso20_AbsolutePriceScheduleType_Language,
+		tvb,
+		node->Language.characters,
+		node->Language.charactersLen,
+		sizeof(node->Language.characters));
+	
+	exi_add_characters(subtree,
+		hf_struct_iso20_AbsolutePriceScheduleType_PriceAlgorithm,
+		tvb,
+		node->PriceAlgorithm.characters,
+		node->PriceAlgorithm.charactersLen,
+		sizeof(node->PriceAlgorithm.characters));
+
+	if (node->MinimumCost_isUsed) {
+		dissect_iso20_RationalNumberType(&node->MinimumCost,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"MinimumCost");
+	}
+
+	if (node->MaximumCost_isUsed) {
+		dissect_iso20_RationalNumberType(&node->MaximumCost,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"MaximumCost");
+	}
+
+	if (node->TaxRules_isUsed) {
+		dissect_iso20_TaxRuleListType(&node->TaxRules,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_TaxRuleListType,
+			"TaxRules");
+	}
+
+	dissect_iso20_PriceRuleStackListType(&node->PriceRuleStacks,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_PriceRuleStackListType,
+		"PriceRuleStacks");
+
+	if (node->OverstayRules_isUsed) {
+		dissect_iso20_OverstayRuleListType(&node->OverstayRules,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_OverstayRuleListType,
+			"OverstayRules");
+	}
+
+	if (node->AdditionalSelectedServices_isUsed) {
+		dissect_iso20_AdditionalServiceListType(&node->AdditionalSelectedServices,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_AdditionalServiceListType,
+			"AdditionalSelectedServices");
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_PriceLevelScheduleEntryType(
+	const struct iso20_PriceLevelScheduleEntryType *node,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_PriceLevelScheduleEntryType_Duration,
+		tvb, 0, 0, node->Duration);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_PriceLevelScheduleEntryType_PriceLevel,
+		tvb, 0, 0, node->PriceLevel);
+	proto_item_set_generated(it);
+	
+	return;
+}
+
+static void
+dissect_iso20_PriceLevelScheduleEntryListType(
+	const struct iso20_PriceLevelScheduleEntryListType *node,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	for (i = 0; i < node->PriceLevelScheduleEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_PriceLevelScheduleEntryType(&node->PriceLevelScheduleEntry.array[i],
+			tvb, subtree,
+			ett_struct_iso20_PriceLevelScheduleEntryType,
+			index);
+	}
+	
+	return;
+}
+
+static void
+dissect_iso20_PriceLevelScheduleType(
+	const struct iso20_PriceLevelScheduleType *node,
+	tvbuff_t *tvb,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	if (node->Id_isUsed) {
+		exi_add_characters(subtree,
+			hf_struct_iso20_PriceLevelScheduleType_Id,
+			tvb,
+			node->Id.characters,
+			node->Id.charactersLen,
+			sizeof(node->Id.characters));
+	}
+
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_PriceLevelScheduleType_TimeAnchor,
+		tvb, 0, 0, node->TimeAnchor);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_PriceLevelScheduleType_PriceScheduleID,
+		tvb, 0, 0, node->PriceScheduleID);
+	proto_item_set_generated(it);
+
+	if (node->PriceScheduleDescription_isUsed) {
+		exi_add_characters(subtree,
+			hf_struct_iso20_PriceLevelScheduleType_PriceScheduleDescription,
+			tvb,
+			node->PriceScheduleDescription.characters,
+			node->PriceScheduleDescription.charactersLen,
+			sizeof(node->PriceScheduleDescription.characters));
+	}
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_PriceLevelScheduleType_NumberOfPriceLevels,
+		tvb, 0, 0, node->NumberOfPriceLevels);
+	proto_item_set_generated(it);
+
+	dissect_iso20_PriceLevelScheduleEntryListType(&node->PriceLevelScheduleEntries,
+		tvb, subtree,
+		ett_struct_iso20_PriceLevelScheduleEntryListType,
+		"PriceLevelScheduleEntries");
+	
+	return;
+}
+
+
+static void
+dissect_iso20_Dynamic_SEResControlModeType(
+	const struct iso20_Dynamic_SEResControlModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Dynamic_SEResControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Dynamic_SEResControlModeType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Dynamic_SEResControlModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->AbsolutePriceSchedule_isUsed) {
+		dissect_iso20_AbsolutePriceScheduleType(&node->AbsolutePriceSchedule,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_AbsolutePriceScheduleType,
+			"AbsolutePriceSchedule");
+	}
+
+	if (node->PriceLevelSchedule_isUsed) {
+		dissect_iso20_PriceLevelScheduleType(&node->PriceLevelSchedule,
+			tvb, subtree,
+			ett_struct_iso20_PriceLevelScheduleType,
+			"PriceLevelSchedule");
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_PowerScheduleEntryListType(
+	const struct iso20_PowerScheduleEntryListType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	for (i = 0; i < node->PowerScheduleEntry.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_PowerScheduleEntryType(&node->PowerScheduleEntry.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_PowerScheduleEntryType,
+			index);
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_PowerScheduleType(
+	const struct iso20_PowerScheduleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_PowerScheduleType_TimeAnchor,
+		tvb, 0, 0, node->TimeAnchor);
+	proto_item_set_generated(it);
+
+	if (node->AvailableEnergy_isUsed) {
+		dissect_iso20_RationalNumberType(&node->AvailableEnergy,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"AvailableEnergy");
+	}
+
+	if (node->PowerTolerance_isUsed) {
+		dissect_iso20_RationalNumberType(&node->PowerTolerance,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_RationalNumberType,
+			"PowerTolerance");
+	}
+
+	dissect_iso20_PowerScheduleEntryListType(&node->PowerScheduleEntries,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_PowerScheduleEntryListType,
+		"PowerScheduleEntries");
+
+	return;
+}
+
+static void
+dissect_iso20_ChargingScheduleType(
+	const struct iso20_ChargingScheduleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	dissect_iso20_PowerScheduleType(&node->PowerSchedule,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_PowerScheduleType,
+		"PowerSchedule");
+
+	if (node->AbsolutePriceSchedule_isUsed) {
+		dissect_iso20_AbsolutePriceScheduleType(&node->AbsolutePriceSchedule,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_AbsolutePriceScheduleType,
+			"AbsolutePriceSchedule");
+	}
+
+	if (node->PriceLevelSchedule_isUsed) {
+		dissect_iso20_PriceLevelScheduleType(&node->PriceLevelSchedule,
+			tvb, subtree,
+			ett_struct_iso20_PriceLevelScheduleType,
+			"PriceLevelSchedule");
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_ScheduleTupleType(
+	const struct iso20_ScheduleTupleType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_ScheduleTupleType_ScheduleTupleID,
+		tvb, 0, 0, node->ScheduleTupleID);
+	proto_item_set_generated(it);
+
+	dissect_iso20_ChargingScheduleType(&node->ChargingSchedule,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ChargingScheduleType,
+		"ChargingSchedule");
+	
+	if (node->DischargingSchedule_isUsed) {
+		dissect_iso20_ChargingScheduleType(&node->DischargingSchedule,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ChargingScheduleType,
+			"DischargingSchedule");
+	}
+
 	return;
 }
 
 static void
 dissect_iso20_Scheduled_SEResControlModeType(
-	const struct iso20_Scheduled_SEResControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	const struct iso20_Scheduled_SEResControlModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	unsigned int i;
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	for (i = 0; i < node->ScheduleTuple.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+		snprintf(index, sizeof(index), "[%u]", i);
+	
+		dissect_iso20_ScheduleTupleType(&node->ScheduleTuple.array[i],
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ScheduleTupleType,
+			index);
+	}
+
 	return;
 }
 
@@ -2761,14 +3962,31 @@ dissect_iso20_Dynamic_EVPPTControlModeType(
 
 static void
 dissect_iso20_Scheduled_EVPPTControlModeType(
-	const struct iso20_Scheduled_EVPPTControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_Scheduled_EVPPTControlModeType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+	
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_Scheduled_EVPPTControlModeType_SelectedScheduleTupleID,
+		tvb, 0, 0, node->SelectedScheduleTupleID);
+	proto_item_set_generated(it);
+
+	if (node->PowerToleranceAcceptance_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_Scheduled_EVPPTControlModeType_PowerToleranceAcceptance,
+			tvb, 0, 0, node->PowerToleranceAcceptance);
+		proto_item_set_generated(it);
+	}
+
 	return;
 }
 
@@ -3388,6 +4606,10 @@ dissect_iso20_PowerDeliveryResType(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_MessageHeaderType(&powerdeliveryres->Header,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_MessageHeaderType, "Header");
 
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_PowerDeliveryResType_ResponseCode,
@@ -4512,7 +5734,7 @@ proto_register_v2giso20(void)
 		{ &hf_struct_iso20_ParameterSetType_ParameterSetID,
 		  { "ParameterSetID",
 		    "v2giso20.struct.parameterset.parametersetid",
-		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_ParameterType */
@@ -4558,13 +5780,6 @@ proto_register_v2giso20(void)
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
-		/* struct iso20_EVPowerScheduleEntryType */
-		{ &hf_struct_iso20_EVPowerScheduleEntryType_Duration,
-		  { "Duration",
-		    "v2giso20.struct.evpowerscheduleentry.duration",
-		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
-		},
-
 		/* struct iso20_ServiceSelectionReqType */
 		/* struct iso20_ServiceSelectionResType */
 		{ &hf_struct_iso20_ServiceSelectionResType_ResponseCode,
@@ -4573,6 +5788,303 @@ proto_register_v2giso20(void)
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_enum_iso20_responseCodeType_names),
 		    0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_ScheduleExchangeReqType */
+		{ &hf_struct_iso20_ScheduleExchangeReqType_MaximumSupportingPoints,
+		  { "MaximumSupportingPoints",
+		    "v2giso20.struct.scheduleexchangereq.maximumsupportingpoints",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Dynamic_SEReqControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.struct.dynamic_sereqcontrolmode.departuretime",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Dynamic_SEReqControlModeType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.struct.dynamic_sereqcontrolmode.minimumsoc",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Dynamic_SEReqControlModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.struct.dynamic_sereqcontrolmode.targetsoc",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Scheduled_SEReqControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.struct.scheduled_sereqcontrolmode.departuretime",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_EVPowerScheduleType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.evpowerschedule.timeanchor",
+			 FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_EVPowerScheduleEntryType_Duration,
+		  { "Duration",
+		    "v2giso20.struct.evpowerscheduleentry.duration",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_EVAbsolutePriceScheduleType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.evabsolutepriceschedule.timeanchor",
+			 FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_EVAbsolutePriceScheduleType_Currency,
+		  { "Currency",
+		    "v2giso20.struct.evabsolutepriceschedule.currency",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_EVAbsolutePriceScheduleType_PriceAlgorithm,
+		  { "PriceAlgorithm",
+		    "v2giso20.struct.evabsolutepriceschedule.pricealgorithm",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_EVPriceRuleStackType_Duration,
+		  { "Duration",
+		    "v2giso20.struct.evpricerulestack.duration",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_ScheduleExchangeResType */
+		{ &hf_struct_iso20_ScheduleExchangeResType_ResponseCode,
+		  { "ResponseCode",
+		    "v2giso20.struct.scheduleexchangeres.responsecode",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_responseCodeType_names),
+		    0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ScheduleExchangeResType_EVSEProcessing,
+		  { "EVSEProcessing",
+		    "v2giso20.struct.scheduleexchangeres.evseprocessing",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_processingType_names),
+		    0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ScheduleExchangeResType_GoToPause,
+		  { "GoToPause",
+		    "v2giso20.struct.scheduleexchangeres.gotopause",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_processingType_names),
+		    0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Dynamic_SEResControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.struct.dynamic_serescontrolmode.departuretime",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Dynamic_SEResControlModeType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.struct.dynamic_serescontrolmode.minimumsoc",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_Dynamic_SEResControlModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.struct.dynamic_serescontrolmode.targetsoc",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_Id,
+		  { "Id",
+		    "v2giso20.struct.absolutepriceschedule.id",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.absolutepriceschedule.timeanchor",
+			 FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleID,
+		  { "PriceScheduleID",
+		    "v2giso20.struct.absolutepriceschedule.pricescheduleid",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleDescription,
+		  { "PriceScheduleDescription",
+		    "v2giso20.struct.absolutepriceschedule.pricescheduledescription",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_Currency,
+		  { "Currency",
+		    "v2giso20.struct.absolutepriceschedule.currency",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_Language,
+		  { "Language",
+		    "v2giso20.struct.absolutepriceschedule.language",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AbsolutePriceScheduleType_PriceAlgorithm,
+		  { "PriceAlgorithm",
+		    "v2giso20.struct.absolutepriceschedule.pricealgorithm",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_TaxRuleID,
+		  { "TaxRuleID",
+		    "v2giso20.struct.taxrule.taxruleid",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_TaxRuleName,
+		  { "TaxRuleName",
+		    "v2giso20.struct.taxrule.taxrulename",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_TaxIncludedInPrice,
+		  { "TaxIncludedInPrice", "v2giso20.struct.taxrule.taxincludedinprice",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_AppliesToEnergyFee,
+		  { "AppliesToEnergyFee", "v2giso20.struct.taxrule.appliestoenergyfee",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_AppliesToParkingFee,
+		  { "AppliesToParkingFee", "v2giso20.struct.taxrule.appliestoparkingfee",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_AppliesToOverstayFee,
+		  { "AppliesToOverstayFee", "v2giso20.struct.taxrule.appliestooverstayfee",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_TaxRuleType_AppliesMinimumMaximumCost,
+		  { "AppliesMinimumMaximumCost", "v2giso20.struct.taxrule.appliesminimummaximumcost",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceRuleStackType_Duration,
+		  { "Duration",
+		    "v2giso20.struct.pricerulestack.duration",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceRuleType_ParkingFeePeriod,
+		  { "ParkingFeePeriod",
+		    "v2giso20.struct.pricerule.parkingfeeperiod",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceRuleType_CarbonDioxideEmission,
+		  { "CarbonDioxideEmission",
+		    "v2giso20.struct.pricerule.carbondioxideemission",
+			 FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceRuleType_RenewableGenerationPercentage,
+		  { "RenewableGenerationPercentage",
+		    "v2giso20.struct.pricerule.renewablegenerationpercentage",
+			 FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_OverstayRuleListType_OverstayTimeThreshold,
+		  { "OverstayTimeThreshold",
+		    "v2giso20.struct.overstayrulelist.overstaytimethreshold",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_OverstayRuleType_OverstayRuleDescription,
+		  { "OverstayRuleDescription",
+		    "v2giso20.struct.overstayrule.overstayruledescription",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_OverstayRuleType_StartTime,
+		  { "StartTime",
+		    "v2giso20.struct.overstayrule.starttime",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_OverstayRuleType_OverstayFeePeriod,
+		  { "OverstayFeePeriod",
+		    "v2giso20.struct.overstayrule.overstayfeeperiod",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_AdditionalServiceType_ServiceName,
+		  { "ServiceName",
+		    "v2giso20.struct.additionalservice.servicename",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleType_Id,
+		  { "Id",
+		    "v2giso20.struct.pricelevelschedule.id",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.pricelevelschedule.timeanchor",
+			 FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleType_PriceScheduleID,
+		  { "PriceScheduleID",
+		    "v2giso20.struct.pricelevelschedule.pricescheduleid",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleType_PriceScheduleDescription,
+		  { "PriceScheduleDescription",
+		    "v2giso20.struct.pricelevelschedule.pricescheduledescription",
+			 FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleType_NumberOfPriceLevels,
+		  { "NumberOfPriceLevels",
+		    "v2giso20.struct.pricelevelschedule.numberofpricelevels",
+			 FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleEntryType_Duration,
+		  { "Duration",
+		    "v2giso20.struct.pricelevelscheduleentry.duration",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PriceLevelScheduleEntryType_PriceLevel,
+		  { "PriceLevel",
+		    "v2giso20.struct.pricelevelscheduleentry.pricelevel",
+			 FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ScheduleTupleType_ScheduleTupleID,
+		  { "ScheduleTupleID",
+		    "v2giso20.struct.scheduletuple.scheduletupleid",
+			 FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_PowerScheduleType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.powerschedule.timeanchor",
+			 FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_PowerDeliveryReqType */
@@ -4595,6 +6107,18 @@ proto_register_v2giso20(void)
 		    "v2giso20.struct.powerdeliveryreq.bpt_channelselection",
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_enum_iso20_channelSelectionType_names),
+		    0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_Scheduled_EVPPTControlModeType_SelectedScheduleTupleID,
+		  { "SelectedScheduleTupleID",
+		    "v2giso20.struct.scheduled_evpptcontrolmode.selectedscheduletupleid",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_Scheduled_EVPPTControlModeType_PowerToleranceAcceptance,
+		  { "PowerToleranceAcceptance",
+		    "v2giso20.struct.scheduled_evpptcontrolmode.powertoleranceacceptance",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_powerToleranceAcceptanceType_names),
 		    0x0, NULL, HFILL }
 		},
 		/* struct iso20_PowerDeliveryResType */
@@ -5010,6 +6534,33 @@ proto_register_v2giso20(void)
 		&ett_struct_iso20_Scheduled_EVPPTControlModeType,
 		&ett_struct_iso20_Dynamic_SMDTControlModeType,
 		&ett_struct_iso20_Scheduled_SMDTControlModeType,
+		/* ScheduleExchangeReq - Dynamic_SEReqControlModeType */
+		&ett_struct_iso20_EVEnergyOfferType,
+		&ett_struct_iso20_EVPowerScheduleType,
+		&ett_struct_iso20_EVAbsolutePriceScheduleType,
+		&ett_struct_iso20_EVPriceRuleStackListType,
+		&ett_struct_iso20_EVPriceRuleStackType,
+		&ett_struct_iso20_EVPriceRuleType,
+		/* ScheduleExchangeRes - Dynamic_SEResControlModeType */
+		&ett_struct_iso20_AbsolutePriceScheduleType,
+		&ett_struct_iso20_TaxRuleListType,
+		&ett_struct_iso20_TaxRuleType,
+		&ett_struct_iso20_PriceRuleStackListType,
+		&ett_struct_iso20_PriceRuleStackType,
+		&ett_struct_iso20_PriceRuleType,
+		&ett_struct_iso20_OverstayRuleListType,
+		&ett_struct_iso20_OverstayRuleType,
+		&ett_struct_iso20_AdditionalServiceListType,
+		&ett_struct_iso20_AdditionalServiceType,
+		&ett_struct_iso20_PriceLevelScheduleType,
+		&ett_struct_iso20_PriceLevelScheduleEntryListType,
+		&ett_struct_iso20_PriceLevelScheduleEntryType,
+		/* ScheduleExchangeRes - Scheduled_SEResControlModeType */
+		&ett_struct_iso20_ScheduleTupleType,
+		&ett_struct_iso20_ChargingScheduleType,
+		&ett_struct_iso20_PowerScheduleType,
+		&ett_struct_iso20_PowerScheduleEntryListType,
+		&ett_struct_iso20_PowerScheduleEntryType,
 	};
 
 	proto_v2giso20 = proto_register_protocol(

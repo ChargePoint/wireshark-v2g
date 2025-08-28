@@ -90,6 +90,85 @@ static int hf_struct_iso20_ac_AC_ChargeParameterDiscoveryResType_ResponseCode = 
 static int hf_struct_iso20_ac_AC_ChargeLoopReqType_MeterInfoRequested = -1;
 static int hf_struct_iso20_ac_AC_ChargeLoopResType_ResponseCode = -1;
 
+static int hf_struct_iso20_ac_Dynamic_AC_CLReqControlModeType_DepartureTime = -1;
+
+static int hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_MinimumSOC = -1;
+static int hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_TargetSOC = -1;
+static int hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_AckMaxDelay = -1;
+
+static int hf_struct_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType_DepartureTime = -1;
+
+static int hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_MinimumSOC = -1;
+static int hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_TargetSOC = -1;
+static int hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_AckMaxDelay = -1;
+
+static int hf_struct_iso20_ac_DisplayParametersType_PresentSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_MinimumSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_TargetSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_MaximumSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMinimumSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToTargetSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMaximumSOC = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_ChargingComplete = -1;
+static int hf_struct_iso20_ac_DisplayParametersType_InletHot = -1;
+
+
+/* Rational Number */
+static int hf_struct_iso20_ac_RationalNumberType_Exponent = -1;
+static int hf_struct_iso20_ac_RationalNumberType_Value = -1;
+
+/* Specifically track voltage and current for graphing */
+static int hf_iso20_ev_max_power = -1;
+static int hf_iso20_ev_max_power_l2 = -1;
+static int hf_iso20_ev_max_power_l3 = -1;
+static int hf_iso20_ev_min_power = -1;
+static int hf_iso20_ev_min_power_l2 = -1;
+static int hf_iso20_ev_min_power_l3 = -1;
+static int hf_iso20_ev_target_energy = -1;
+static int hf_iso20_ev_max_energy = -1;
+static int hf_iso20_ev_min_energy = -1;
+static int hf_iso20_ev_present_active_power = -1;
+static int hf_iso20_ev_present_active_power_l2 = -1;
+static int hf_iso20_ev_present_active_power_l3 = -1;
+static int hf_iso20_ev_present_reactive_power = -1;
+static int hf_iso20_ev_present_reactive_power_l2 = -1;
+static int hf_iso20_ev_present_reactive_power_l3 = -1;
+static int hf_iso20_ev_max_discharge_power = -1;
+static int hf_iso20_ev_max_discharge_power_l2 = -1;
+static int hf_iso20_ev_max_discharge_power_l3 = -1;
+static int hf_iso20_ev_min_discharge_power = -1;
+static int hf_iso20_ev_min_discharge_power_l2 = -1;
+static int hf_iso20_ev_min_discharge_power_l3 = -1;
+
+static int hf_iso20_evse_max_power = -1;
+static int hf_iso20_evse_max_power_l2 = -1;
+static int hf_iso20_evse_max_power_l3 = -1;
+static int hf_iso20_evse_min_power = -1;
+static int hf_iso20_evse_min_power_l2 = -1;
+static int hf_iso20_evse_min_power_l3 = -1;
+static int hf_iso20_evse_nominal_frequency = -1;
+static int hf_iso20_evse_present_active_power = -1;
+static int hf_iso20_evse_present_active_power_l2 = -1;
+static int hf_iso20_evse_present_active_power_l3 = -1;
+static int hf_iso20_evse_max_discharge_power = -1;
+static int hf_iso20_evse_max_discharge_power_l2 = -1;
+static int hf_iso20_evse_max_discharge_power_l3 = -1;
+static int hf_iso20_evse_min_discharge_power = -1;
+static int hf_iso20_evse_min_discharge_power_l2 = -1;
+static int hf_iso20_evse_min_discharge_power_l3 = -1;
+
+static int hf_iso20_evse_target_active_power = -1;
+static int hf_iso20_evse_target_active_power_l2 = -1;
+static int hf_iso20_evse_target_active_power_l3 = -1;
+static int hf_iso20_evse_target_reactive_power = -1;
+static int hf_iso20_evse_target_reactive_power_l2 = -1;
+static int hf_iso20_evse_target_reactive_power_l3 = -1;
+
+
+
+
 
 /* Initialize the subtree pointers */
 static gint ett_v2giso20_ac = -1;
@@ -331,7 +410,38 @@ static void dissect_iso20_ac_X509IssuerSerialType(
 	const struct iso20_ac_X509IssuerSerialType *node,
 	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
 	gint idx, const char *subtree_name);
+static void dissect_iso20_ac_RationalNumberType(
+	const struct iso20_ac_RationalNumberType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
+static void dissect_iso20_ac_RationalNumberType_and_convert(
+	const struct iso20_ac_RationalNumberType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name, int *hf);
+	
 
+static inline double
+v2giso20_physicalvalue_to_double(
+	const struct iso20_ac_RationalNumberType *physicalvalue)
+{
+	double value;
+	int32_t exponent;
+
+	value = (double)physicalvalue->Value;
+	exponent = physicalvalue->Exponent;
+	if (exponent > 0) {
+		for (; exponent != 0; exponent--) {
+			value *= 10.0;
+		}
+	}
+	if (exponent < 0) {
+		for (; exponent != 0; exponent++) {
+			value /= 10.0;
+		}
+	}
+
+	return value;
+}
 
 static void
 dissect_iso20_ac_SignatureType(
@@ -1361,14 +1471,62 @@ static void dissect_iso20_ac_CLResControlModeType(
 
 static void
 dissect_iso20_ac_AC_CPDReqEnergyTransferModeType(
-	const struct iso20_ac_AC_CPDReqEnergyTransferModeType *node _U_,
-	tvbuff_t *tvb _U_,
-	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	const struct iso20_ac_AC_CPDReqEnergyTransferModeType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumChargePower", &hf_iso20_ev_max_power);
+
+	if (node->EVMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L2", &hf_iso20_ev_max_power_l2);
+	}
+
+	if (node->EVMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L3", &hf_iso20_ev_max_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumChargePower", &hf_iso20_ev_min_power);
+
+	if (node->EVMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L2", &hf_iso20_ev_min_power_l2);
+	}
+
+	if (node->EVMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L3", &hf_iso20_ev_min_power_l3);
+	}
+
 	return;
 }
 
@@ -1381,7 +1539,101 @@ dissect_iso20_ac_AC_CPDResEnergyTransferModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSEMaximumChargePower", &hf_iso20_evse_max_power);
+
+	if (node->EVSEMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMaximumChargePower_L2", &hf_iso20_evse_max_power_l2);
+	}
+
+	if (node->EVSEMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMaximumChargePower_L3", &hf_iso20_evse_max_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSEMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSEMinimumChargePower", &hf_iso20_evse_min_power);
+
+	if (node->EVSEMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMinimumChargePower_L2", &hf_iso20_evse_min_power_l2);
+	}
+
+	if (node->EVSEMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMinimumChargePower_L3", &hf_iso20_evse_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSENominalFrequency,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSENominalFrequency", &hf_iso20_evse_nominal_frequency);
+
+	if (node->MaximumPowerAsymmetry_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->MaximumPowerAsymmetry,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"MaximumPowerAsymmetry");
+	}
+
+	if (node->EVSEPowerRampLimitation_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->EVSEPowerRampLimitation,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPowerRampLimitation");
+	}
+
+	if (node->EVSEPresentActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower", &hf_iso20_evse_present_active_power);
+	}
+
+	if (node->EVSEPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L2", &hf_iso20_evse_present_active_power_l2);
+	}
+
+	if (node->EVSEPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L3", &hf_iso20_evse_present_active_power_l3);
+	}
+	
 	return;
 }
 
@@ -1394,7 +1646,99 @@ dissect_iso20_ac_BPT_AC_CPDReqEnergyTransferModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumChargePower", &hf_iso20_ev_max_power);
+
+	if (node->EVMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L2", &hf_iso20_ev_max_power_l2);
+	}
+
+	if (node->EVMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L3", &hf_iso20_ev_max_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumChargePower", &hf_iso20_ev_min_power);
+
+	if (node->EVMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L2", &hf_iso20_ev_min_power_l2);
+	}
+
+	if (node->EVMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L3", &hf_iso20_ev_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumDischargePower", &hf_iso20_ev_max_discharge_power);
+
+	if (node->EVMaximumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower_L2", &hf_iso20_ev_max_discharge_power_l2);
+	}
+
+	if (node->EVMaximumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower_L3", &hf_iso20_ev_max_discharge_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumDischargePower", &hf_iso20_ev_min_discharge_power);
+
+	if (node->EVMinimumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower_L2", &hf_iso20_ev_min_discharge_power_l2);
+	}
+
+	if (node->EVMinimumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower_L3", &hf_iso20_ev_min_discharge_power_l3);
+	}
+
 	return;
 }
 
@@ -1407,46 +1751,554 @@ dissect_iso20_ac_BPT_AC_CPDResEnergyTransferModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSEMaximumChargePower", &hf_iso20_evse_max_power);
+
+	if (node->EVSEMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMaximumChargePower_L2", &hf_iso20_evse_max_power_l2);
+	}
+
+	if (node->EVSEMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMaximumChargePower_L3", &hf_iso20_evse_max_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSEMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSEMinimumChargePower", &hf_iso20_evse_min_power);
+
+	if (node->EVSEMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMinimumChargePower_L2", &hf_iso20_evse_min_power_l2);
+	}
+
+	if (node->EVSEMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMinimumChargePower_L3", &hf_iso20_evse_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSENominalFrequency,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSENominalFrequency", &hf_iso20_evse_nominal_frequency);
+
+
+	if (node->MaximumPowerAsymmetry_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->MaximumPowerAsymmetry,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"MaximumPowerAsymmetry");
+	}
+
+	if (node->EVSEPowerRampLimitation_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->EVSEPowerRampLimitation,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPowerRampLimitation");
+	}
+
+	if (node->EVSEPresentActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower", &hf_iso20_ev_present_active_power);
+	}
+
+	if (node->EVSEPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L2", &hf_iso20_ev_present_active_power_l2);
+	}
+
+	if (node->EVSEPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L3", &hf_iso20_ev_present_active_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSEMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSEMaximumDischargePower", &hf_iso20_evse_max_discharge_power);
+
+	if (node->EVSEMaximumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMaximumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMaximumDischargePower_L2", &hf_iso20_evse_max_discharge_power_l2);
+	}
+
+	if (node->EVSEMaximumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMaximumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMaximumDischargePower_L3", &hf_iso20_evse_max_discharge_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSEMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSEMinimumDischargePower", &hf_iso20_evse_min_discharge_power);
+
+	if (node->EVSEMinimumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMinimumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMinimumDischargePower_L2", &hf_iso20_evse_min_discharge_power_l2);
+	}
+
+	if (node->EVSEMinimumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEMinimumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEMinimumDischargePower_L3", &hf_iso20_evse_min_discharge_power_l3);
+	}
+
 	return;
 }
 
 static void
 dissect_iso20_ac_Scheduled_AC_CLReqControlModeType(
-	const struct iso20_ac_Scheduled_AC_CLReqControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_Scheduled_AC_CLReqControlModeType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->EVTargetEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVTargetEnergyRequest", &hf_iso20_ev_target_energy);
+	}
+
+	if (node->EVMaximumEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);
+	}
+
+	if (node->EVMinimumEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumEnergyRequest", &hf_iso20_ev_min_energy);
+	}
+
+	if (node->EVMaximumChargePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower", &hf_iso20_ev_max_power);
+	}
+
+	if (node->EVMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L2", &hf_iso20_ev_max_power_l2);
+	}
+
+	if (node->EVMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L3", &hf_iso20_ev_max_power_l3);
+	}
+
+	if (node->EVMinimumChargePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower", &hf_iso20_ev_min_power);
+	}
+
+	if (node->EVMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L2", &hf_iso20_ev_min_power_l2);
+	}
+
+	if (node->EVMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L3", &hf_iso20_ev_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVPresentActivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVPresentActivePower", &hf_iso20_ev_present_active_power);
+
+	if (node->EVPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L2", &hf_iso20_ev_present_active_power_l2);
+	}
+
+	if (node->EVPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L3", &hf_iso20_ev_present_active_power_l3);
+	}
+
+	if (node->EVPresentReactivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower", &hf_iso20_ev_present_reactive_power);
+	}
+
+	if (node->EVPresentReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L2", &hf_iso20_ev_present_reactive_power_l2);
+	}
+
+	if (node->EVPresentReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L3", &hf_iso20_ev_present_reactive_power_l3);
+	}
+
 	return;
 }
 
 static void
 dissect_iso20_ac_Scheduled_AC_CLResControlModeType(
-	const struct iso20_ac_Scheduled_AC_CLResControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_Scheduled_AC_CLResControlModeType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->EVSETargetActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower", &hf_iso20_evse_target_active_power);
+	}
+
+	if (node->EVSETargetActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L2", &hf_iso20_evse_target_active_power_l2);
+	}
+
+	if (node->EVSETargetActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L3", &hf_iso20_evse_target_active_power_l3);
+	}
+
+	if (node->EVSETargetReactivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower", &hf_iso20_evse_target_reactive_power);
+	}
+
+	if (node->EVSETargetReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L2", &hf_iso20_evse_target_reactive_power_l2);
+	}
+
+	if (node->EVSETargetReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L3", &hf_iso20_evse_target_reactive_power_l3);
+	}
+
+	if (node->EVSEPresentActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower", &hf_iso20_evse_present_active_power);
+	}
+
+	if (node->EVSEPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L2", &hf_iso20_evse_present_active_power_l2);
+	}
+
+	if (node->EVSEPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L3", &hf_iso20_evse_present_active_power_l3);
+	}
+
 	return;
 }
 
 static void
 dissect_iso20_ac_BPT_Scheduled_AC_CLReqControlModeType(
-	const struct iso20_ac_BPT_Scheduled_AC_CLReqControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_BPT_Scheduled_AC_CLReqControlModeType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->EVTargetEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVTargetEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVTargetEnergyRequest", &hf_iso20_ev_target_energy);
+	}
+
+	if (node->EVMaximumEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);
+	}
+
+	if (node->EVMinimumEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumEnergyRequest", &hf_iso20_ev_min_energy);
+	}
+
+	if (node->EVMaximumChargePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower", &hf_iso20_ev_max_power);
+	}
+
+	if (node->EVMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L2", &hf_iso20_ev_max_power_l2);
+	}
+
+	if (node->EVMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L3", &hf_iso20_ev_max_power_l3);
+	}
+
+	if (node->EVMinimumChargePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower", &hf_iso20_ev_min_power);
+	}
+
+	if (node->EVMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L2", &hf_iso20_ev_min_power_l2);
+	}
+
+	if (node->EVMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L3", &hf_iso20_ev_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVPresentActivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVPresentActivePower", &hf_iso20_ev_present_active_power);
+
+	if (node->EVPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L2", &hf_iso20_ev_present_active_power_l2);
+	}
+
+	if (node->EVPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L3", &hf_iso20_ev_present_active_power_l3);
+	}
+
+	if (node->EVPresentReactivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower", &hf_iso20_ev_present_reactive_power);
+	}
+
+	if (node->EVPresentReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L2", &hf_iso20_ev_present_reactive_power_l2);
+	}
+
+	if (node->EVPresentReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L3", &hf_iso20_ev_present_reactive_power_l3);
+	}
+
+	if (node->EVMaximumDischargePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower", &hf_iso20_ev_max_discharge_power);
+	}
+
+	if (node->EVMaximumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower_L2", &hf_iso20_ev_max_discharge_power_l2);
+	}
+
+	if (node->EVMaximumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower_L3", &hf_iso20_ev_max_discharge_power_l3);
+	}
+
+
+	if (node->EVMinimumDischargePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower", &hf_iso20_ev_min_discharge_power);
+	}
+
+	if (node->EVMinimumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower_L2", &hf_iso20_ev_min_discharge_power_l2);
+	}
+
+	if (node->EVMinimumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower_L3", &hf_iso20_ev_min_discharge_power_l3);
+	}
+
 	return;
 }
 
@@ -1459,20 +2311,214 @@ dissect_iso20_ac_BPT_Scheduled_AC_CLResControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->EVSETargetActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower", &hf_iso20_evse_target_active_power);
+	}
+
+	if (node->EVSETargetActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L2", &hf_iso20_evse_target_active_power_l2);
+	}
+
+	if (node->EVSETargetActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L3", &hf_iso20_evse_target_active_power_l3);
+	}
+
+	if (node->EVSETargetReactivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower", &hf_iso20_evse_target_reactive_power);
+	}
+
+	if (node->EVSETargetReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L2", &hf_iso20_evse_target_reactive_power_l2);
+	}
+
+	if (node->EVSETargetReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L3", &hf_iso20_evse_target_reactive_power_l3);
+	}
+
+	if (node->EVSEPresentActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower", &hf_iso20_evse_present_active_power);
+	}
+
+	if (node->EVSEPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L2", &hf_iso20_evse_present_active_power_l2);
+	}
+
+	if (node->EVSEPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L3", &hf_iso20_evse_present_active_power_l3);
+	}
+
 	return;
 }
 
 static void
 dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
-	const struct iso20_ac_Dynamic_AC_CLReqControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_Dynamic_AC_CLReqControlModeType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_Dynamic_AC_CLReqControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVTargetEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVTargetEnergyRequest", &hf_iso20_ev_target_energy);
+	
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);	
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumEnergyRequest", &hf_iso20_ev_min_energy);
+	
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumChargePower", &hf_iso20_ev_max_power);
+	
+	if (node->EVMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L2", &hf_iso20_ev_max_power_l2);
+	}
+
+	if (node->EVMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L3", &hf_iso20_ev_max_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumChargePower", &hf_iso20_ev_min_power);
+	
+	if (node->EVMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L2", &hf_iso20_ev_min_power_l2);
+	}
+
+	if (node->EVMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L3", &hf_iso20_ev_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVPresentActivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVPresentActivePower", &hf_iso20_ev_present_active_power);
+	
+	if (node->EVPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L2", &hf_iso20_ev_present_active_power_l2);
+	}
+
+	if (node->EVPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L3", &hf_iso20_ev_present_active_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVPresentReactivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVPresentReactivePower", &hf_iso20_ev_present_reactive_power);
+	
+	if (node->EVPresentReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L2", &hf_iso20_ev_present_reactive_power_l2);
+	}
+
+	if (node->EVPresentReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L3", &hf_iso20_ev_present_reactive_power_l3);
+	}
+
 	return;
 }
 
@@ -1485,7 +2531,110 @@ dissect_iso20_ac_Dynamic_AC_CLResControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->AckMaxDelay_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_AckMaxDelay,
+			tvb, 0, 0, node->AckMaxDelay);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSETargetActivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSETargetActivePower", &hf_iso20_evse_target_active_power);
+
+	if (node->EVSETargetActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L2", &hf_iso20_evse_target_active_power_l2);
+	}
+
+	if (node->EVSETargetActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L3", &hf_iso20_evse_target_active_power_l3);
+	}
+
+	if (node->EVSETargetReactivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower", &hf_iso20_evse_target_reactive_power);
+	}
+
+	if (node->EVSETargetReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L2", &hf_iso20_evse_target_reactive_power_l2);
+	}
+
+	if (node->EVSETargetReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L3", &hf_iso20_evse_target_reactive_power_l3);
+	}
+
+	if (node->EVSEPresentActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower", &hf_iso20_evse_present_active_power);
+	}
+
+	if (node->EVSEPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L2", &hf_iso20_evse_present_active_power_l2);
+	}
+
+	if (node->EVSEPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L3", &hf_iso20_evse_present_active_power_l3);
+	}
+
 	return;
 }
 
@@ -1498,7 +2647,185 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVTargetEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVTargetEnergyRequest", &hf_iso20_ev_target_energy);
+	
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);	
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumEnergyRequest", &hf_iso20_ev_min_energy);
+	
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumChargePower", &hf_iso20_ev_max_power);
+	
+	if (node->EVMaximumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L2", &hf_iso20_ev_max_power_l2);
+	}
+
+	if (node->EVMaximumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumChargePower_L3", &hf_iso20_ev_max_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumChargePower", &hf_iso20_ev_min_power);
+	
+	if (node->EVMinimumChargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L2", &hf_iso20_ev_min_power_l2);
+	}
+
+	if (node->EVMinimumChargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumChargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumChargePower_L3", &hf_iso20_ev_min_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVPresentActivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVPresentActivePower", &hf_iso20_ev_present_active_power);
+	
+	if (node->EVPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L2", &hf_iso20_ev_present_active_power_l2);
+	}
+
+	if (node->EVPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentActivePower_L3", &hf_iso20_ev_present_active_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVPresentReactivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVPresentReactivePower", &hf_iso20_ev_present_reactive_power);
+	
+	if (node->EVPresentReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L2", &hf_iso20_ev_present_reactive_power_l2);
+	}
+
+	if (node->EVPresentReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVPresentReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVPresentReactivePower_L3", &hf_iso20_ev_present_reactive_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMaximumDischargePower", &hf_iso20_ev_max_discharge_power);
+	
+	if (node->EVMaximumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower_L2", &hf_iso20_ev_max_discharge_power_l2);
+	}
+
+	if (node->EVMaximumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMaximumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumDischargePower_L3", &hf_iso20_ev_max_discharge_power_l3);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVMinimumDischargePower", &hf_iso20_ev_min_discharge_power);
+	
+	if (node->EVMinimumDischargePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower_L2", &hf_iso20_ev_min_discharge_power_l2);
+	}
+
+	if (node->EVMinimumDischargePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVMinimumDischargePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumDischargePower_L3", &hf_iso20_ev_min_discharge_power_l3);
+	}
+
+	if (node->EVMaximumV2XEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->EVMaximumV2XEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMaximumV2XEnergyRequest");
+	}
+
+	if (node->EVMinimumV2XEnergyRequest_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->EVMinimumV2XEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVMinimumV2XEnergyRequest");
+	}
+
 	return;
 }
 
@@ -1511,7 +2838,110 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLResControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->AckMaxDelay_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_AckMaxDelay,
+			tvb, 0, 0, node->AckMaxDelay);
+		proto_item_set_generated(it);
+	}
+
+	dissect_iso20_ac_RationalNumberType_and_convert(
+		&node->EVSETargetActivePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"EVSETargetActivePower", &hf_iso20_evse_target_active_power);
+
+	if (node->EVSETargetActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L2", &hf_iso20_evse_target_active_power_l2);
+	}
+
+	if (node->EVSETargetActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetActivePower_L3", &hf_iso20_evse_target_active_power_l3);
+	}
+
+	if (node->EVSETargetReactivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower", &hf_iso20_evse_target_reactive_power);
+	}
+
+	if (node->EVSETargetReactivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L2", &hf_iso20_evse_target_reactive_power_l2);
+	}
+
+	if (node->EVSETargetReactivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSETargetReactivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSETargetReactivePower_L3", &hf_iso20_evse_target_reactive_power_l3);
+	}
+
+	if (node->EVSEPresentActivePower_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower", &hf_iso20_evse_present_active_power);
+	}
+
+	if (node->EVSEPresentActivePower_L2_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L2,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L2", &hf_iso20_evse_present_active_power_l2);
+	}
+
+	if (node->EVSEPresentActivePower_L3_isUsed) {
+		dissect_iso20_ac_RationalNumberType_and_convert(
+			&node->EVSEPresentActivePower_L3,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"EVSEPresentActivePower_L3", &hf_iso20_evse_present_active_power_l3);
+	}
+
 	return;
 }
 
@@ -1543,14 +2973,90 @@ dissect_iso20_ac_CLResControlModeType(
 
 static void
 dissect_iso20_ac_DisplayParametersType(
-	const struct iso20_ac_DisplayParametersType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_DisplayParametersType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->PresentSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_PresentSOC,
+			tvb, 0, 0, node->PresentSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MaximumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_MaximumSOC,
+			tvb, 0, 0, node->MaximumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->RemainingTimeToMinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMinimumSOC,
+			tvb, 0, 0, node->RemainingTimeToMinimumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->RemainingTimeToTargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToTargetSOC,
+			tvb, 0, 0, node->RemainingTimeToTargetSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->RemainingTimeToMaximumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMaximumSOC,
+			tvb, 0, 0, node->RemainingTimeToMaximumSOC);
+		proto_item_set_generated(it);
+	}
+
+	if (node->ChargingComplete_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_ChargingComplete,
+			tvb, 0, 0, node->ChargingComplete);
+		proto_item_set_generated(it);
+	}
+
+	if (node->BatteryEnergyCapacity_isUsed) {
+		dissect_iso20_ac_RationalNumberType(
+			&node->BatteryEnergyCapacity,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_RationalNumberType,
+			"BatteryEnergyCapacity");
+	}
+
+	if (node->InletHot_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_ac_DisplayParametersType_InletHot,
+			tvb, 0, 0, node->InletHot);
+		proto_item_set_generated(it);
+	}
+
 	return;
 }
 
@@ -1595,14 +3101,65 @@ dissect_iso20_ac_ReceiptType(
 
 static void
 dissect_iso20_ac_RationalNumberType(
-	const struct iso20_ac_RationalNumberType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_RationalNumberType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_ac_RationalNumberType_Exponent,
+		tvb, 0, 0, node->Exponent);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_ac_RationalNumberType_Value,
+		tvb, 0, 0, node->Value);
+	proto_item_set_generated(it);
+
+	return;
+}
+
+static void
+dissect_iso20_ac_RationalNumberType_and_convert(
+	const struct iso20_ac_RationalNumberType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo _U_,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name,
+	int *hf)
+{
+	proto_tree *subtree;
+	proto_item *it;
+	double value;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_ac_RationalNumberType_Exponent,
+		tvb, 0, 0, node->Exponent);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_int(subtree,
+		hf_struct_iso20_ac_RationalNumberType_Value,
+		tvb, 0, 0, node->Value);
+	proto_item_set_generated(it);
+
+	value = v2giso20_physicalvalue_to_double(node);
+
+	it = proto_tree_add_double(subtree,
+		*hf, tvb, 0, 0, value);
+	proto_item_set_generated(it);
+
 	return;
 }
 
@@ -2217,7 +3774,7 @@ proto_register_v2giso20_ac(void)
 		{ &hf_struct_iso20_ac_AC_ChargeLoopReqType_MeterInfoRequested,
 		  { "MeterInfoRequested",
 		    "v2giso20.ac.struct.ac_chargeloopreq.meterinforequested",
-		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 		/* iso20_ac_AC_ChargeLoopResType */
 		{ &hf_struct_iso20_ac_AC_ChargeLoopResType_ResponseCode,
@@ -2226,6 +3783,346 @@ proto_register_v2giso20_ac(void)
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_ac_enum_iso20_ac_responseCodeType_names),
 		    0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_Dynamic_AC_CLReqControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.ac.struct.ac_dynamic_ac_clreqcontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.ac.struct.ac_dynamic_ac_clrescontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.ac.struct.ac_dynamic_ac_clrescontrolmode.minimumsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.ac.struct.ac_dynamic_ac_clrescontrolmode.targetsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_Dynamic_AC_CLResControlModeType_AckMaxDelay,
+		  { "AckMaxDelay",
+		    "v2giso20.ac.struct.ac_dynamic_ac_clrescontrolmode.ackmaxdelay",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.ac.struct.ac_bpt_dynamic_ac_clreqcontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.ac.struct.ac_bpt_dynamic_ac_clrescontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.ac.struct.ac_bpt_dynamic_ac_clrescontrolmode.minimumsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.ac.struct.ac_bpt_dynamic_ac_clrescontrolmode.targetsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_BPT_Dynamic_AC_CLResControlModeType_AckMaxDelay,
+		  { "AckMaxDelay",
+		    "v2giso20.ac.struct.ac_bpt_dynamic_ac_clrescontrolmode.ackmaxdelay",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_PresentSOC,
+		  { "PresentSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.presentsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.minimumsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.targetsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_MaximumSOC,
+		  { "MaximumSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.maximumsoc",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMinimumSOC,
+		  { "RemainingTimeToMinimumSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.remainingtimetominimumsoc",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToTargetSOC,
+		  { "RemainingTimeToTargetSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.remainingtimetotargetsoc",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMaximumSOC,
+		  { "RemainingTimeToMaximumSOC",
+		    "v2giso20.ac.struct.ac_displayparameters.remainingtimetomaximumsoc",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_ChargingComplete,
+		  { "ChargingComplete",
+		    "v2giso20.ac.struct.ac_displayparameters.chargingcomplete",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DisplayParametersType_InletHot,
+		  { "InletHot",
+		    "v2giso20.ac.struct.ac_displayparameters.inlethot",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_RationalNumberType */
+		{ &hf_struct_iso20_ac_RationalNumberType_Exponent,
+		  { "Exponent", "v2giso20.struct.ac_rationalnumber.exponent",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_RationalNumberType_Value,
+		  { "Value", "v2giso20.struct.ac_rationalnumber.value",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* Derived values for graphing */
+		{ &hf_iso20_ev_max_power,
+		  { "EV Max Power (derived)", "v2giso20.ev.max.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_max_power_l2,
+		  { "EV Max Power L2 (derived)", "v2giso20.ev.max.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_max_power_l3,
+		  { "EV Max Power L3 (derived)", "v2giso20.ev.max.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_power,
+		  { "EV Min Power (derived)", "v2giso20.ev.min.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_power_l2,
+		  { "EV Min Power L2 (derived)", "v2giso20.ev.min.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_power_l3,
+		  { "EV Min Power L3 (derived)", "v2giso20.ev.min.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_max_power,
+		  { "EVSE Max Power (derived)", "v2giso20.evse.max.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_max_power_l2,
+		  { "EVSE Max Power L2 (derived)", "v2giso20.evse.max.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_max_power_l3,
+		  { "EVSE Max Power L3 (derived)", "v2giso20.evse.max.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_min_power,
+		  { "EVSE Min Power (derived)", "v2giso20.evse.min.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_min_power_l2,
+		  { "EVSE Min Power L2 (derived)", "v2giso20.evse.min.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_min_power_l3,
+		  { "EVSE Min Power L3 (derived)", "v2giso20.evse.min.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_nominal_frequency,
+		  { "EVSE Nominal Frequency (derived)", "v2giso20.evse.nominal.frequency",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_present_active_power,
+		  { "EVSE Present Active Power (derived)", "v2giso20.evse.present.active.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_present_active_power_l2,
+		  { "EVSE Present Active Power L2 (derived)", "v2giso20.evse.present.active.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_present_active_power_l3,
+		  { "EVSE Present Active Power L3 (derived)", "v2giso20.evse.present.active.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_target_energy,
+		  { "EV Target Energy (derived)", "v2giso20.ev.target.energy",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_max_energy,
+		  { "EV Max Energy (derived)", "v2giso20.ev.max.energy",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_energy,
+		  { "EV Min Energy (derived)", "v2giso20.ev.min.energy",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_present_active_power,
+		  { "EV Present Active Power (derived)", "v2giso20.ev.present.active.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_present_active_power_l2,
+		  { "EV Present Active Power L2 (derived)", "v2giso20.ev.present.active.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_present_active_power_l3,
+		  { "EV Present Active Power L3 (derived)", "v2giso20.ev.present.active.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_present_reactive_power,
+		  { "EV Present Reactive Power (derived)", "v2giso20.ev.present.reactive.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_present_reactive_power_l2,
+		  { "EV Present Reactive Power L2 (derived)", "v2giso20.ev.present.reactive.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_present_reactive_power_l3,
+		  { "EV Present Reactive Power L3 (derived)", "v2giso20.ev.present.reactive.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_max_discharge_power,
+		  { "EV Max Discharge Power (derived)", "v2giso20.ev.max.discharge.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_max_discharge_power_l2,
+		  { "EV Max Discharge Power L2 (derived)", "v2giso20.ev.max.discharge.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_max_discharge_power_l3,
+		  { "EV Max Discharge Power L3 (derived)", "v2giso20.ev.max.discharge.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_discharge_power,
+		  { "EV Min Discharge Power (derived)", "v2giso20.ev.min.discharge.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_discharge_power_l2,
+		  { "EV Min Discharge Power L2 (derived)", "v2giso20.ev.min.discharge.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_ev_min_discharge_power_l3,
+		  { "EV Min Discharge Power L3 (derived)", "v2giso20.ev.min.discharge.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_max_discharge_power,
+		  { "EVSE Max Discharge Power (derived)", "v2giso20.evse.max.discharge.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_max_discharge_power_l2,
+		  { "EVSE Max Discharge Power L2 (derived)", "v2giso20.evse.max.discharge.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_max_discharge_power_l3,
+		  { "EVSE Max Discharge Power L3 (derived)", "v2giso20.evse.max.discharge.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_min_discharge_power,
+		  { "EVSE Min Discharge Power (derived)", "v2giso20.evse.min.discharge.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_min_discharge_power_l2,
+		  { "EVSE Min Discharge Power L2 (derived)", "v2giso20.evse.min.discharge.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_min_discharge_power_l3,
+		  { "EVSE Min Discharge Power L3 (derived)", "v2giso20.evse.min.discharge.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_target_active_power,
+		  { "EVSE Target Active Power (derived)", "v2giso20.evse.target.active.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_target_active_power_l2,
+		  { "EVSE Target Active Power L2 (derived)", "v2giso20.evse.target.active.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_target_active_power_l3,
+		  { "EVSE Target Active Power L3 (derived)", "v2giso20.evse.target.active.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_target_reactive_power,
+		  { "EVSE Target Reactive Power (derived)", "v2giso20.evse.target.reactive.power",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_target_reactive_power_l2,
+		  { "EVSE Target Reactive Power L2 (derived)", "v2giso20.evse.target.reactive.power.l2",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_iso20_evse_target_reactive_power_l3,
+		  { "EVSE Target Reactive Power L3 (derived)", "v2giso20.evse.target.reactive.power.l3",
+		    FT_DOUBLE, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 	};
 
