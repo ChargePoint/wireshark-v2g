@@ -137,6 +137,9 @@ static int hf_struct_iso20_RationalNumberType_Value = -1;
 /* ServiceSelection */
 static int hf_struct_iso20_ServiceSelectionResType_ResponseCode = -1;
 
+static int hf_struct_iso20_SelectedServiceType_ServiceID = -1;
+static int hf_struct_iso20_SelectedServiceType_ParameterSetID = -1;
+
 /* ScheduleExchangeReq */
 static int hf_struct_iso20_ScheduleExchangeReqType_MaximumSupportingPoints = -1;
 /* ScheduleExchangeReq - Dynamic_SEReqControlModeType */
@@ -200,26 +203,32 @@ static int hf_struct_iso20_PriceLevelScheduleEntryType_PriceLevel = -1;
 static int hf_struct_iso20_ScheduleTupleType_ScheduleTupleID = -1;
 static int hf_struct_iso20_PowerScheduleType_TimeAnchor = -1;
 
-
-
 /* PowerDelivery */
 static int hf_struct_iso20_PowerDeliveryReqType_EVProcessing = -1;
 static int hf_struct_iso20_PowerDeliveryReqType_ChargeProgress = -1;
 static int hf_struct_iso20_PowerDeliveryReqType_BPT_ChannelSelection = -1;
+static int hf_struct_iso20_PowerScheduleEntryType_Duration = -1;
+static int hf_struct_iso20_EVPowerProfileType_TimeAnchor = -1;
+
 static int hf_struct_iso20_PowerDeliveryResType_ResponseCode = -1;
 static int hf_struct_iso20_PowerDeliveryResType_EVSEProcessing = -1;
 
 static int hf_struct_iso20_Scheduled_EVPPTControlModeType_SelectedScheduleTupleID = -1;
 static int hf_struct_iso20_Scheduled_EVPPTControlModeType_PowerToleranceAcceptance = -1;
 
+/* SessionStop */
+static int hf_struct_iso20_SessionStopReqType_ChargingSession = -1;
+static int hf_struct_iso20_SessionStopReqType_EVTerminationCode = -1;
+static int hf_struct_iso20_SessionStopReqType_EVTerminationExplanation = -1;
+static int hf_struct_iso20_SessionStopResType_ResponseCode = -1;
 
-/* TBD */
+/* EVSEStatus */
 static int hf_struct_iso20_EVSEStatusType_NotificationMaxDelay = -1;
 static int hf_struct_iso20_EVSEStatusType_EVSENotification = -1;
 
-static int hf_struct_iso20_DetailedTaxType_TaxRuleID = -1;
-
-static int hf_struct_iso20_ReceiptType_TimeAnchor = -1;
+/* MeteringConfirmation */
+static int hf_struct_iso20_SignedMeteringDataType_Id = -1;
+static int hf_struct_iso20_SignedMeteringDataType_SessionID = -1;
 
 static int hf_struct_iso20_MeterInfoType_MeterID = -1;
 static int hf_struct_iso20_MeterInfoType_ChargedEnergyReadingWh = -1;
@@ -230,27 +239,35 @@ static int hf_struct_iso20_MeterInfoType_MeterSignature = -1;
 static int hf_struct_iso20_MeterInfoType_MeterStatus = -1;
 static int hf_struct_iso20_MeterInfoType_MeterTimestamp = -1;
 
-static int hf_struct_iso20_SignedMeteringDataType_Id = -1;
-static int hf_struct_iso20_SignedMeteringDataType_SessionID = -1;
+static int hf_struct_iso20_ReceiptType_TimeAnchor = -1;
+static int hf_struct_iso20_DetailedTaxType_TaxRuleID = -1;
 
-static int hf_struct_iso20_MeasurementDataListType_MeasurementData = -1;
+static int hf_struct_iso20_Scheduled_SMDTControlModeType_SelectedScheduleTupleID = -1;
 
+static int hf_struct_iso20_MeteringConfirmationResType_ResponseCode = -1;
+
+/* CertificateInstallation */
 static int hf_struct_iso20_CertificateChainType_Id = -1;
 static int hf_struct_iso20_CertificateChainType_Certificate = -1;
 
 static int hf_struct_iso20_SignedCertificateChainType_Id = -1;
 static int hf_struct_iso20_SignedCertificateChainType_Certificate = -1;
 
+static int hf_struct_iso20_CertificateInstallationReqType_MaximumContractCertificateChains = -1;
+static int hf_struct_iso20_CertificateInstallationResType_ResponseCode = -1;
+static int hf_struct_iso20_CertificateInstallationResType_EVSEProcessing = -1;
+static int hf_struct_iso20_CertificateInstallationResType_RemainingContractCertificateChains = -1;
+
+static int hf_struct_iso20_SignedInstallationDataType_Id = -1;
+static int hf_struct_iso20_SignedInstallationDataType_ECDHCurve = -1;
+static int hf_struct_iso20_SignedInstallationDataType_DHPublicKey = -1;
+static int hf_struct_iso20_SignedInstallationDataType_SECP521_EncryptedPrivateKey = -1;
+static int hf_struct_iso20_SignedInstallationDataType_X448_EncryptedPrivateKey = -1;
+static int hf_struct_iso20_SignedInstallationDataType_TPM_EncryptedPrivateKey = -1;
+
 static int hf_struct_iso20_EMAIDListType_EMAID = -1;
 
-static int hf_struct_iso20_RelativeTimeIntervalType_start = -1;
-static int hf_struct_iso20_RelativeTimeIntervalType_duration = -1;
-
-static int hf_struct_iso20_SAScheduleTupleType_SAScheduleTupleID = -1;
-
-static int hf_struct_iso20_SelectedServiceType_ServiceID = -1;
-static int hf_struct_iso20_SelectedServiceType_ParameterSetID = -1;
-
+/* VAS - TBD */
 static int hf_struct_iso20_VehicleCheckOutReqType_EVCheckOutStatus = -1;
 static int hf_struct_iso20_VehicleCheckOutReqType_CheckOutTime = -1;
 static int hf_struct_iso20_VehicleCheckOutResType_ResponseCode = -1;
@@ -266,9 +283,8 @@ static int hf_struct_iso20_VehicleCheckInResType_ParkingSpace = -1;
 static int hf_struct_iso20_VehicleCheckInResType_DeviceLocation = -1;
 static int hf_struct_iso20_VehicleCheckInResType_TargetDistance = -1;
 
-static int hf_struct_iso20_PowerScheduleEntryType_Duration = -1;
 
-static int hf_struct_iso20_EVPowerProfileType_TimeAnchor = -1;
+/* TODO: Check why defined. They are not in libcbv2g */
 
 static int hf_struct_iso20_PowerDemandResType_ResponseCode = -1;
 static int hf_struct_iso20_PowerDemandResType_EVSEID = -1;
@@ -282,16 +298,6 @@ static int hf_struct_iso20_CurrentDemandResType_EVSEID = -1;
 static int hf_struct_iso20_CurrentDemandResType_SAScheduleTupleID = -1;
 static int hf_struct_iso20_CurrentDemandResType_ReceiptRequired = -1;
 
-static int hf_struct_iso20_CertificateInstallationReqType_MaximumContractCertificateChains = -1;
-static int hf_struct_iso20_CertificateInstallationResType_ResponseCode = -1;
-static int hf_struct_iso20_CertificateInstallationResType_EVSEProcessing = -1;
-static int hf_struct_iso20_CertificateInstallationResType_RemainingContractCertificateChains = -1;
-
-static int hf_struct_iso20_SessionStopReqType_ChargingSession = -1;
-static int hf_struct_iso20_SessionStopReqType_EVTerminationCode = -1;
-static int hf_struct_iso20_SessionStopReqType_EVTerminationExplanation = -1;
-static int hf_struct_iso20_SessionStopResType_ResponseCode = -1;
-
 static int hf_struct_iso20_MeteringReceiptReqType_Id = -1;
 static int hf_struct_iso20_MeteringReceiptReqType_SessionID = -1;
 static int hf_struct_iso20_MeteringReceiptReqType_SAScheduleTupleID = -1;
@@ -300,6 +306,11 @@ static int hf_struct_iso20_MeteringReceiptResType_ResponseCode = -1;
 static int hf_struct_iso20_ChargeParameterDiscoveryReqType_MaxSupportingPoints = -1;
 static int hf_struct_iso20_ChargeParameterDiscoveryResType_ResponseCode = -1;
 static int hf_struct_iso20_ChargeParameterDiscoveryResType_EVSEProcessing = -1;
+
+static int hf_struct_iso20_MeasurementDataListType_MeasurementData = -1;
+static int hf_struct_iso20_RelativeTimeIntervalType_start = -1;
+static int hf_struct_iso20_RelativeTimeIntervalType_duration = -1;
+static int hf_struct_iso20_SAScheduleTupleType_SAScheduleTupleID = -1;
 
 
 /* Initialize the subtree pointers */
@@ -597,6 +608,12 @@ static const value_string v2giso20_enum_iso20_chargeProgressType_names[] = {
 static const value_string v2giso20_enum_iso20_powerToleranceAcceptanceType_names[] = {
 	{ iso20_powerToleranceAcceptanceType_PowerToleranceNotConfirmed, "PowerToleranceNotConfirmed" },
 	{ iso20_powerToleranceAcceptanceType_PowerToleranceConfirmed, "PowerToleranceConfirmed" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_enum_iso20_ecdhCurveType_names[] = {
+	{ iso20_ecdhCurveType_SECP521, "SECP521" },
+	{ iso20_ecdhCurveType_X448, "X448" },
 	{ 0, NULL }
 };
 
@@ -1621,9 +1638,9 @@ static void dissect_iso20_DetailedTaxType(
 	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
 	gint idx, const char *subtree_name);
 static void dissect_iso20_ReceiptType(
-        const struct iso20_ReceiptType *node,
-        tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
-        gint idx, const char *subtree_name);
+	const struct iso20_ReceiptType *node,
+	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
+	gint idx, const char *subtree_name);
 static void dissect_iso20_Dynamic_EVPPTControlModeType(
 	const struct iso20_Dynamic_EVPPTControlModeType *node,
 	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
@@ -2292,14 +2309,71 @@ dissect_iso20_SignedCertificateChainType(
 
 static void
 dissect_iso20_SignedInstallationDataType(
-	const struct iso20_SignedInstallationDataType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_SignedInstallationDataType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_struct_iso20_SignedInstallationDataType_Id,
+		tvb,
+		node->Id.characters,
+		node->Id.charactersLen,
+		sizeof(node->Id.characters));
+	
+	dissect_iso20_ContractCertificateChainType(
+		&node->ContractCertificateChain,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ContractCertificateChainType,
+		"ContractCertificateChain");
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_SignedInstallationDataType_ECDHCurve,
+		tvb, 0, 0, node->ECDHCurve);
+	proto_item_set_generated(it);
+	
+	exi_add_bytes(subtree,
+		hf_struct_iso20_SignedInstallationDataType_DHPublicKey,
+		tvb,
+		node->DHPublicKey.bytes,
+		node->DHPublicKey.bytesLen,
+		sizeof(node->DHPublicKey.bytes));
+
+	if (node->SECP521_EncryptedPrivateKey_isUsed) {
+		exi_add_bytes(subtree,
+			hf_struct_iso20_SignedInstallationDataType_SECP521_EncryptedPrivateKey,
+			tvb,
+			node->SECP521_EncryptedPrivateKey.bytes,
+			node->SECP521_EncryptedPrivateKey.bytesLen,
+			sizeof(node->SECP521_EncryptedPrivateKey.bytes));
+	}
+
+	if (node->X448_EncryptedPrivateKey_isUsed) {
+		exi_add_bytes(subtree,
+			hf_struct_iso20_SignedInstallationDataType_X448_EncryptedPrivateKey,
+			tvb,
+			node->X448_EncryptedPrivateKey.bytes,
+			node->X448_EncryptedPrivateKey.bytesLen,
+			sizeof(node->X448_EncryptedPrivateKey.bytes));
+	}
+
+	if (node->TPM_EncryptedPrivateKey_isUsed) {
+		exi_add_bytes(subtree,
+			hf_struct_iso20_SignedInstallationDataType_TPM_EncryptedPrivateKey,
+			tvb,
+			node->TPM_EncryptedPrivateKey.bytes,
+			node->TPM_EncryptedPrivateKey.bytesLen,
+			sizeof(node->TPM_EncryptedPrivateKey.bytes));
+	}
+	
 	return;
 }
 
@@ -3956,7 +4030,7 @@ dissect_iso20_Dynamic_EVPPTControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	/* unused */
 	return;
 }
 
@@ -3999,7 +4073,7 @@ dissect_iso20_Dynamic_SMDTControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	/* unused */
 	return;
 }
 
@@ -4012,7 +4086,17 @@ dissect_iso20_Scheduled_SMDTControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
+		idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_Scheduled_SMDTControlModeType_SelectedScheduleTupleID,
+		tvb, 0, 0, node->SelectedScheduleTupleID);
+	proto_item_set_generated(it);
+
 	return;
 }
 
@@ -4658,13 +4742,28 @@ dissect_iso20_MeteringConfirmationReqType(
 static void
 dissect_iso20_MeteringConfirmationResType(
 	const struct iso20_MeteringConfirmationResType
-	    *meteringconfirmationres _U_,
-	tvbuff_t *tvb _U_,
+	    *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_MessageHeaderType(&node->Header,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_MessageHeaderType, "Header");
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_MeteringConfirmationResType_ResponseCode,
+		tvb, 0, 0, node->ResponseCode);
+	proto_item_set_generated(it);
+
 	return;
 }
 
@@ -5780,6 +5879,12 @@ proto_register_v2giso20(void)
 		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
+		{ &hf_struct_iso20_EVPowerProfileType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.evpowerprofile.timeanchor",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
 		/* struct iso20_ServiceSelectionReqType */
 		/* struct iso20_ServiceSelectionResType */
 		{ &hf_struct_iso20_ServiceSelectionResType_ResponseCode,
@@ -6137,6 +6242,69 @@ proto_register_v2giso20(void)
 		    0x0, NULL, HFILL }
 		},
 
+		/* struct iso20_SignedMeteringDataType */
+		{ &hf_struct_iso20_SignedMeteringDataType_Id,
+		  { "Id",
+		    "v2giso20.struct.signedmeteringdata.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_SignedMeteringDataType_SessionID,
+		  { "SessionID",
+		    "v2giso20.struct.signedmeteringdata.sessionid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_MeterID,
+		  { "MeterID",
+		    "v2giso20.struct.meterinfo.meterid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_ChargedEnergyReadingWh,
+		  { "ChargedEnergyReadingWh",
+		    "v2giso20.struct.meterinfo.chargedenergyreadingwh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_BPT_DischargedEnergyReadingWh,
+		  { "BPT_DischargedEnergyReadingWh",
+		    "v2giso20.struct.meterinfo.bpt_dischargedenergyreadingwh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_CapacitiveEnergyReadingVARh,
+		  { "CapacitiveEnergyReadingVARh",
+		    "v2giso20.struct.meterinfo.capacitiveenergyreadingvarh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_BPT_InductiveEnergyReadingVARh,
+		  { "BPT_InductiveEnergyReadingVARh",
+		    "v2giso20.struct.meterinfo.bpt_inductiveenergyreadingvarh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_MeterSignature,
+		  { "MeterSignature",
+		    "v2giso20.struct.meterinfo.metersignature",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_MeterStatus,
+		  { "MeterStatus",
+		    "v2giso20.struct.meterinfo.meterstatus",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeterInfoType_MeterTimestamp,
+		  { "metertimestamp",
+		    "v2giso20.struct.meterinfo.metertimestamp",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_Scheduled_SMDTControlModeType_SelectedScheduleTupleID,
+		  { "SelectedScheduleTupleID",
+		    "v2giso20.struct.scheduled_smdtcontrolmode.selectedscheduletupleid",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_MeteringConfirmationResType_ResponseCode,
+		  { "ResponseCode",
+		    "v2giso20.struct.meteringconfirmationres.ResponseCode",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_responseCodeType_names),
+		    0x0, NULL, HFILL }
+		},
 
 		/* struct iso20_EVSEStatusType */
 		{ &hf_struct_iso20_EVSEStatusType_NotificationMaxDelay,
@@ -6374,6 +6542,58 @@ proto_register_v2giso20(void)
 		    0x0, NULL, HFILL }
 		},
 
+		{ &hf_struct_iso20_CertificateInstallationResType_EVSEProcessing,
+		  { "EVSEProcessing",
+		    "v2giso20.struct.certificateinstallationres.evseprocessing",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_enum_iso20_processingType_names),
+		    0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_CertificateInstallationResType_RemainingContractCertificateChains,
+		  { "RemainingContractCertificateChains",
+		    "v2giso20.struct.certificateinstallationres.remainingcontractcertificatechains",
+		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_SignedInstallationDataType_Id,
+		  { "Id",
+		    "v2giso20.struct.signedinstallationdata.id",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_SignedInstallationDataType_ECDHCurve,
+		  { "ECDHCurve",
+		    "v2giso20.struct.signedinstallationdata.ecdhcurve",
+		    FT_UINT16, BASE_NONE,
+			VALS(v2giso20_enum_iso20_ecdhCurveType_names), 
+			0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_SignedInstallationDataType_DHPublicKey,
+		  { "DHPublicKey",
+		    "v2giso20.struct.signedinstallationdata.dhpublickey",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_SignedInstallationDataType_SECP521_EncryptedPrivateKey,
+		  { "EncryptedPrivateKey",
+		    "v2giso20.struct.signedinstallationdata.encryptedprivatekey",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_SignedInstallationDataType_X448_EncryptedPrivateKey,
+		  { "X448_EncryptedPrivateKey",
+		    "v2giso20.struct.signedinstallationdata.x448_encryptedprivatekey",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_SignedInstallationDataType_TPM_EncryptedPrivateKey,
+		  { "TPM_EncryptedPrivateKey",
+		    "v2giso20.struct.signedinstallationdata.tpm_encryptedprivatekey",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
 		/* struct iso20_SessionStopReqType */
 		{ &hf_struct_iso20_SessionStopReqType_ChargingSession,
 		  { "ChargingSession",
@@ -6501,6 +6721,13 @@ proto_register_v2giso20(void)
 		&ett_struct_iso20_MessageHeaderType,
 		&ett_struct_iso20_X509IssuerSerialType,
 
+		&ett_struct_iso20_EIM_AReqAuthorizationModeType,
+		&ett_struct_iso20_PnC_AReqAuthorizationModeType,
+		&ett_struct_iso20_EIM_ASResAuthorizationModeType,
+		&ett_struct_iso20_PnC_ASResAuthorizationModeType,
+		&ett_struct_iso20_EVPowerProfileType,
+		&ett_struct_iso20_EVPowerProfileEntryListType,
+
 		&ett_struct_iso20_EVSEStatusType,
 		&ett_struct_iso20_RationalNumberType,
 		&ett_struct_iso20_DetailedCostType,
@@ -6514,6 +6741,7 @@ proto_register_v2giso20(void)
 		&ett_struct_iso20_ListOfRootCertificateIDsType,
 		&ett_struct_iso20_SubCertificatesType,
 		&ett_struct_iso20_CertificateChainType,
+		&ett_struct_iso20_ContractCertificateChainType,
 		&ett_struct_iso20_SignedCertificateChainType,
 		&ett_struct_iso20_EMAIDListType,
 		&ett_struct_iso20_ChargingProfileType,
@@ -6526,6 +6754,7 @@ proto_register_v2giso20(void)
 		&ett_struct_iso20_ServiceIDListType,
 		&ett_struct_iso20_ServiceType,
 		&ett_struct_iso20_ServiceListType,
+		&ett_struct_iso20_SupportedProvidersListType,
 		&ett_struct_iso20_Dynamic_SEReqControlModeType,
 		&ett_struct_iso20_Scheduled_SEReqControlModeType,
 		&ett_struct_iso20_Dynamic_SEResControlModeType,

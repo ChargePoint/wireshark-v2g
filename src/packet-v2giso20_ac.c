@@ -89,6 +89,8 @@ static int hf_struct_iso20_ac_AC_ChargeParameterDiscoveryResType_ResponseCode = 
 /* AC_ChargeLoop */
 static int hf_struct_iso20_ac_AC_ChargeLoopReqType_MeterInfoRequested = -1;
 static int hf_struct_iso20_ac_AC_ChargeLoopResType_ResponseCode = -1;
+static int hf_struct_iso20_ac_EVSEStatusType_NotificationMaxDelay = -1;
+static int hf_struct_iso20_ac_EVSEStatusType_EVSENotification = -1;
 
 static int hf_struct_iso20_ac_Dynamic_AC_CLReqControlModeType_DepartureTime = -1;
 
@@ -114,6 +116,19 @@ static int hf_struct_iso20_ac_DisplayParametersType_RemainingTimeToMaximumSOC = 
 static int hf_struct_iso20_ac_DisplayParametersType_ChargingComplete = -1;
 static int hf_struct_iso20_ac_DisplayParametersType_InletHot = -1;
 
+/* MeterInfo */
+static int hf_struct_iso20_ac_MeterInfoType_MeterID = -1;
+static int hf_struct_iso20_ac_MeterInfoType_ChargedEnergyReadingWh = -1;
+static int hf_struct_iso20_ac_MeterInfoType_BPT_DischargedEnergyReadingWh = -1;
+static int hf_struct_iso20_ac_MeterInfoType_CapacitiveEnergyReadingVARh = -1;
+static int hf_struct_iso20_ac_MeterInfoType_BPT_InductiveEnergyReadingVARh = -1;
+static int hf_struct_iso20_ac_MeterInfoType_MeterSignature = -1;
+static int hf_struct_iso20_ac_MeterInfoType_MeterStatus = -1;
+static int hf_struct_iso20_ac_MeterInfoType_MeterTimestamp = -1;
+
+/* Receipt */
+static int hf_struct_iso20_ac_ReceiptType_TimeAnchor = -1;
+static int hf_struct_iso20_ac_DetailedTaxType_TaxRuleID = -1;
 
 /* Rational Number */
 static int hf_struct_iso20_ac_RationalNumberType_Exponent = -1;
@@ -226,6 +241,8 @@ static gint ett_struct_iso20_ac_EVSEStatusType = -1;
 static gint ett_struct_iso20_ac_MeterInfoType = -1;
 static gint ett_struct_iso20_ac_ReceiptType = -1;
 static gint ett_struct_iso20_ac_RationalNumberType = -1;
+static gint	ett_struct_iso20_ac_DetailedCostType = -1;
+static gint ett_struct_iso20_ac_DetailedTaxType = -1;
 
 
 static const value_string v2giso20_ac_enum_iso20_ac_responseCodeType_names[] = {
@@ -306,6 +323,16 @@ static const value_string v2giso20_ac_enum_iso20_ac_responseCodeType_names[] = {
 	  "FAILED (UnknownSession)" },
 	{ iso20_ac_responseCodeType_FAILED_WrongChargeParameter,
 	  "FAILED (WrongChargeParameter)" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_ac_enum_iso20_ac_evseNotificationType[] = {
+	{ iso20_ac_evseNotificationType_Pause, "Pause" },
+	{ iso20_ac_evseNotificationType_ExitStandby, "ExitStandby" },
+	{ iso20_ac_evseNotificationType_Terminate, "Terminate" },
+	{ iso20_ac_evseNotificationType_ScheduleRenegotiation, "ScheduleRenegotiation" },
+	{ iso20_ac_evseNotificationType_ServiceRenegotiation, "ServiceRenegotiation" },
+	{ iso20_ac_evseNotificationType_MeteringConfirmation, "MeteringConfirmation" },
 	{ 0, NULL }
 };
 
@@ -418,7 +445,6 @@ static void dissect_iso20_ac_RationalNumberType_and_convert(
 	const struct iso20_ac_RationalNumberType *node,
 	tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree,
 	gint idx, const char *subtree_name, int *hf);
-	
 
 static inline double
 v2giso20_physicalvalue_to_double(
@@ -2954,7 +2980,7 @@ dissect_iso20_ac_CLReqControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	/* unused */
 	return;
 }
 
@@ -2967,7 +2993,7 @@ dissect_iso20_ac_CLResControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	/* unused */
 	return;
 }
 
@@ -3069,33 +3095,215 @@ dissect_iso20_ac_EVSEStatusType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+	
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_ac_EVSEStatusType_NotificationMaxDelay,
+		tvb, 0, 0, node->NotificationMaxDelay);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_ac_EVSEStatusType_EVSENotification,
+		tvb, 0, 0, node->EVSENotification);
+	proto_item_set_generated(it);
+
 	return;
 }
 
 static void
 dissect_iso20_ac_MeterInfoType(
-	const struct iso20_ac_MeterInfoType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_MeterInfoType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	exi_add_characters(subtree,
+		hf_struct_iso20_ac_MeterInfoType_MeterID,
+		tvb,
+		node->MeterID.characters,
+		node->MeterID.charactersLen,
+		sizeof(node->MeterID.characters));
+
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_ac_MeterInfoType_ChargedEnergyReadingWh,
+		tvb, 0, 0, node->ChargedEnergyReadingWh);
+	proto_item_set_generated(it);
+
+	if (node->BPT_DischargedEnergyReadingWh_isUsed) {
+		it = proto_tree_add_uint64(subtree,
+			hf_struct_iso20_ac_MeterInfoType_BPT_DischargedEnergyReadingWh,
+			tvb, 0, 0, node->BPT_DischargedEnergyReadingWh);
+		proto_item_set_generated(it);
+	}
+
+	if (node->CapacitiveEnergyReadingVARh_isUsed) {
+		it = proto_tree_add_uint64(subtree,
+			hf_struct_iso20_ac_MeterInfoType_CapacitiveEnergyReadingVARh,
+			tvb, 0, 0, node->CapacitiveEnergyReadingVARh);
+		proto_item_set_generated(it);
+	}
+
+	if (node->BPT_InductiveEnergyReadingVARh_isUsed) {
+		it = proto_tree_add_uint64(subtree,
+			hf_struct_iso20_ac_MeterInfoType_BPT_InductiveEnergyReadingVARh,
+			tvb, 0, 0, node->BPT_InductiveEnergyReadingVARh);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MeterSignature_isUsed) {
+		exi_add_bytes(subtree,
+			hf_struct_iso20_ac_MeterInfoType_MeterSignature,
+			tvb,
+			node->MeterSignature.bytes,
+			node->MeterSignature.bytesLen,
+			sizeof(node->MeterSignature.bytes));
+	}
+
+	if (node->MeterStatus_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_ac_MeterInfoType_MeterStatus,
+			tvb, 0, 0, node->MeterStatus);
+		proto_item_set_generated(it);
+	}
+
+	if (node->MeterTimestamp_isUsed) {
+		it = proto_tree_add_int64(subtree,
+			hf_struct_iso20_ac_MeterInfoType_MeterTimestamp,
+			tvb, 0, 0, node->MeterTimestamp);
+		proto_item_set_generated(it);
+	}
+
+	return;
+}
+
+static void
+dissect_iso20_ac_DetailedCostType(
+	const struct iso20_ac_DetailedCostType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	dissect_iso20_ac_RationalNumberType(
+		&node->Amount,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"Amount");
+
+	dissect_iso20_ac_RationalNumberType(
+		&node->CostPerUnit,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"CostPerUnit");
+
+	return;
+}
+
+static void
+dissect_iso20_ac_DetailedTaxType(
+	const struct iso20_ac_DetailedTaxType *node,
+	tvbuff_t *tvb,
+	packet_info *pinfo,
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
+{
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_ac_DetailedTaxType_TaxRuleID,
+		tvb, 0, 0, node->TaxRuleID);
+	proto_item_set_generated(it);
+
+	dissect_iso20_ac_RationalNumberType(
+		&node->Amount,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_ac_RationalNumberType,
+		"Amount");
+
 	return;
 }
 
 static void
 dissect_iso20_ac_ReceiptType(
-	const struct iso20_ac_ReceiptType *node _U_,
-	tvbuff_t *tvb _U_,
+	const struct iso20_ac_ReceiptType *node,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* TODO */
+	unsigned int i;
+	proto_tree *subtree;
+	proto_item *it;
+	proto_tree *taxcosts_tree;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint64(subtree,
+		hf_struct_iso20_ac_ReceiptType_TimeAnchor,
+		tvb, 0, 0, node->TimeAnchor);
+	proto_item_set_generated(it);
+
+	if (node->EnergyCosts_isUsed) {
+		dissect_iso20_ac_DetailedCostType(&node->EnergyCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_DetailedCostType,
+			"EnergyCosts");
+	}
+	if (node->OccupancyCosts_isUsed) {
+		dissect_iso20_ac_DetailedCostType(&node->OccupancyCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_DetailedCostType,
+			"OccupancyCosts");
+	}
+	if (node->AdditionalServicesCosts_isUsed) {
+		dissect_iso20_ac_DetailedCostType(&node->AdditionalServicesCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_DetailedCostType,
+			"AdditionalServicesCosts");
+	}
+	if (node->OverstayCosts_isUsed) {
+		dissect_iso20_ac_DetailedCostType(&node->OverstayCosts,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_ac_DetailedCostType,
+			"OverstayCosts");
+	}
+
+	taxcosts_tree = proto_tree_add_subtree(subtree,
+		tvb, 0, 0, ett_v2giso20_ac_array, NULL, "TaxCosts");
+	for (i = 0; i < node->TaxCosts.arrayLen; i++) {
+		char index[sizeof("[65536]")];
+
+		snprintf(index, sizeof(index), "[%u]", i);
+		dissect_iso20_ac_DetailedTaxType(&node->TaxCosts.array[i],
+			tvb, pinfo, taxcosts_tree,
+			ett_struct_iso20_ac_DetailedTaxType, index);
+	}
+
 	return;
 }
 
@@ -3785,6 +3993,20 @@ proto_register_v2giso20_ac(void)
 		    0x0, NULL, HFILL }
 		},
 
+		{ &hf_struct_iso20_ac_EVSEStatusType_NotificationMaxDelay,
+		  { "NotificationMaxDelay",
+		    "v2giso20.ac.struct.evsestatustype.notificationmaxdelay",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_EVSEStatusType_EVSENotification,
+		  { "evsenotification",
+		    "v2giso20.ac.struct.evsestatustype.evsenotification",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_ac_enum_iso20_ac_evseNotificationType),
+			0x0, NULL, HFILL }
+		},
+
 		{ &hf_struct_iso20_ac_Dynamic_AC_CLReqControlModeType_DepartureTime,
 		  { "DepartureTime",
 		    "v2giso20.ac.struct.ac_dynamic_ac_clreqcontrolmode.departuretime",
@@ -3897,6 +4119,61 @@ proto_register_v2giso20_ac(void)
 		  { "InletHot",
 		    "v2giso20.ac.struct.ac_displayparameters.inlethot",
 		    FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_ac_MeterInfo */
+		{ &hf_struct_iso20_ac_MeterInfoType_MeterID,
+		  { "MeterID",
+		    "v2giso20.struct.ac_meterinfo.meterid",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_ChargedEnergyReadingWh,
+		  { "ChargedEnergyReadingWh",
+		    "v2giso20.struct.ac_meterinfo.chargedenergyreadingwh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_BPT_DischargedEnergyReadingWh,
+		  { "BPT_DischargedEnergyReadingWh",
+		    "v2giso20.struct.ac_meterinfo.bpt_dischargedenergyreadingwh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_CapacitiveEnergyReadingVARh,
+		  { "CapacitiveEnergyReadingVARh",
+		    "v2giso20.struct.ac_meterinfo.capacitiveenergyreadingvarh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_BPT_InductiveEnergyReadingVARh,
+		  { "BPT_InductiveEnergyReadingVARh",
+		    "v2giso20.struct.ac_meterinfo.bpt_inductiveenergyreadingvarh",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_MeterSignature,
+		  { "MeterSignature",
+		    "v2giso20.struct.ac_meterinfo.metersignature",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_MeterStatus,
+		  { "MeterStatus",
+		    "v2giso20.struct.ac_meterinfo.meterstatus",
+		    FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_ac_MeterInfoType_MeterTimestamp,
+		  { "metertimestamp",
+		    "v2giso20.struct.ac_meterinfo.metertimestamp",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_ac_ReceiptType */
+		{ &hf_struct_iso20_ac_ReceiptType_TimeAnchor,
+		  { "TimeAnchor",
+		    "v2giso20.struct.ac_receipt.timeanchor",
+		    FT_UINT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		{ &hf_struct_iso20_ac_DetailedTaxType_TaxRuleID,
+		  { "TaxRuleID",
+		    "v2giso20.struct.ac_detailedtax.taxruleid",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_RationalNumberType */
@@ -4182,6 +4459,8 @@ proto_register_v2giso20_ac(void)
 		&ett_struct_iso20_ac_MeterInfoType,
 		&ett_struct_iso20_ac_ReceiptType,
 		&ett_struct_iso20_ac_RationalNumberType,
+		&ett_struct_iso20_ac_DetailedCostType,
+		&ett_struct_iso20_ac_DetailedTaxType,
 	};
 
 	proto_v2giso20_ac = proto_register_protocol(
