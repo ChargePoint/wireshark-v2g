@@ -2513,7 +2513,7 @@ dissect_v2giso20_dc(tvbuff_t *tvb,
 
 	size = tvb_reported_length(tvb);
 	exi_bitstream_init(&stream,
-			   tvb_memdup(wmem_packet_scope(), tvb, 0, size),
+	           tvb_memdup(pinfo->pool, tvb, 0, size),
 			   size, 0, NULL);
 
 	exiiso20_dc = wmem_alloc(pinfo->pool, sizeof(*exiiso20_dc));

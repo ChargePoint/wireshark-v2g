@@ -1659,7 +1659,7 @@ dissect_iso20_ac_AC_CPDResEnergyTransferModeType(
 			ett_struct_iso20_ac_RationalNumberType,
 			"EVSEPresentActivePower_L3", &hf_iso20_evse_present_active_power_l3);
 	}
-	
+
 	return;
 }
 
@@ -2444,25 +2444,25 @@ dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVTargetEnergyRequest", &hf_iso20_ev_target_energy);
-	
+
 	dissect_iso20_ac_RationalNumberType_and_convert(
 		&node->EVMaximumEnergyRequest,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
-		"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);	
+		"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);
 
 	dissect_iso20_ac_RationalNumberType_and_convert(
 		&node->EVMinimumEnergyRequest,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMinimumEnergyRequest", &hf_iso20_ev_min_energy);
-	
+
 	dissect_iso20_ac_RationalNumberType_and_convert(
 		&node->EVMaximumChargePower,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMaximumChargePower", &hf_iso20_ev_max_power);
-	
+
 	if (node->EVMaximumChargePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVMaximumChargePower_L2,
@@ -2484,7 +2484,7 @@ dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMinimumChargePower", &hf_iso20_ev_min_power);
-	
+
 	if (node->EVMinimumChargePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVMinimumChargePower_L2,
@@ -2506,7 +2506,7 @@ dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVPresentActivePower", &hf_iso20_ev_present_active_power);
-	
+
 	if (node->EVPresentActivePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVPresentActivePower_L2,
@@ -2528,7 +2528,7 @@ dissect_iso20_ac_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVPresentReactivePower", &hf_iso20_ev_present_reactive_power);
-	
+
 	if (node->EVPresentReactivePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVPresentReactivePower_L2,
@@ -2691,25 +2691,25 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVTargetEnergyRequest", &hf_iso20_ev_target_energy);
-	
+
 	dissect_iso20_ac_RationalNumberType_and_convert(
 		&node->EVMaximumEnergyRequest,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
-		"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);	
+		"EVMaximumEnergyRequest", &hf_iso20_ev_max_energy);
 
 	dissect_iso20_ac_RationalNumberType_and_convert(
 		&node->EVMinimumEnergyRequest,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMinimumEnergyRequest", &hf_iso20_ev_min_energy);
-	
+
 	dissect_iso20_ac_RationalNumberType_and_convert(
 		&node->EVMaximumChargePower,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMaximumChargePower", &hf_iso20_ev_max_power);
-	
+
 	if (node->EVMaximumChargePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVMaximumChargePower_L2,
@@ -2731,7 +2731,7 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMinimumChargePower", &hf_iso20_ev_min_power);
-	
+
 	if (node->EVMinimumChargePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVMinimumChargePower_L2,
@@ -2753,7 +2753,7 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVPresentActivePower", &hf_iso20_ev_present_active_power);
-	
+
 	if (node->EVPresentActivePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVPresentActivePower_L2,
@@ -2775,7 +2775,7 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVPresentReactivePower", &hf_iso20_ev_present_reactive_power);
-	
+
 	if (node->EVPresentReactivePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVPresentReactivePower_L2,
@@ -2797,7 +2797,7 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMaximumDischargePower", &hf_iso20_ev_max_discharge_power);
-	
+
 	if (node->EVMaximumDischargePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVMaximumDischargePower_L2,
@@ -2819,7 +2819,7 @@ dissect_iso20_ac_BPT_Dynamic_AC_CLReqControlModeType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ac_RationalNumberType,
 		"EVMinimumDischargePower", &hf_iso20_ev_min_discharge_power);
-	
+
 	if (node->EVMinimumDischargePower_L2_isUsed) {
 		dissect_iso20_ac_RationalNumberType_and_convert(
 			&node->EVMinimumDischargePower_L2,
@@ -3100,7 +3100,7 @@ dissect_iso20_ac_EVSEStatusType(
 
 	subtree = proto_tree_add_subtree(tree,
 		tvb, 0, 0, idx, NULL, subtree_name);
-	
+
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_ac_EVSEStatusType_NotificationMaxDelay,
 		tvb, 0, 0, node->NotificationMaxDelay);
@@ -3685,7 +3685,7 @@ dissect_v2giso20_ac(tvbuff_t *tvb,
 
 	size = tvb_reported_length(tvb);
 	exi_bitstream_init(&stream,
-			   tvb_memdup(wmem_packet_scope(), tvb, 0, size),
+			   tvb_memdup(pinfo->pool, tvb, 0, size),
 			   size, 0, NULL);
 
 	exiiso20_ac = wmem_alloc(pinfo->pool, sizeof(*exiiso20_ac));

@@ -284,7 +284,7 @@ dissect_v2gexi_hs(v2gexi_conv_t *v2gexi_conv,
 
 	size = tvb_reported_length(tvb);
 	exi_bitstream_init(&stream,
-			   tvb_memdup(wmem_packet_scope(), tvb, 0, size),
+			   tvb_memdup(pinfo->pool, tvb, 0, size),
 			   size, 0, NULL);
 
 	errn = decode_appHand_exiDocument(&stream, &ahexi);
@@ -381,7 +381,13 @@ dissect_v2gexi(tvbuff_t *tvb,
 		v2gexi_mode = V2GEXI_HANDSHAKE;
 	}
 	col_append_fstr(pinfo->cinfo, COL_INFO, "%s",
-		val_to_str(v2gexi_mode, v2gexi_mode_names, "Unknown"));
+#if (WIRESHARK_VERSION_MAJOR < 4) || \
+    ((WIRESHARK_VERSION_MAJOR == 4) && (WIRESHARK_VERSION_MINOR < 6))
+		val_to_str(v2gexi_mode, v2gexi_mode_names, "Unknown")
+#else
+		val_to_str(pinfo->pool, v2gexi_mode, v2gexi_mode_names, "Unknown")
+#endif
+	);
 
 	switch(v2gexi_mode) {
 	default:

@@ -2328,7 +2328,7 @@ dissect_iso20_SignedInstallationDataType(
 		node->Id.characters,
 		node->Id.charactersLen,
 		sizeof(node->Id.characters));
-	
+
 	dissect_iso20_ContractCertificateChainType(
 		&node->ContractCertificateChain,
 		tvb, pinfo, subtree,
@@ -2339,7 +2339,7 @@ dissect_iso20_SignedInstallationDataType(
 		hf_struct_iso20_SignedInstallationDataType_ECDHCurve,
 		tvb, 0, 0, node->ECDHCurve);
 	proto_item_set_generated(it);
-	
+
 	exi_add_bytes(subtree,
 		hf_struct_iso20_SignedInstallationDataType_DHPublicKey,
 		tvb,
@@ -2373,7 +2373,7 @@ dissect_iso20_SignedInstallationDataType(
 			node->TPM_EncryptedPrivateKey.bytesLen,
 			sizeof(node->TPM_EncryptedPrivateKey.bytes));
 	}
-	
+
 	return;
 }
 
@@ -2950,7 +2950,7 @@ dissect_iso20_EVPowerScheduleEntryType(
 		hf_struct_iso20_EVPowerScheduleEntryType_Duration,
 		tvb, 0, 0, node->Duration);
 	proto_item_set_generated(it);
-	
+
 	dissect_iso20_RationalNumberType(&node->Power,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_RationalNumberType,
@@ -2973,17 +2973,17 @@ dissect_iso20_EVPowerScheduleEntryListType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	for (i = 0; i < node->EVPowerScheduleEntry.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_EVPowerScheduleEntryType(&node->EVPowerScheduleEntry.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_EEVPowerScheduleEntryType,
 			index);
 	}
-	
+
 	return;
 }
 
@@ -3002,7 +3002,7 @@ dissect_iso20_EVPowerScheduleType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	it = proto_tree_add_uint64(subtree,
 		hf_struct_iso20_EVPowerScheduleType_TimeAnchor,
 		tvb, 0, 0, node->TimeAnchor);
@@ -3013,7 +3013,7 @@ dissect_iso20_EVPowerScheduleType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_EVPowerScheduleEntryListType,
 		"EVPowerScheduleEntries");
-	
+
 	return;
 }
 
@@ -3035,7 +3035,7 @@ dissect_iso20_EVPriceRuleType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_RationalNumberType,
 		"EnergyFee");
-	
+
 	dissect_iso20_RationalNumberType(&ev_pricerule->PowerRangeStart,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_RationalNumberType,
@@ -3068,13 +3068,13 @@ dissect_iso20_EVPriceRuleStackType(
 	for (i = 0; i < ev_pricerulestack->EVPriceRule.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_EVPriceRuleType(&ev_pricerulestack->EVPriceRule.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_EVPriceRuleType,
 			index);
 	}
-	
+
 	return;
 }
 
@@ -3096,13 +3096,13 @@ dissect_iso20_EVPriceRuleStackListType(
 	for (i = 0; i < ev_pricerulestacklist->EVPriceRuleStack.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_EVPriceRuleStackType(&ev_pricerulestacklist->EVPriceRuleStack.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_EVPriceRuleStackType,
 			index);
 	}
-	
+
 	return;
 }
 
@@ -3120,7 +3120,7 @@ dissect_iso20_EVAbsolutePriceScheduleType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	it = proto_tree_add_uint64(subtree,
 		hf_struct_iso20_EVAbsolutePriceScheduleType_TimeAnchor,
 		tvb, 0, 0, ev_absolutepriceschedule->TimeAnchor);
@@ -3132,19 +3132,19 @@ dissect_iso20_EVAbsolutePriceScheduleType(
 		ev_absolutepriceschedule->Currency.characters,
 		ev_absolutepriceschedule->Currency.charactersLen,
 		sizeof(ev_absolutepriceschedule->Currency.characters));
-	
+
 	exi_add_characters(subtree,
 		hf_struct_iso20_EVAbsolutePriceScheduleType_PriceAlgorithm,
 		tvb,
 		ev_absolutepriceschedule->PriceAlgorithm.characters,
 		ev_absolutepriceschedule->PriceAlgorithm.charactersLen,
 		sizeof(ev_absolutepriceschedule->PriceAlgorithm.characters));
-	
+
 	dissect_iso20_EVPriceRuleStackListType(&ev_absolutepriceschedule->EVPriceRuleStacks,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_EVPriceRuleStackListType,
 		"EVPriceRuleStacks");
-	
+
 	return;
 }
 
@@ -3161,17 +3161,17 @@ dissect_iso20_EVEnergyOfferType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	dissect_iso20_EVPowerScheduleType(&node->EVPowerSchedule,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_EVPowerScheduleType,
 		"EVPowerSchedule");
-	
+
 	dissect_iso20_EVAbsolutePriceScheduleType(&node->EVAbsolutePriceSchedule,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_EVAbsolutePriceScheduleType,
 		"EVAbsolutePriceSchedule");
-	
+
 	return;
 }
 
@@ -3189,7 +3189,7 @@ dissect_iso20_Scheduled_SEReqControlModeType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	if (node->DepartureTime_isUsed) {
 		it = proto_tree_add_uint(subtree,
 			hf_struct_iso20_Scheduled_SEReqControlModeType_DepartureTime,
@@ -3243,7 +3243,7 @@ dissect_iso20_TaxRuleType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_TaxRuleType_TaxRuleID,
 		tvb, 0, 0, node->TaxRuleID);
@@ -3279,7 +3279,7 @@ dissect_iso20_TaxRuleType(
 		hf_struct_iso20_TaxRuleType_AppliesToParkingFee,
 		tvb, 0, 0, node->AppliesToParkingFee);
 	proto_item_set_generated(it);
-	
+
 	it = proto_tree_add_int(subtree,
 		hf_struct_iso20_TaxRuleType_AppliesToOverstayFee,
 		tvb, 0, 0, node->AppliesToOverstayFee);
@@ -3288,7 +3288,7 @@ dissect_iso20_TaxRuleType(
 	it = proto_tree_add_int(subtree,
 		hf_struct_iso20_TaxRuleType_AppliesMinimumMaximumCost,
 		tvb, 0, 0, node->AppliesMinimumMaximumCost);
-	proto_item_set_generated(it);	
+	proto_item_set_generated(it);
 
 	return;
 }
@@ -3312,7 +3312,7 @@ dissect_iso20_TaxRuleListType(
 	for (i = 0; i < node->TaxRule.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_TaxRuleType(&node->TaxRule.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_TaxRuleType,
@@ -3341,7 +3341,7 @@ dissect_iso20_PriceRuleType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_RationalNumberType,
 		"EnergyFee");
-	
+
 	if (node->ParkingFee_isUsed) {
 		dissect_iso20_RationalNumberType(&node->ParkingFee,
 			tvb, pinfo, subtree,
@@ -3402,12 +3402,12 @@ dissect_iso20_PriceRuleStackType(
 	for (i = 0; i < node->PriceRule.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_PriceRuleType(&node->PriceRule.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_PriceRuleType,
 			index);
-	}	
+	}
 
 	return;
 }
@@ -3430,7 +3430,7 @@ dissect_iso20_PriceRuleStackListType(
 	for (i = 0; i < node->PriceRuleStack.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_PriceRuleStackType(&node->PriceRuleStack.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_PriceRuleStackType,
@@ -3515,7 +3515,7 @@ dissect_iso20_OverstayRuleListType(
 	for (i = 0; i < node->OverstayRule.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_OverstayRuleType(&node->OverstayRule.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_OverstayRuleType,
@@ -3572,13 +3572,13 @@ dissect_iso20_AdditionalServiceListType(
 	for (i = 0; i < node->AdditionalService.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_AdditionalServiceType(&node->AdditionalService.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_AdditionalServiceType,
 			index);
 	}
-	
+
 	return;
 }
 
@@ -3615,7 +3615,7 @@ dissect_iso20_AbsolutePriceScheduleType(
 		hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleID,
 		tvb, 0, 0, node->PriceScheduleID);
 	proto_item_set_generated(it);
-	
+
 	if (node->PriceScheduleDescription_isUsed) {
 		exi_add_characters(subtree,
 			hf_struct_iso20_AbsolutePriceScheduleType_PriceScheduleDescription,
@@ -3624,21 +3624,21 @@ dissect_iso20_AbsolutePriceScheduleType(
 			node->PriceScheduleDescription.charactersLen,
 			sizeof(node->PriceScheduleDescription.characters));
 	}
-	
+
 	exi_add_characters(subtree,
 		hf_struct_iso20_AbsolutePriceScheduleType_Currency,
 		tvb,
 		node->Currency.characters,
 		node->Currency.charactersLen,
 		sizeof(node->Currency.characters));
-	
+
 	exi_add_characters(subtree,
 		hf_struct_iso20_AbsolutePriceScheduleType_Language,
 		tvb,
 		node->Language.characters,
 		node->Language.charactersLen,
 		sizeof(node->Language.characters));
-	
+
 	exi_add_characters(subtree,
 		hf_struct_iso20_AbsolutePriceScheduleType_PriceAlgorithm,
 		tvb,
@@ -3702,7 +3702,7 @@ dissect_iso20_PriceLevelScheduleEntryType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_PriceLevelScheduleEntryType_Duration,
 		tvb, 0, 0, node->Duration);
@@ -3712,7 +3712,7 @@ dissect_iso20_PriceLevelScheduleEntryType(
 		hf_struct_iso20_PriceLevelScheduleEntryType_PriceLevel,
 		tvb, 0, 0, node->PriceLevel);
 	proto_item_set_generated(it);
-	
+
 	return;
 }
 
@@ -3729,17 +3729,17 @@ dissect_iso20_PriceLevelScheduleEntryListType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	for (i = 0; i < node->PriceLevelScheduleEntry.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_PriceLevelScheduleEntryType(&node->PriceLevelScheduleEntry.array[i],
 			tvb, subtree,
 			ett_struct_iso20_PriceLevelScheduleEntryType,
 			index);
 	}
-	
+
 	return;
 }
 
@@ -3756,7 +3756,7 @@ dissect_iso20_PriceLevelScheduleType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	if (node->Id_isUsed) {
 		exi_add_characters(subtree,
 			hf_struct_iso20_PriceLevelScheduleType_Id,
@@ -3794,7 +3794,7 @@ dissect_iso20_PriceLevelScheduleType(
 		tvb, subtree,
 		ett_struct_iso20_PriceLevelScheduleEntryListType,
 		"PriceLevelScheduleEntries");
-	
+
 	return;
 }
 
@@ -3813,7 +3813,7 @@ dissect_iso20_Dynamic_SEResControlModeType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	if (node->DepartureTime_isUsed) {
 		it = proto_tree_add_uint(subtree,
 			hf_struct_iso20_Dynamic_SEResControlModeType_DepartureTime,
@@ -3870,7 +3870,7 @@ dissect_iso20_PowerScheduleEntryListType(
 	for (i = 0; i < node->PowerScheduleEntry.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_PowerScheduleEntryType(&node->PowerScheduleEntry.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_PowerScheduleEntryType,
@@ -3982,7 +3982,7 @@ dissect_iso20_ScheduleTupleType(
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ChargingScheduleType,
 		"ChargingSchedule");
-	
+
 	if (node->DischargingSchedule_isUsed) {
 		dissect_iso20_ChargingScheduleType(&node->DischargingSchedule,
 			tvb, pinfo, subtree,
@@ -4011,7 +4011,7 @@ dissect_iso20_Scheduled_SEResControlModeType(
 	for (i = 0; i < node->ScheduleTuple.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 		snprintf(index, sizeof(index), "[%u]", i);
-	
+
 		dissect_iso20_ScheduleTupleType(&node->ScheduleTuple.array[i],
 			tvb, pinfo, subtree,
 			ett_struct_iso20_ScheduleTupleType,
@@ -4048,7 +4048,7 @@ dissect_iso20_Scheduled_EVPPTControlModeType(
 
 	subtree = proto_tree_add_subtree(tree, tvb, 0, 0,
 		idx, NULL, subtree_name);
-	
+
 	it = proto_tree_add_uint(subtree,
 		hf_struct_iso20_Scheduled_EVPPTControlModeType_SelectedScheduleTupleID,
 		tvb, 0, 0, node->SelectedScheduleTupleID);
@@ -5388,7 +5388,7 @@ dissect_v2giso20(tvbuff_t *tvb,
 
 	size = tvb_reported_length(tvb);
 	exi_bitstream_init(&stream,
-			   tvb_memdup(wmem_packet_scope(), tvb, 0, size),
+			   tvb_memdup(pinfo->pool, tvb, 0, size),
 			   size, 0, NULL);
 
 	exiiso20 = wmem_alloc(pinfo->pool, sizeof(*exiiso20));
@@ -6566,7 +6566,7 @@ proto_register_v2giso20(void)
 		  { "ECDHCurve",
 		    "v2giso20.struct.signedinstallationdata.ecdhcurve",
 		    FT_UINT16, BASE_NONE,
-			VALS(v2giso20_enum_iso20_ecdhCurveType_names), 
+			VALS(v2giso20_enum_iso20_ecdhCurveType_names),
 			0x0, NULL, HFILL }
 		},
 
