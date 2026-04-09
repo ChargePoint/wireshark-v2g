@@ -2459,13 +2459,15 @@ dissect_iso20_SupportedProvidersListType(
 static void
 dissect_iso20_EIM_AReqAuthorizationModeType(
 	const struct iso20_EIM_AReqAuthorizationModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* unused */
+	/* EIM_AReqAuthorizationModeType has no fields (content type=empty),
+	 * but we show a subtree so the presence of EIM mode is visible */
+	proto_tree_add_subtree(tree, tvb, 0, 0, idx, NULL, subtree_name);
 	return;
 }
 
@@ -2511,13 +2513,15 @@ dissect_iso20_PnC_AReqAuthorizationModeType(
 static void
 dissect_iso20_EIM_ASResAuthorizationModeType(
 	const struct iso20_EIM_ASResAuthorizationModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* unused */
+	/* EIM_ASResAuthorizationModeType has no fields (content type=empty),
+	 * but we show a subtree so the presence of EIM mode is visible */
+	proto_tree_add_subtree(tree, tvb, 0, 0, idx, NULL, subtree_name);
 	return;
 }
 
@@ -5701,7 +5705,7 @@ proto_register_v2giso20(void)
 		    0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_AuthorizationSetupResType_Authorization,
-		  { "ResponseCode",
+		  { "AuthorizationType",
 		    "v2giso20.struct.authorizationsetupres.authorization",
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_enum_iso20_authorizationType_names),

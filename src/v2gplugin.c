@@ -55,12 +55,12 @@ void plugin_register(void)
     proto_register_plugin(&plug_v2giso20);
     static proto_plugin plug_v2giso20_ac;
 
-    plug_v2giso20.register_protoinfo = proto_register_v2giso20_ac;
-    plug_v2giso20.register_handoff = proto_reg_handoff_v2giso20_ac;
+    plug_v2giso20_ac.register_protoinfo = proto_register_v2giso20_ac;
+    plug_v2giso20_ac.register_handoff = proto_reg_handoff_v2giso20_ac;
     proto_register_plugin(&plug_v2giso20_ac);
     static proto_plugin plug_v2giso20_dc;
 
-    plug_v2giso20.register_protoinfo = proto_register_v2giso20_dc;
-    plug_v2giso20.register_handoff = proto_reg_handoff_v2giso20_dc;
+    plug_v2giso20_dc.register_protoinfo = proto_register_v2giso20_dc;
+    plug_v2giso20_dc.register_handoff = proto_reg_handoff_v2giso20_dc;
     proto_register_plugin(&plug_v2giso20_dc);
 }
