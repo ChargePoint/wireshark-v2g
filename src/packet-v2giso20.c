@@ -534,6 +534,63 @@ static const value_string v2giso20_enum_iso20_authorizationType_names[] = {
 	{ 0, NULL }
 };
 
+static const value_string v2giso20_service_id_names[] = {
+	{ 1, "AC" },
+	{ 2, "DC" },
+	{ 3, "WPT" },
+	{ 4, "ACDP_ACD" },
+	{ 5, "AC_BPT" },
+	{ 6, "DC_BPT" },
+	{ 7, "ACDP_BPT" },
+	{ 0, NULL }
+};
+
+/* ISO 15118-20 Table 203/204 - ServiceDetailRes parameter value mappings */
+static const value_string v2giso20_param_dc_connector_names[] = {
+	{ 1, "CORE" },
+	{ 2, "EXTENDED" },
+	{ 3, "DUAL2" },
+	{ 4, "DUAL4" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_param_ac_connector_names[] = {
+	{ 1, "SINGLE_PHASE" },
+	{ 2, "THREE_PHASE" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_param_controlmode_names[] = {
+	{ 1, "SCHEDULED" },
+	{ 2, "DYNAMIC" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_param_mobilityneedsmode_names[] = {
+	{ 1, "EVCC_PROVIDED" },
+	{ 2, "SECC_ALLOWED" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_param_pricing_names[] = {
+	{ 0, "NO_PRICING" },
+	{ 1, "STATIC" },
+	{ 2, "DYNAMIC" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_param_bptchannel_names[] = {
+	{ 1, "UNIFIED" },
+	{ 2, "SEPARATED" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_param_generatormode_names[] = {
+	{ 1, "GRID_FOLLOWING" },
+	{ 2, "GRID_FORMING" },
+	{ 0, NULL }
+};
+
 static const value_string v2giso20_enum_iso20_processingType_names[] = {
 	{ iso20_processingType_Finished, "Finished" },
 	{ iso20_processingType_Ongoing, "Ongoing" },
@@ -1981,7 +2038,8 @@ dissect_iso20_ParameterType(
 	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
-	const char *subtree_name)
+	const char *subtree_name,
+	uint16_t service_id)
 {
 	proto_tree *subtree;
 	proto_item *it;
@@ -2015,10 +2073,32 @@ dissect_iso20_ParameterType(
 		proto_item_set_generated(it);
 	}
 	if (parameter->intValue_isUsed) {
+		const char *val_name = NULL;
+		const char *pname = parameter->Name.characters;
+		guint plen = parameter->Name.charactersLen;
+		/* AC service IDs: 1=AC, 5=AC_BPT; DC service IDs: 2=DC, 6=DC_BPT, 3=WPT, 4=ACDP_ACD, 7=ACDP_BPT */
+		gboolean is_ac = (service_id == 1 || service_id == 5);
 		it = proto_tree_add_int(subtree,
 			hf_struct_iso20_ParameterType_intValue,
 			tvb, 0, 0, parameter->intValue);
 		proto_item_set_generated(it);
+		if (strncmp(pname, "Connector", plen) == 0)
+			val_name = val_to_str_const(parameter->intValue,
+				is_ac ? v2giso20_param_ac_connector_names
+				      : v2giso20_param_dc_connector_names,
+				"Unknown");
+		else if (strncmp(pname, "ControlMode", plen) == 0)
+			val_name = val_to_str_const(parameter->intValue, v2giso20_param_controlmode_names, "Unknown");
+		else if (strncmp(pname, "MobilityNeedsMode", plen) == 0)
+			val_name = val_to_str_const(parameter->intValue, v2giso20_param_mobilityneedsmode_names, "Unknown");
+		else if (strncmp(pname, "Pricing", plen) == 0)
+			val_name = val_to_str_const(parameter->intValue, v2giso20_param_pricing_names, "Unknown");
+		else if (strncmp(pname, "BPTChannel", plen) == 0)
+			val_name = val_to_str_const(parameter->intValue, v2giso20_param_bptchannel_names, "Unknown");
+		else if (strncmp(pname, "GeneratorMode", plen) == 0)
+			val_name = val_to_str_const(parameter->intValue, v2giso20_param_generatormode_names, "Unknown");
+		if (val_name)
+			proto_item_set_text(it, "intValue: %s (%d)", val_name, parameter->intValue);
 	}
 	if (parameter->rationalNumber_isUsed) {
 		dissect_iso20_RationalNumberType(&parameter->rationalNumber,
@@ -2046,7 +2126,8 @@ dissect_iso20_ParameterSetType(
 	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
-	const char *subtree_name)
+	const char *subtree_name,
+	uint16_t service_id)
 {
 	unsigned int i;
 	proto_tree *subtree;
@@ -2070,7 +2151,8 @@ dissect_iso20_ParameterSetType(
 		dissect_iso20_ParameterType(
 			&node->Parameter.array[i],
 			tvb, pinfo, parameter_tree,
-			ett_struct_iso20_ParameterType, index);
+			ett_struct_iso20_ParameterType, index,
+			service_id);
 	}
 
 	return;
@@ -2625,7 +2707,8 @@ dissect_iso20_ServiceParameterListType(
 	packet_info *pinfo _U_,
 	proto_tree *tree,
 	gint idx,
-	const char *subtree_name)
+	const char *subtree_name,
+	uint16_t service_id)
 {
 	unsigned int i;
 	proto_tree *subtree;
@@ -2635,7 +2718,7 @@ dissect_iso20_ServiceParameterListType(
 		tvb, 0, 0, idx, NULL, subtree_name);
 
 	parameterset_tree = proto_tree_add_subtree(subtree,
-		tvb, 0, 0, ett_v2giso20_array, NULL, "Service");
+		tvb, 0, 0, ett_v2giso20_array, NULL, "ParameterSet");
 	for (i = 0; i < node->ParameterSet.arrayLen; i++) {
 		char index[sizeof("[65536]")];
 
@@ -2644,7 +2727,7 @@ dissect_iso20_ServiceParameterListType(
 			&node->ParameterSet.array[i],
 			tvb, pinfo, parameterset_tree,
 			ett_struct_iso20_ParameterSetType,
-			index);
+			index, service_id);
 	}
 
 	return;
@@ -4469,7 +4552,7 @@ dissect_iso20_ServiceDetailResType(
 		&res->ServiceParameterList,
 		tvb, pinfo, subtree,
 		ett_struct_iso20_ServiceParameterListType,
-		"ServiceParameterList");
+		"ServiceParameterList", res->ServiceID);
 
 	return;
 }
@@ -5800,13 +5883,15 @@ proto_register_v2giso20(void)
 		{ &hf_struct_iso20_ServiceIDListType_ServiceID,
 		  { "ServiceID",
 		    "vgiso20.struct.serviceidlist.serviceid",
-		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_service_id_names), 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_ServiceType */
 		{ &hf_struct_iso20_ServiceType_ServiceID,
 		  { "ServiceID", "vgiso20.struct.service.serviceid",
-		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_service_id_names), 0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_ServiceType_FreeService,
 		  { "FreeService", "vgiso20.struct.service.freeservice",
@@ -5817,7 +5902,8 @@ proto_register_v2giso20(void)
 		{ &hf_struct_iso20_ServiceDetailReqType_ServiceID,
 		  { "ServiceID",
 		    "v2giso20.struct.servicedetailreq.serviceid",
-		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_service_id_names), 0x0, NULL, HFILL }
 		},
 		/* struct iso20_ServiceDetailResType */
 		{ &hf_struct_iso20_ServiceDetailResType_ResponseCode,
@@ -5830,7 +5916,8 @@ proto_register_v2giso20(void)
 		{ &hf_struct_iso20_ServiceDetailResType_ServiceID,
 		  { "ServiceID",
 		    "v2giso20.struct.servicedetailres.serviceid",
-		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_service_id_names), 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_ParameterSetType */
@@ -6395,7 +6482,8 @@ proto_register_v2giso20(void)
 		/* struct iso20_SelectedServiceType */
 		{ &hf_struct_iso20_SelectedServiceType_ServiceID,
 		  { "ServiceID", "vgiso20.struct.selectedservice.serviceid",
-		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_service_id_names), 0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_SelectedServiceType_ParameterSetID,
 		  { "ParameterSetID",
