@@ -4691,10 +4691,12 @@ dissect_iso20_ScheduleExchangeResType(
 		tvb, 0, 0, res->EVSEProcessing);
 	proto_item_set_generated(it);
 
-	it = proto_tree_add_uint(subtree,
-		hf_struct_iso20_ScheduleExchangeResType_GoToPause,
-		tvb, 0, 0, res->GoToPause);
-	proto_item_set_generated(it);
+	if (res->GoToPause_isUsed) {
+		it = proto_tree_add_boolean(subtree,
+			hf_struct_iso20_ScheduleExchangeResType_GoToPause,
+			tvb, 0, 0, res->GoToPause);
+		proto_item_set_generated(it);
+	}
 
 	if (res->Dynamic_SEResControlMode_isUsed) {
 		dissect_iso20_Dynamic_SEResControlModeType(
@@ -6073,8 +6075,8 @@ proto_register_v2giso20(void)
 		{ &hf_struct_iso20_ScheduleExchangeResType_GoToPause,
 		  { "GoToPause",
 		    "v2giso20.struct.scheduleexchangeres.gotopause",
-		    FT_UINT16, BASE_DEC,
-		    VALS(v2giso20_enum_iso20_processingType_names),
+		    FT_BOOLEAN, BASE_NONE,
+		    NULL,
 		    0x0, NULL, HFILL }
 		},
 
