@@ -101,6 +101,35 @@ static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEPowerLimitAchieved = -1;
 static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSECurrentLimitAchieved = -1;
 static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEVoltageLimitAchieved = -1;
 
+/* DisplayParametersType */
+static int hf_struct_iso20_dc_DisplayParametersType_PresentSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_MinimumSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_TargetSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_MaximumSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToMinimumSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToTargetSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToMaximumSOC = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_ChargingComplete = -1;
+static int hf_struct_iso20_dc_DisplayParametersType_InletHot = -1;
+
+/* Dynamic_DC_CLReqControlModeType */
+static int hf_struct_iso20_dc_Dynamic_DC_CLReqControlModeType_DepartureTime = -1;
+
+/* Dynamic_DC_CLResControlModeType */
+static int hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_MinimumSOC = -1;
+static int hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_TargetSOC = -1;
+static int hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_AckMaxDelay = -1;
+
+/* BPT_Dynamic_DC_CLReqControlModeType */
+static int hf_struct_iso20_dc_BPT_Dynamic_DC_CLReqControlModeType_DepartureTime = -1;
+
+/* BPT_Dynamic_DC_CLResControlModeType */
+static int hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_DepartureTime = -1;
+static int hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_MinimumSOC = -1;
+static int hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_TargetSOC = -1;
+static int hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_AckMaxDelay = -1;
+
 /* DC_WeldingDetection */
 static int hf_struct_iso20_dc_DC_WeldingDetectionReqType_EVProcessing = -1;
 static int hf_struct_iso20_dc_DC_WeldingDetectionResType_ResponseCode = -1;
@@ -1779,7 +1808,43 @@ dissect_iso20_dc_Dynamic_DC_CLReqControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_Dynamic_DC_CLReqControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+	dissect_iso20_dc_RationalNumberType(&node->EVTargetEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVTargetEnergyRequest");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumEnergyRequest");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumEnergyRequest");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumChargeCurrent");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumVoltage");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumVoltage");
+
 	return;
 }
 
@@ -1792,7 +1857,49 @@ dissect_iso20_dc_Dynamic_DC_CLResControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->AckMaxDelay_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_AckMaxDelay,
+			tvb, 0, 0, node->AckMaxDelay);
+		proto_item_set_generated(it);
+	}
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMinimumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumChargeCurrent");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumVoltage");
+
 	return;
 }
 
@@ -1805,7 +1912,62 @@ dissect_iso20_dc_BPT_Dynamic_DC_CLReqControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_BPT_Dynamic_DC_CLReqControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+	dissect_iso20_dc_RationalNumberType(&node->EVTargetEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVTargetEnergyRequest");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumEnergyRequest");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumEnergyRequest,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumEnergyRequest");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumChargeCurrent");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumVoltage");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumVoltage");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumDischargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMinimumDischargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVMaximumDischargeCurrent");
+	if (node->EVMaximumV2XEnergyRequest_isUsed) {
+		dissect_iso20_dc_RationalNumberType(&node->EVMaximumV2XEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType, "EVMaximumV2XEnergyRequest");
+	}
+	if (node->EVMinimumV2XEnergyRequest_isUsed) {
+		dissect_iso20_dc_RationalNumberType(&node->EVMinimumV2XEnergyRequest,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType, "EVMinimumV2XEnergyRequest");
+	}
+
 	return;
 }
 
@@ -1818,7 +1980,61 @@ dissect_iso20_dc_BPT_Dynamic_DC_CLResControlModeType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->DepartureTime_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_DepartureTime,
+			tvb, 0, 0, node->DepartureTime);
+		proto_item_set_generated(it);
+	}
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->AckMaxDelay_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_AckMaxDelay,
+			tvb, 0, 0, node->AckMaxDelay);
+		proto_item_set_generated(it);
+	}
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumChargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMinimumChargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumChargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumChargeCurrent");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumVoltage");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumDischargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumDischargePower,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMinimumDischargePower");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMaximumDischargeCurrent,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMaximumDischargeCurrent");
+	dissect_iso20_dc_RationalNumberType(&node->EVSEMinimumVoltage,
+		tvb, pinfo, subtree,
+		ett_struct_iso20_dc_RationalNumberType, "EVSEMinimumVoltage");
+
 	return;
 }
 
@@ -1857,7 +2073,74 @@ dissect_iso20_dc_DisplayParametersType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	if (node->PresentSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_PresentSOC,
+			tvb, 0, 0, node->PresentSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->MinimumSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_MinimumSOC,
+			tvb, 0, 0, node->MinimumSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->TargetSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_TargetSOC,
+			tvb, 0, 0, node->TargetSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->MaximumSOC_isUsed) {
+		it = proto_tree_add_int(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_MaximumSOC,
+			tvb, 0, 0, node->MaximumSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->RemainingTimeToMinimumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToMinimumSOC,
+			tvb, 0, 0, node->RemainingTimeToMinimumSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->RemainingTimeToTargetSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToTargetSOC,
+			tvb, 0, 0, node->RemainingTimeToTargetSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->RemainingTimeToMaximumSOC_isUsed) {
+		it = proto_tree_add_uint(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToMaximumSOC,
+			tvb, 0, 0, node->RemainingTimeToMaximumSOC);
+		proto_item_set_generated(it);
+	}
+	if (node->ChargingComplete_isUsed) {
+		it = proto_tree_add_boolean(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_ChargingComplete,
+			tvb, 0, 0, node->ChargingComplete);
+		proto_item_set_generated(it);
+	}
+	if (node->BatteryEnergyCapacity_isUsed) {
+		dissect_iso20_dc_RationalNumberType(
+			&node->BatteryEnergyCapacity,
+			tvb, pinfo, subtree,
+			ett_struct_iso20_dc_RationalNumberType,
+			"BatteryEnergyCapacity");
+	}
+	if (node->InletHot_isUsed) {
+		it = proto_tree_add_boolean(subtree,
+			hf_struct_iso20_dc_DisplayParametersType_InletHot,
+			tvb, 0, 0, node->InletHot);
+		proto_item_set_generated(it);
+	}
+
 	return;
 }
 
@@ -2162,7 +2445,7 @@ dissect_iso20_dc_DC_ChargeLoopReqType(
 			"DisplayParameters");
 	}
 
-	it = proto_tree_add_uint(subtree,
+	it = proto_tree_add_boolean(subtree,
 		hf_struct_iso20_dc_DC_ChargeLoopReqType_MeterInfoRequested,
 		tvb, 0, 0, req->MeterInfoRequested);
 	proto_item_set_generated(it);
@@ -2267,17 +2550,17 @@ dissect_iso20_dc_DC_ChargeLoopResType(
 		ett_struct_iso20_dc_RationalNumberType,
 		"EVSEPresentVoltage");
 
-	it = proto_tree_add_uint(subtree,
+	it = proto_tree_add_boolean(subtree,
 		hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEPowerLimitAchieved,
 		tvb, 0, 0, res->EVSEPowerLimitAchieved);
 	proto_item_set_generated(it);
 
-	it = proto_tree_add_uint(subtree,
+	it = proto_tree_add_boolean(subtree,
 		hf_struct_iso20_dc_DC_ChargeLoopResType_EVSECurrentLimitAchieved,
 		tvb, 0, 0, res->EVSECurrentLimitAchieved);
 	proto_item_set_generated(it);
 
-	it = proto_tree_add_uint(subtree,
+	it = proto_tree_add_boolean(subtree,
 		hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEVoltageLimitAchieved,
 		tvb, 0, 0, res->EVSEVoltageLimitAchieved);
 	proto_item_set_generated(it);
@@ -2844,7 +3127,7 @@ proto_register_v2giso20_dc(void)
 		{ &hf_struct_iso20_dc_DC_ChargeLoopReqType_MeterInfoRequested,
 		  { "MeterInfoRequested",
 		    "v2giso20.dc.struct.dc_chargeloopreq.meterinforequested",
-		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		/* struct iso20_dc_DC_ChargeLoopResType */
 		{ &hf_struct_iso20_dc_DC_ChargeLoopResType_ResponseCode,
@@ -2857,17 +3140,17 @@ proto_register_v2giso20_dc(void)
 		{ &hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEPowerLimitAchieved,
 		  { "EVSEPowerLimitAchieved",
 		    "v2giso20.dc.struct.dc_chargeloopres.evsepowerlimitachieved",
-		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_dc_DC_ChargeLoopResType_EVSECurrentLimitAchieved,
 		  { "EVSECurrentLimitAchieved",
 		    "v2giso20.dc.struct.dc_chargeloopres.evsecurrentlimitachieved",
-		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 		{ &hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEVoltageLimitAchieved,
 		  { "EVSEVoltageLimitAchieved",
 		    "v2giso20.dc.struct.dc_chargeloopres.evsevoltagelimitachieved",
-		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_dc_DC_WeldingDetectionReqType */
@@ -2885,6 +3168,111 @@ proto_register_v2giso20_dc(void)
 		    FT_UINT16, BASE_DEC,
 		    VALS(v2giso20_dc_enum_iso20_dc_responseCodeType_names),
 		    0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_DisplayParametersType */
+		{ &hf_struct_iso20_dc_DisplayParametersType_PresentSOC,
+		  { "PresentSOC",
+		    "v2giso20.dc.struct.displayparameters.presentsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.dc.struct.displayparameters.minimumsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.dc.struct.displayparameters.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_MaximumSOC,
+		  { "MaximumSOC",
+		    "v2giso20.dc.struct.displayparameters.maximumsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToMinimumSOC,
+		  { "RemainingTimeToMinimumSOC",
+		    "v2giso20.dc.struct.displayparameters.remainingtimetominimumsoc",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToTargetSOC,
+		  { "RemainingTimeToTargetSOC",
+		    "v2giso20.dc.struct.displayparameters.remainingtimetotargetsoc",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_RemainingTimeToMaximumSOC,
+		  { "RemainingTimeToMaximumSOC",
+		    "v2giso20.dc.struct.displayparameters.remainingtimemaximumsoc",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_ChargingComplete,
+		  { "ChargingComplete",
+		    "v2giso20.dc.struct.displayparameters.chargingcomplete",
+		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_DisplayParametersType_InletHot,
+		  { "InletHot",
+		    "v2giso20.dc.struct.displayparameters.inlethot",
+		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_Dynamic_DC_CLReqControlModeType */
+		{ &hf_struct_iso20_dc_Dynamic_DC_CLReqControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.dc.struct.dynamic_dc_clreqcontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_Dynamic_DC_CLResControlModeType */
+		{ &hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.dc.struct.dynamic_dc_clrescontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.dc.struct.dynamic_dc_clrescontrolmode.minimumsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.dc.struct.dynamic_dc_clrescontrolmode.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_Dynamic_DC_CLResControlModeType_AckMaxDelay,
+		  { "AckMaxDelay",
+		    "v2giso20.dc.struct.dynamic_dc_clrescontrolmode.ackmaxdelay",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_BPT_Dynamic_DC_CLReqControlModeType */
+		{ &hf_struct_iso20_dc_BPT_Dynamic_DC_CLReqControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.dc.struct.bpt_dynamic_dc_clreqcontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_BPT_Dynamic_DC_CLResControlModeType */
+		{ &hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_DepartureTime,
+		  { "DepartureTime",
+		    "v2giso20.dc.struct.bpt_dynamic_dc_clrescontrolmode.departuretime",
+		    FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_MinimumSOC,
+		  { "MinimumSOC",
+		    "v2giso20.dc.struct.bpt_dynamic_dc_clrescontrolmode.minimumsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_TargetSOC,
+		  { "TargetSOC",
+		    "v2giso20.dc.struct.bpt_dynamic_dc_clrescontrolmode.targetsoc",
+		    FT_INT8, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_BPT_Dynamic_DC_CLResControlModeType_AckMaxDelay,
+		  { "AckMaxDelay",
+		    "v2giso20.dc.struct.bpt_dynamic_dc_clrescontrolmode.ackmaxdelay",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_dc_DC_CPDReqEnergyTransferModeType */
