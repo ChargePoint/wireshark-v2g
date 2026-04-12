@@ -13,6 +13,7 @@ FetchContent_Declare(libcbv2g
     GIT_SHALLOW ON
     PATCH_COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-to-build-standalone.patch
           COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-add-static-and-position-independent-code.patch
+          COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-fix-iso20-loop-grammars.patch
     CMAKE_ARGS -DCB_V2G_BUILD_TESTS:BOOL=OFF
 )
 

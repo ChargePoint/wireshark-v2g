@@ -4111,13 +4111,15 @@ dissect_iso20_Scheduled_SEResControlModeType(
 static void
 dissect_iso20_Dynamic_EVPPTControlModeType(
 	const struct iso20_Dynamic_EVPPTControlModeType *node _U_,
-	tvbuff_t *tvb _U_,
+	tvbuff_t *tvb,
 	packet_info *pinfo _U_,
-	proto_tree *tree _U_,
-	gint idx _U_,
-	const char *subtree_name _U_)
+	proto_tree *tree,
+	gint idx,
+	const char *subtree_name)
 {
-	/* unused */
+	proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
 	return;
 }
 
@@ -6073,11 +6075,11 @@ proto_register_v2giso20(void)
 		},
 
 		{ &hf_struct_iso20_ScheduleExchangeResType_GoToPause,
-		  { "GoToPause",
-		    "v2giso20.struct.scheduleexchangeres.gotopause",
-		    FT_BOOLEAN, BASE_NONE,
-		    NULL,
-		    0x0, NULL, HFILL }
+			{ "GoToPause",
+			"v2giso20.struct.scheduleexchangeres.gotopause",
+			FT_BOOLEAN, 8,
+			NULL,
+			0x0, NULL, HFILL }
 		},
 
 		{ &hf_struct_iso20_Dynamic_SEResControlModeType_DepartureTime,

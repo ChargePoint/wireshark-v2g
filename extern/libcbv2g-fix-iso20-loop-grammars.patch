@@ -1,0 +1,124 @@
+diff --git a/lib/cbv2g/iso_20/iso20_CommonMessages_Decoder.c b/lib/cbv2g/iso_20/iso20_CommonMessages_Decoder.c
+index 2394a09..13114a7 100644
+--- a/lib/cbv2g/iso_20/iso20_CommonMessages_Decoder.c
++++ b/lib/cbv2g/iso_20/iso20_CommonMessages_Decoder.c
+@@ -3610,7 +3610,7 @@ static int decode_iso20_PowerScheduleEntryListType(exi_bitstream_t* stream, stru
+                     {
+                         error = EXI_ERROR__ARRAY_OUT_OF_BOUNDS;
+                     }
+-                    grammar_id = 3;
++                    grammar_id = 68;
+                     break;
+                 case 1:
+                     // Event: END Element; next=3
+@@ -4786,7 +4786,7 @@ static int decode_iso20_EVPowerScheduleEntryListType(exi_bitstream_t* stream, st
+                     {
+                         error = EXI_ERROR__ARRAY_OUT_OF_BOUNDS;
+                     }
+-                    grammar_id = 3;
++                    grammar_id = 93;
+                     break;
+                 case 1:
+                     // Event: END Element; next=3
+@@ -5073,7 +5073,7 @@ static int decode_iso20_EVPriceRuleStackListType(exi_bitstream_t* stream, struct
+                     {
+                         error = EXI_ERROR__ARRAY_OUT_OF_BOUNDS;
+                     }
+-                    grammar_id = 3;
++                    grammar_id = 99;
+                     break;
+                 case 1:
+                     // Event: END Element; next=3
+@@ -7191,7 +7191,7 @@ static int decode_iso20_PriceLevelScheduleEntryListType(exi_bitstream_t* stream,
+                     {
+                         error = EXI_ERROR__ARRAY_OUT_OF_BOUNDS;
+                     }
+-                    grammar_id = 3;
++                    grammar_id = 132;
+                     break;
+                 case 1:
+                     // Event: END Element; next=3
+@@ -7735,7 +7735,7 @@ static int decode_iso20_PriceRuleStackListType(exi_bitstream_t* stream, struct i
+                     {
+                         error = EXI_ERROR__ARRAY_OUT_OF_BOUNDS;
+                     }
+-                    grammar_id = 3;
++                    grammar_id = 146;
+                     break;
+                 case 1:
+                     // Event: END Element; next=3
+@@ -9110,7 +9110,7 @@ static int decode_iso20_SupportedProvidersListType(exi_bitstream_t* stream, stru
+                         {
+                             if (eventCode == 0)
+                             {
+-                                grammar_id = 3;
++                                grammar_id = 180;
+                             }
+                             else
+                             {
+@@ -9254,14 +9254,19 @@ static int decode_iso20_ContractCertificateChainType(exi_bitstream_t* stream, st
+ // Element: definition=complex; name={urn:iso:std:iso:15118:-20:CommonMessages}Dynamic_EVPPTControlMode; type={urn:iso:std:iso:15118:-20:CommonMessages}Dynamic_EVPPTControlModeType; base type=; content type=empty;
+ //          abstract=False; final=False;
+ static int decode_iso20_Dynamic_EVPPTControlModeType(exi_bitstream_t* stream, struct iso20_Dynamic_EVPPTControlModeType* Dynamic_EVPPTControlModeType) {
+-    // Element has no particles, so the function just decodes END Element
+-    (void)Dynamic_EVPPTControlModeType;
+     uint32_t eventCode;
++    int error;
+ 
+-    int error = exi_basetypes_decoder_nbit_uint(stream, 1, &eventCode);
++    init_iso20_Dynamic_EVPPTControlModeType(Dynamic_EVPPTControlModeType);
++
++    error = exi_basetypes_decoder_nbit_uint(stream, 1, &eventCode);
+     if (error == 0)
+     {
+-        if (eventCode != 0)
++        if (eventCode == 0)
++        {
++            // END Element
++        }
++        else
+         {
+             error = EXI_ERROR__UNKNOWN_EVENT_CODE;
+         }
+@@ -12512,7 +12517,7 @@ static int decode_iso20_EVPowerProfileEntryListType(exi_bitstream_t* stream, str
+                 switch(eventCode)
+                 {
+                 case 0:
+-                    // Event: LOOP (EVPowerProfileEntry, PowerScheduleEntryType (PowerScheduleEntryType)); next=3
++                    // Event: LOOP (EVPowerProfileEntry, PowerScheduleEntryType (PowerScheduleEntryType)); next=265
+                     // decode: element array
+                     if (EVPowerProfileEntryListType->EVPowerProfileEntry.arrayLen < iso20_PowerScheduleEntryType_2048_ARRAY_SIZE)
+                     {
+@@ -12522,7 +12527,7 @@ static int decode_iso20_EVPowerProfileEntryListType(exi_bitstream_t* stream, str
+                     {
+                         error = EXI_ERROR__ARRAY_OUT_OF_BOUNDS;
+                     }
+-                    grammar_id = 3;
++                    grammar_id = 265;
+                     break;
+                 case 1:
+                     // Event: END Element; next=3
+@@ -12569,14 +12574,19 @@ static int decode_iso20_EVPowerProfileEntryListType(exi_bitstream_t* stream, str
+ // Element: definition=complex; name={urn:iso:std:iso:15118:-20:CommonMessages}Dynamic_SMDTControlMode; type={urn:iso:std:iso:15118:-20:CommonMessages}Dynamic_SMDTControlModeType; base type=; content type=empty;
+ //          abstract=False; final=False;
+ static int decode_iso20_Dynamic_SMDTControlModeType(exi_bitstream_t* stream, struct iso20_Dynamic_SMDTControlModeType* Dynamic_SMDTControlModeType) {
+-    // Element has no particles, so the function just decodes END Element
+-    (void)Dynamic_SMDTControlModeType;
+     uint32_t eventCode;
++    int error;
+ 
+-    int error = exi_basetypes_decoder_nbit_uint(stream, 1, &eventCode);
++    init_iso20_Dynamic_SMDTControlModeType(Dynamic_SMDTControlModeType);
++
++    error = exi_basetypes_decoder_nbit_uint(stream, 1, &eventCode);
+     if (error == 0)
+     {
+-        if (eventCode != 0)
++        if (eventCode == 0)
++        {
++            // END Element
++        }
++        else
+         {
+             error = EXI_ERROR__UNKNOWN_EVENT_CODE;
+         }
