@@ -6698,6 +6698,16 @@ proto_register_v2giso20(void)
 		    VALS(v2giso20_enum_iso20_chargingSessionType_names),
 		    0x0, NULL, HFILL }
 		},
+		{ &hf_struct_iso20_SessionStopReqType_EVTerminationCode,
+		  { "EVTerminationCode",
+		    "v2giso20.struct.sessionstopreq.evterminationcode",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_SessionStopReqType_EVTerminationExplanation,
+		  { "EVTerminationExplanation",
+		    "v2giso20.struct.sessionstopreq.evterminationexplanation",
+		    FT_STRING, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
 		/* struct iso20_SessionStopResType */
 		{ &hf_struct_iso20_SessionStopResType_ResponseCode,
 		  { "ResponseCode",
