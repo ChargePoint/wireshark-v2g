@@ -1339,7 +1339,11 @@ dissect_iso20_X509DataType(
 				child, 0, tvb_reported_length(child),
 				ett_v2giso20_asn1, NULL,
 				"X509Certificate ASN1");
+			col_set_writable(pinfo->cinfo, COL_PROTOCOL, FALSE);
+			col_set_writable(pinfo->cinfo, COL_INFO, FALSE);
 			call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+			col_set_writable(pinfo->cinfo, COL_PROTOCOL, TRUE);
+			col_set_writable(pinfo->cinfo, COL_INFO, TRUE);
 		}
 	}
 
@@ -2233,7 +2237,11 @@ dissect_iso20_SubCertificatesType(
 			asn1_tree = proto_tree_add_subtree(certificate_i_tree,
 				child, 0, tvb_reported_length(child),
 				ett_v2giso20_asn1, NULL, "Certificate ASN1");
+			col_set_writable(pinfo->cinfo, COL_PROTOCOL, FALSE);
+			col_set_writable(pinfo->cinfo, COL_INFO, FALSE);
 			call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+			col_set_writable(pinfo->cinfo, COL_PROTOCOL, TRUE);
+			col_set_writable(pinfo->cinfo, COL_INFO, TRUE);
 		}
 	}
 
@@ -2274,7 +2282,11 @@ dissect_iso20_CertificateChainType(
 		asn1_tree = proto_tree_add_subtree(subtree,
 			child, 0, tvb_reported_length(child),
 			ett_v2giso20_asn1, NULL, "Certificate ASN1");
+		col_set_writable(pinfo->cinfo, COL_PROTOCOL, FALSE);
+		col_set_writable(pinfo->cinfo, COL_INFO, FALSE);
 		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+		col_set_writable(pinfo->cinfo, COL_PROTOCOL, TRUE);
+		col_set_writable(pinfo->cinfo, COL_INFO, TRUE);
 	}
 
 	if (node->SubCertificates_isUsed) {
@@ -2322,7 +2334,11 @@ dissect_iso20_ContractCertificateChainType(
 		asn1_tree = proto_tree_add_subtree(subtree,
 			child, 0, tvb_reported_length(child),
 			ett_v2giso20_asn1, NULL, "Certificate ASN1");
+		col_set_writable(pinfo->cinfo, COL_PROTOCOL, FALSE);
+		col_set_writable(pinfo->cinfo, COL_INFO, FALSE);
 		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+		col_set_writable(pinfo->cinfo, COL_PROTOCOL, TRUE);
+		col_set_writable(pinfo->cinfo, COL_INFO, TRUE);
 	}
 
 	dissect_iso20_SubCertificatesType(
@@ -2375,7 +2391,11 @@ dissect_iso20_SignedCertificateChainType(
 		asn1_tree = proto_tree_add_subtree(subtree,
 			child, 0, tvb_reported_length(child),
 			ett_v2giso20_asn1, NULL, "Certificate ASN1");
+		col_set_writable(pinfo->cinfo, COL_PROTOCOL, FALSE);
+		col_set_writable(pinfo->cinfo, COL_INFO, FALSE);
 		call_dissector(v2gber_handle, child, pinfo, asn1_tree);
+		col_set_writable(pinfo->cinfo, COL_PROTOCOL, TRUE);
+		col_set_writable(pinfo->cinfo, COL_INFO, TRUE);
 	}
 
 	if (node->SubCertificates_isUsed) {
