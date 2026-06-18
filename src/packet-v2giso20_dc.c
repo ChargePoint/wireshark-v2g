@@ -101,6 +101,10 @@ static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEPowerLimitAchieved = -1;
 static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSECurrentLimitAchieved = -1;
 static int hf_struct_iso20_dc_DC_ChargeLoopResType_EVSEVoltageLimitAchieved = -1;
 
+/* EVSEStatusType */
+static int hf_struct_iso20_dc_EVSEStatusType_NotificationMaxDelay = -1;
+static int hf_struct_iso20_dc_EVSEStatusType_EVSENotification = -1;
+
 /* DisplayParametersType */
 static int hf_struct_iso20_dc_DisplayParametersType_PresentSOC = -1;
 static int hf_struct_iso20_dc_DisplayParametersType_MinimumSOC = -1;
@@ -292,6 +296,16 @@ static const value_string v2giso20_dc_enum_iso20_dc_processingType_names[] = {
 	{ iso20_dc_processingType_Ongoing, "Ongoing" },
 	{ iso20_dc_processingType_Ongoing_WaitingForCustomerInteraction,
 	  "WaitingForCustomerInteraction" },
+	{ 0, NULL }
+};
+
+static const value_string v2giso20_dc_enum_iso20_dc_evseNotificationType_names[] = {
+	{ iso20_dc_evseNotificationType_Pause, "Pause" },
+	{ iso20_dc_evseNotificationType_ExitStandby, "ExitStandby" },
+	{ iso20_dc_evseNotificationType_Terminate, "Terminate" },
+	{ iso20_dc_evseNotificationType_ScheduleRenegotiation, "ScheduleRenegotiation" },
+	{ iso20_dc_evseNotificationType_ServiceRenegotiation, "ServiceRenegotiation" },
+	{ iso20_dc_evseNotificationType_MeteringConfirmation, "MeteringConfirmation" },
 	{ 0, NULL }
 };
 
@@ -2153,7 +2167,22 @@ dissect_iso20_dc_EVSEStatusType(
 	gint idx _U_,
 	const char *subtree_name _U_)
 {
-	/* TODO */
+	proto_tree *subtree;
+	proto_item *it;
+
+	subtree = proto_tree_add_subtree(tree,
+		tvb, 0, 0, idx, NULL, subtree_name);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_dc_EVSEStatusType_NotificationMaxDelay,
+		tvb, 0, 0, node->NotificationMaxDelay);
+	proto_item_set_generated(it);
+
+	it = proto_tree_add_uint(subtree,
+		hf_struct_iso20_dc_EVSEStatusType_EVSENotification,
+		tvb, 0, 0, node->EVSENotification);
+	proto_item_set_generated(it);
+
 	return;
 }
 
@@ -3215,6 +3244,20 @@ proto_register_v2giso20_dc(void)
 		  { "InletHot",
 		    "v2giso20.dc.struct.displayparameters.inlethot",
 		    FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL }
+		},
+
+		/* struct iso20_dc_EVSEStatusType */
+		{ &hf_struct_iso20_dc_EVSEStatusType_NotificationMaxDelay,
+		  { "NotificationMaxDelay",
+		    "v2giso20.dc.struct.evsestatustype.notificationmaxdelay",
+		    FT_UINT16, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		},
+		{ &hf_struct_iso20_dc_EVSEStatusType_EVSENotification,
+		  { "EVSENotification",
+		    "v2giso20.dc.struct.evsestatustype.evsenotification",
+		    FT_UINT16, BASE_DEC,
+		    VALS(v2giso20_dc_enum_iso20_dc_evseNotificationType_names),
+		    0x0, NULL, HFILL }
 		},
 
 		/* struct iso20_dc_Dynamic_DC_CLReqControlModeType */
