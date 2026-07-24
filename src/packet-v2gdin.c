@@ -859,7 +859,7 @@ dissect_v2gdin_signaturemethod(
 	if (signaturemethod->HMACOutputLength_isUsed) {
 		it = proto_tree_add_int64(subtree,
 			hf_v2gdin_struct_din_SignatureMethodType_HMACOutputLength,
-			tvb, 0, 0, signaturemethod->HMACOutputLength);
+			tvb, 0, 0, ({ int64_t _v = 0; exi_basetypes_convert_64_from_signed(&signaturemethod->HMACOutputLength, &_v); _v; }));
 		proto_item_set_generated(it);
 	}
 
@@ -1149,7 +1149,12 @@ dissect_v2gdin_x509issuerserial(
 
 	it = proto_tree_add_int64(subtree,
 		hf_v2gdin_struct_din_X509IssuerSerialType_X509SerialNumber,
-		tvb, 0, 0, x509issuerserial->X509SerialNumber);
+		tvb, 0, 0, ({
+			int64_t _val = 0;
+			exi_basetypes_convert_64_from_signed(
+				&x509issuerserial->X509SerialNumber, &_val);
+			_val;
+		}));
 	proto_item_set_generated(it);
 
 	return;

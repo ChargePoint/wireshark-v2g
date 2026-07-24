@@ -853,7 +853,7 @@ dissect_v2giso2_signaturemethod(
 	if (signaturemethod->HMACOutputLength_isUsed) {
 		it = proto_tree_add_int64(subtree,
 			hf_v2giso2_struct_iso2_SignatureMethodType_HMACOutputLength,
-			tvb, 0, 0, signaturemethod->HMACOutputLength);
+			tvb, 0, 0, ({ int64_t _v = 0; exi_basetypes_convert_64_from_signed(&signaturemethod->HMACOutputLength, &_v); _v; }));
 		proto_item_set_generated(it);
 	}
 
@@ -1150,9 +1150,14 @@ dissect_v2giso2_x509issuerserial(
 		x509issuerserial->X509IssuerName.charactersLen,
 		sizeof(x509issuerserial->X509IssuerName.characters));
 
-	it = proto_tree_add_int(subtree,
+	it = proto_tree_add_int64(subtree,
 		hf_v2giso2_struct_iso2_X509IssuerSerialType_X509SerialNumber,
-		tvb, 0, 0, x509issuerserial->X509SerialNumber);
+		tvb, 0, 0, ({
+			int64_t _val = 0;
+			exi_basetypes_convert_64_from_signed(
+				&x509issuerserial->X509SerialNumber, &_val);
+			_val;
+		}));
 	proto_item_set_generated(it);
 
 	return;
@@ -5205,7 +5210,7 @@ proto_register_v2giso2(void)
 		{ &hf_v2giso2_struct_iso2_X509IssuerSerialType_X509SerialNumber,
 		  { "X509SerialNumber",
 		    "v2giso2.struct.x509issuerserial.x509serialnumber",
-		    FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL }
+		    FT_INT64, BASE_DEC, NULL, 0x0, NULL, HFILL }
 		},
 
 		/* struct iso2_PGPDataType */

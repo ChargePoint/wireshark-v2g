@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Vidyadhari Raghu <vidyadhari.raghu@chargepoint.com>
+Date: Wed, 25 Jun 2025 00:00:00 -0700
+Subject: [PATCH] fix(iso20): increase secp521 EncryptedPrivateKey buffer size
+
+The secp521 encrypted private key can be up to 100 bytes when encoded,
+but the buffer was only allocated 94 bytes causing decode failures
+during CertificateInstallationRes processing.
+
+Increase the buffer from 94 to 128 bytes to accommodate the full
+encoded key payload.
+
+Signed-off-by: Vidyadhari Raghu <vidyadhari.raghu@chargepoint.com>
+---
+ include/cbv2g/iso_20/iso20_CommonMessages_Datatypes.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/cbv2g/iso_20/iso20_CommonMessages_Datatypes.h b/include/cbv2g/iso_20/iso20_CommonMessages_Datatypes.h
+--- a/include/cbv2g/iso_20/iso20_CommonMessages_Datatypes.h
++++ b/include/cbv2g/iso_20/iso20_CommonMessages_Datatypes.h
+@@ -90,7 +90,7 @@
+ #define iso20_EMAID_CHARACTER_SIZE (255 + ASCII_EXTRA_CHAR)
+ #define iso20_dhPublicKeyType_BYTES_SIZE (133)
+-#define iso20_secp521_EncryptedPrivateKeyType_BYTES_SIZE (94)
++#define iso20_secp521_EncryptedPrivateKeyType_BYTES_SIZE (128)
+ #define iso20_x448_EncryptedPrivateKeyType_BYTES_SIZE (84)
+ #define iso20_tpm_EncryptedPrivateKeyType_BYTES_SIZE (206)
