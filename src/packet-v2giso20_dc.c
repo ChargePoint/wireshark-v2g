@@ -597,7 +597,7 @@ dissect_iso20_dc_SignatureMethodType(
 	if (node->HMACOutputLength_isUsed) {
 		it = proto_tree_add_int(subtree,
 			hf_struct_iso20_dc_SignatureMethodType_HMACOutputLength,
-			tvb, 0, 0, node->HMACOutputLength);
+			tvb, 0, 0, ({ int64_t _v = 0; exi_basetypes_convert_64_from_signed(&node->HMACOutputLength, &_v); _v; }));
 		proto_item_set_generated(it);
 	}
 
@@ -1326,7 +1326,7 @@ dissect_iso20_dc_X509IssuerSerialType(
 
 	it = proto_tree_add_int64(subtree,
 		hf_struct_iso20_dc_X509IssuerSerialType_X509SerialNumber,
-		tvb, 0, 0, node->X509SerialNumber);
+		tvb, 0, 0, ({ int64_t _v = 0; exi_basetypes_convert_64_from_signed(&node->X509SerialNumber, &_v); _v; }));
 	proto_item_set_generated(it);
 
 	return;

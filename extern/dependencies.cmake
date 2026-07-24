@@ -4,16 +4,13 @@ include(FetchContent)
 #
 # Use the libcbv2g project as part of the dissector
 #
-set(libcbv2g_VERSION 0.2.0)
 set(LIBCBV2G_PATCH_COMMAND patch -p1)
 
 FetchContent_Declare(libcbv2g
     GIT_REPOSITORY https://github.com/EVerest/libcbv2g.git
-    GIT_TAG v${libcbv2g_VERSION}
-    GIT_SHALLOW ON
-    PATCH_COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-to-build-standalone.patch
-          COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-add-static-and-position-independent-code.patch
-          COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-fix-iso20-loop-grammars.patch
+    GIT_TAG 03350be048b35b179905129005a97144a4bdcf93
+    PATCH_COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-add-static-and-position-independent-code.patch
+    COMMAND ${LIBCBV2G_PATCH_COMMAND} < ${PROJECT_SOURCE_DIR}/extern/libcbv2g-fix-iso20-secp521-buffer-size.patch
     CMAKE_ARGS -DCB_V2G_BUILD_TESTS:BOOL=OFF
 )
 
