@@ -574,8 +574,8 @@ static const value_string v2giso20_param_mobilityneedsmode_names[] = {
 
 static const value_string v2giso20_param_pricing_names[] = {
 	{ 0, "NO_PRICING" },
-	{ 1, "STATIC" },
-	{ 2, "DYNAMIC" },
+	{ 1, "ABSOLUTE_PRICING" },
+	{ 2, "PRICE_LEVELS" },
 	{ 0, NULL }
 };
 
