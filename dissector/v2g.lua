@@ -505,6 +505,21 @@ function dissect_v2gtp(buffer, pinfo, tree)
     elseif payload_type_name == "Part20DCMainstream" then
         Dissector.get("v2giso20_dc"):call(buffer(V2GTP_HEADER_LENGTH):tvb(),
                                           pinfo, tree)
+
+    elseif payload_type_name == "ScheduleRenegotiation" then
+        -- 0x8101 carries Common (ScheduleExchange, PowerDelivery), AC
+        -- (AC_ChargeParameterDiscovery) or DC (DC_ChargeParameterDiscovery)
+        -- messages. Skip the EXI header (0x80, 1 byte) and read the 6-bit
+        -- message ID to pick the right grammar directly.
+        local payload = buffer(V2GTP_HEADER_LENGTH):tvb()
+        local msg_id = payload:bitfield(8, 6)
+        if msg_id == 4 or msg_id == 5 then
+            Dissector.get("v2giso20_ac"):call(payload, pinfo, tree)
+        elseif msg_id == 15 or msg_id == 16 then
+            Dissector.get("v2giso20_dc"):call(payload, pinfo, tree)
+        else
+            Dissector.get("v2giso20"):call(payload, pinfo, tree)
+        end
     end
 end
 
